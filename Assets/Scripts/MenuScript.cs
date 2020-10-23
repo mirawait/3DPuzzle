@@ -7,6 +7,7 @@ public class MenuScript : MonoBehaviour
 {
     GameObject playButton, settingsButton, htpButton, exitButton, btmButton;
     SolarSystem solarSystem;
+    CameraScript camera;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +23,7 @@ public class MenuScript : MonoBehaviour
         btmButton.SetActive(false);
 
         solarSystem = GameObject.FindGameObjectWithTag("Sun").GetComponent<SolarSystem>();
+        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
     }
     void PlayTask()
     {
@@ -30,7 +32,9 @@ public class MenuScript : MonoBehaviour
         htpButton.SetActive(false);
         exitButton.SetActive(false);
         btmButton.SetActive(true);
+
         solarSystem.EnableSolarSystemPhase(true);
+        camera.GoFree();
     }
     void BackTask()
     {

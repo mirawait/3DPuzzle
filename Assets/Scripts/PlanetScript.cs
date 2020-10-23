@@ -7,9 +7,10 @@ public class PlanetScript : MonoBehaviour
 {
     public float selfRotationSpeed, solarRotationSpeed;
     public int planetIndex;
+    GameObject sun;
     bool solarRotationEnabled = false;
     int distancingSpeed = 10;
-    GameObject sun;
+    
     Vector3 standartPosition;
     // Start is called before the first frame update
     void Start()
@@ -33,6 +34,7 @@ public class PlanetScript : MonoBehaviour
                 Vector3 direction = transform.position - sun.transform.position;
                 direction.Normalize();
                 Vector3 newPos = transform.position + direction * distancingSpeed;
+                newPos.y = 4;
                 transform.position = Vector3.MoveTowards(transform.position, newPos, Time.deltaTime * distancingSpeed);
             }
             Vector3 targerPosY = transform.position;
