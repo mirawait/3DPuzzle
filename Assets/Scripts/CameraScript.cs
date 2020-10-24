@@ -20,7 +20,7 @@ public class CameraScript : MonoBehaviour
     }
     
     private Phase currentPhase = Phase.Menu;
-    private float CameraYLimitUp = 18;
+    private float CameraYLimitUp = 180f;
     private float CameraYLimitDown = -5f;
     //private float CameraXLimitRight = 21;
     //private float CameraXLimitLeft = -21;
@@ -115,13 +115,13 @@ public class CameraScript : MonoBehaviour
                 moveDirection = Vector3.left;
             }
         }
-        else
+        else 
         {
-            if (deltaPos.y < 0 && transform.position.y < CameraYLimitUp)
+            if (deltaPos.y < 0 && transform.rotation.x < CameraYLimitUp)
             {
                 moveDirection = Vector3.up;
             }
-            else if (deltaPos.y > 0 && transform.position.y > CameraYLimitDown)
+            else if (deltaPos.y > 0 && transform.rotation.x > CameraYLimitDown)
             {
                 moveDirection = Vector3.down;
             }
