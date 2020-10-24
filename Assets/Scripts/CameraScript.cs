@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CameraScript : MonoBehaviour
@@ -18,7 +18,7 @@ public class CameraScript : MonoBehaviour
         GoingMenu,
         GoingFree
     }
-
+    
     private Phase currentPhase = Phase.Menu;
     private float CameraYLimitUp = 18;
     private float CameraYLimitDown = -5f;
@@ -28,6 +28,10 @@ public class CameraScript : MonoBehaviour
     private Camera camera;
     private Vector3 defaultPosition;
     private Quaternion defaultQuaternion;
+    [SerializeField]
+    private GameObject camStartPos;
+    [SerializeField]
+    private GameObject camEndPos;
 
     // Start is called before the first frame update
     void Start()
@@ -46,9 +50,10 @@ public class CameraScript : MonoBehaviour
     {
         Vector3 direction = transform.position - target.transform.position;
         direction.Normalize();
-        
-        Vector3 targetPos = direction * maxZoom;
-        targetPos.y = 15;
+
+        //Vector3 targetPos = direction * maxZoom;
+        Vector3 targetPos = camEndPos.transform.position;
+       // targetPos.y = 15;
         transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed);
 
         Quaternion targetRot = Quaternion.LookRotation(-direction);
@@ -63,6 +68,7 @@ public class CameraScript : MonoBehaviour
         if (Input.touchCount != 2)
             return;
 
+
         Touch touchZero = Input.GetTouch(0);
         Touch touchOne = Input.GetTouch(1);
 
@@ -76,9 +82,16 @@ public class CameraScript : MonoBehaviour
         Vector3 direction = transform.position - target.transform.position;
         direction.Normalize();
         Vector3 newPos = transform.position + direction * deltaMagnitudeDiff * zoomSpeed * Time.deltaTime;
+        Vector3 newDirection = newPos - target.transform.position;
+        newDirection.Normalize();
         float newDistance = Vector3.Distance(target.transform.position, newPos);
-        if (newDistance > minZoom && newDistance < maxZoom)
+        Debug.Log(direction+"==="+newDirection);
+        if (newDistance > minZoom && newDistance < maxZoom && direction==newDirection) 
             transform.position = newPos;
+        //if(transform.position.y < 20f)
+        //{
+        //    transform.position = new Vector3(transform.position.x, 20f, transform.position.z);
+        //}
     }
     void _HandleRotation()
     {
