@@ -2221,9 +2221,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 50
-  zoomSpeed: 5
-  minZoom: 20
-  maxZoom: 180
+  zoomSpeed: 10
+  minSolarZoom: 0.1
+  maxSolarZoom: 179.9
+  minPlanetZoom: 0.1
+  maxPlanetZoom: 90
   camStartPos: {fileID: 396501272}
   camEndPos: {fileID: 301212991}
 --- !u!1 &1270876173

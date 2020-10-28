@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security;
 using UnityEditor;
+using UnityEditorInternal;
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -8,59 +10,84 @@ public class CameraScript : MonoBehaviour
 {
     public float rotationSpeed = 1f,
                  zoomSpeed = 0.5f,
-                 minZoom = 0.1f,
-                 maxZoom = 179.9f;
+                 minSolarZoom = 0.1f,
+                 maxSolarZoom = 179.9f,
+                 minPlanetZoom = 0.1f,
+                 maxPlanetZoom = 90f;
+    [SerializeField]
+    private GameObject camStartPos;
+    [SerializeField]
+    private GameObject camEndPos;
 
-    enum Phase
+    private enum Phase
     {
         Menu,
         Free,
         GoingMenu,
         GoingFree
     }
-    
     private Phase currentPhase = Phase.Menu;
-    private float CameraYLimitUp = 180f;
-    private float CameraYLimitDown = -5f;
+    private float currentMaxZoom, 
+                  currentMinZoom;
+    private float CameraYLimitUp = 180f,
+                  CameraYLimitDown = -5f;
     //private float CameraXLimitRight = 21;
     //private float CameraXLimitLeft = -21;
-    private GameObject target;
+    private GameObject sun,
+                       target;
     private Camera camera;
     private Vector3 defaultPosition;
     private Quaternion defaultQuaternion;
-    [SerializeField]
-    private GameObject camStartPos;
-    [SerializeField]
-    private GameObject camEndPos;
 
+    
     // Start is called before the first frame update
     void Start()
     {
-        target = GameObject.Find("Sun");
+        sun = GameObject.Find("Sun");
         camera = GetComponent<Camera>();
         defaultPosition = transform.position;
         defaultQuaternion = transform.rotation;
     }
-
     public void GoFree()
     {
         currentPhase = Phase.GoingFree;
+        currentMaxZoom = maxSolarZoom;
+        currentMinZoom = minSolarZoom;
+        target = sun;
+
+        Debug.Log("Going free");
+        StartCoroutine(_LockOnTargetTransition(maxSolarZoom, new Vector3(0,40,0), Phase.Free));
+
     }
-    void _GoFree()
+    IEnumerator _LockOnTargetTransition(float targetDistance, Vector3 targetAngle, Phase targetPhase)
     {
-        Vector3 direction = transform.position - target.transform.position;
-        direction.Normalize();
-
-        //Vector3 targetPos = direction * maxZoom;
-        Vector3 targetPos = camEndPos.transform.position;
-       // targetPos.y = 15;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed);
-
-        Quaternion targetRot = Quaternion.LookRotation(-direction);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed);
-        if (transform.position == targetPos && transform.rotation == targetRot)
+        while (true)
         {
-            currentPhase = Phase.Free;
+            Debug.Log("_LockOnTargetTransition WHILE");
+
+            Vector3 targetDir = (transform.position - target.transform.position);
+            targetDir.Normalize();
+
+            float distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position),
+                  diffTargetDistance = targetDistance - distanceFromLockTarget;
+            float angleY = Vector3.Angle(targetDir, Vector3.up),
+                  diffAngle = angleY - targetAngle.y;
+            Debug.Log("diffAngle" + diffAngle);
+            Debug.Log("diffDistance" + diffTargetDistance);
+            Vector3 targetPos = transform.position + targetDir * diffTargetDistance 
+                + new Vector3(0, 1, 0) * rotationSpeed * diffAngle * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 10 * Time.deltaTime);
+
+            Quaternion targetRot = Quaternion.LookRotation(-targetDir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+
+            if (targetDistance == distanceFromLockTarget && transform.rotation == targetRot)
+            {
+                currentPhase = targetPhase;
+                Debug.Log("_LockOnTargetTransition end");
+                yield break;
+            }
+            yield return new WaitForSeconds(0.01f);
         }
     }
     void _HandleZoom()
@@ -86,7 +113,7 @@ public class CameraScript : MonoBehaviour
         newDirection.Normalize();
         float newDistance = Vector3.Distance(target.transform.position, newPos);
         Debug.Log(direction+"==="+newDirection);
-        if (newDistance > minZoom && newDistance < maxZoom && direction==newDirection) 
+        if (newDistance > currentMinZoom && newDistance < currentMaxZoom && direction==newDirection) 
             transform.position = newPos;
         //if(transform.position.y < 20f)
         //{
@@ -133,10 +160,16 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch(currentPhase)
+        //Vector3 targetDir = transform.position - sun.transform.position;
+        //Quaternion targetRot = Quaternion.LookRotation(-
+        //       targetDir);
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+        //
+        //Debug.Log(angle);
+        switch (currentPhase)
         {
             case Phase.GoingFree:
-                _GoFree();
+                //_GoFree();
                 break;
             case Phase.Free:
                 _HandleRotation();
