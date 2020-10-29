@@ -7,9 +7,10 @@ public class PlanetScript : MonoBehaviour
 {
     public float selfRotationSpeed, solarRotationSpeed;
     public int planetIndex;
+    public int distancingSpeed = 40;
     GameObject sun;
     bool solarRotationEnabled = false;
-    int distancingSpeed = 10;
+    
     
     Vector3 standartPosition;
     // Start is called before the first frame update
@@ -29,13 +30,12 @@ public class PlanetScript : MonoBehaviour
         if (solarRotationEnabled)
         {
             transform.RotateAround(sun.transform.position, new Vector3(0, 1, 0), solarRotationSpeed);
-            if (Vector3.Distance(transform.position, sun.transform.position) <= planetIndex * 7.5)
+            if (Vector3.Distance(transform.position, sun.transform.position) < planetIndex * 7.5)
             {
                 Vector3 direction = transform.position - sun.transform.position;
                 direction.Normalize();
-                Vector3 newPos = transform.position + direction * distancingSpeed;
-                newPos.y = 4;
-                transform.position = Vector3.MoveTowards(transform.position, newPos, Time.deltaTime * distancingSpeed);
+                Vector3 newPos = direction * planetIndex * 7.5f;
+                transform.position = Vector3.MoveTowards(transform.position, newPos, distancingSpeed * Time.deltaTime);
             }
             Vector3 targerPosY = transform.position;
             targerPosY.y = 0;
@@ -51,5 +51,7 @@ public class PlanetScript : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, standartPosition, Time.deltaTime * distancingSpeed * 3);
             }
         }
+
+       
     }
 }

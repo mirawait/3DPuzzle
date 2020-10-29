@@ -5,9 +5,16 @@ using UnityEngine.UI;
 
 public class MenuScript : MonoBehaviour
 {
-    GameObject playButton, settingsButton, htpButton, exitButton, btmButton;
-    SolarSystem solarSystem;
-    CameraScript camera;
+    private GameObject playButton, settingsButton, htpButton, exitButton, btmButton;
+    private SolarSystem solarSystem;
+    private CameraScript mainCamera;
+    enum UI_Phase
+    {
+        PlanetInfo,
+        SolarSystem,
+        MainMenu
+    }
+    private UI_Phase currentPhase;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +30,9 @@ public class MenuScript : MonoBehaviour
         btmButton.SetActive(false);
 
         solarSystem = GameObject.FindGameObjectWithTag("Sun").GetComponent<SolarSystem>();
-        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
+
+        currentPhase = UI_Phase.MainMenu;
     }
     void PlayTask()
     {
@@ -34,20 +43,51 @@ public class MenuScript : MonoBehaviour
         btmButton.SetActive(true);
 
         solarSystem.EnableSolarSystemPhase(true);
-        camera.GoFree();
+        mainCamera.GoFree();
+        currentPhase = UI_Phase.SolarSystem;
     }
     void BackTask()
     {
-        playButton.SetActive(true);
-        settingsButton.SetActive(true);
-        htpButton.SetActive(true);
-        exitButton.SetActive(true);
-        btmButton.SetActive(false);
-        solarSystem.EnableSolarSystemPhase(false);
+        switch (currentPhase)
+        {
+            case UI_Phase.SolarSystem:
+                playButton.SetActive(true);
+                settingsButton.SetActive(true);
+                htpButton.SetActive(true);
+                exitButton.SetActive(true);
+                btmButton.SetActive(false);
+                solarSystem.EnableSolarSystemPhase(false);
+                currentPhase = UI_Phase.MainMenu;
+                break;
+            case UI_Phase.PlanetInfo:
+                mainCamera.GoFree();
+                currentPhase = UI_Phase.SolarSystem;
+                break;
+        }
+
     }
+
+    void _HandlePlanetClick()
+    {
+        if ((Input.touchCount == 1) && (Input.GetTouch(0).phase == TouchPhase.Began) && mainCamera.ReadyForLock())
+        {
+            Ray raycast = mainCamera.camera.ScreenPointToRay(Input.GetTouch(0).position);
+            RaycastHit raycastHit;
+            if (Physics.Raycast(raycast, out raycastHit, Mathf.Infinity))
+            {
+                Debug.DrawRay(transform.position, raycastHit.point, Color.red, 5f);
+                if (raycastHit.transform.gameObject.tag == "Planet")
+                {
+                    mainCamera.FocusOn(raycastHit.transform.gameObject);
+                    currentPhase = UI_Phase.PlanetInfo;
+                }
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+        _HandlePlanetClick();
     }
 }
