@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using UnityEngine;
 
 public class PlanetScript : MonoBehaviour
 {
@@ -10,8 +7,8 @@ public class PlanetScript : MonoBehaviour
     public int distancingSpeed = 40;
     GameObject sun;
     bool solarRotationEnabled = false;
-    
-    
+
+
     Vector3 standartPosition;
     // Start is called before the first frame update
     void Start()
@@ -26,16 +23,21 @@ public class PlanetScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.RotateAround(transform.position, new Vector3(0, 1, 0), selfRotationSpeed);
+        transform.RotateAround(transform.position, new Vector3(0, 1, 0), selfRotationSpeed * Time.deltaTime);
         if (solarRotationEnabled)
         {
-            transform.RotateAround(sun.transform.position, new Vector3(0, 1, 0), solarRotationSpeed);
+            
             if (Vector3.Distance(transform.position, sun.transform.position) < planetIndex * 7.5)
             {
+                transform.RotateAround(sun.transform.position, new Vector3(0, 1, 0), solarRotationSpeed);
                 Vector3 direction = transform.position - sun.transform.position;
                 direction.Normalize();
                 Vector3 newPos = direction * planetIndex * 7.5f;
                 transform.position = Vector3.MoveTowards(transform.position, newPos, distancingSpeed * Time.deltaTime);
+            }
+            else
+            {
+                transform.RotateAround(sun.transform.position, new Vector3(0, 1, 0), solarRotationSpeed * Time.deltaTime);
             }
             Vector3 targerPosY = transform.position;
             targerPosY.y = 0;
@@ -52,6 +54,6 @@ public class PlanetScript : MonoBehaviour
             }
         }
 
-       
+
     }
 }

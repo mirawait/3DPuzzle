@@ -26,6 +26,7 @@ public class MenuScript : MonoBehaviour
 
         playButton.GetComponent<Button>().onClick.AddListener(PlayTask);
         btmButton.GetComponent<Button>().onClick.AddListener(BackTask);
+        exitButton.GetComponent<Button>().onClick.AddListener(Exit);
 
         btmButton.SetActive(false);
 
@@ -46,18 +47,28 @@ public class MenuScript : MonoBehaviour
         mainCamera.GoFree();
         currentPhase = UI_Phase.SolarSystem;
     }
+    IEnumerator _WaitForCameraMenuPhase()
+    {
+        while (!mainCamera.IsCurrentPhaseMenu())
+        {
+            yield return new WaitForSeconds(0.01f);
+        }
+        playButton.SetActive(true);
+        settingsButton.SetActive(true);
+        htpButton.SetActive(true);
+        exitButton.SetActive(true);
+        currentPhase = UI_Phase.MainMenu;
+        yield break;
+    }
     void BackTask()
     {
         switch (currentPhase)
         {
             case UI_Phase.SolarSystem:
-                playButton.SetActive(true);
-                settingsButton.SetActive(true);
-                htpButton.SetActive(true);
-                exitButton.SetActive(true);
+                StartCoroutine(_WaitForCameraMenuPhase());
                 btmButton.SetActive(false);
                 solarSystem.EnableSolarSystemPhase(false);
-                currentPhase = UI_Phase.MainMenu;
+                mainCamera.GoMenu();
                 break;
             case UI_Phase.PlanetInfo:
                 mainCamera.GoFree();
@@ -66,7 +77,10 @@ public class MenuScript : MonoBehaviour
         }
 
     }
-
+    void Exit()
+    {
+        Application.Quit(0);
+    }
     void _HandlePlanetClick()
     {
         if ((Input.touchCount == 1) && (Input.GetTouch(0).phase == TouchPhase.Began) && mainCamera.ReadyForLock())
