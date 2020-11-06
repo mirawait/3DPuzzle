@@ -1,11 +1,12 @@
 ﻿using System.Collections;
+using UnityEditor;
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public float rotationSpeed = 1f,
-                 zoomSpeed = 0.5f,
+    public float rotationSpeed = 0.8f,
+                 zoomSpeed = 0.2f,
                  minSolarZoom = 0.1f,
                  maxSolarZoom = 179.9f,
                  minPlanetZoom = 0.1f,
@@ -15,18 +16,18 @@ public class CameraScript : MonoBehaviour
 
     private enum Phase
     {
-        Menu,
+        Start,
         Free,
         PlanetLock,
         GoingMenu,
         GoingFree,
         GoingPlanetLock
     }
-    private Phase currentPhase = Phase.Menu;
+    private Phase currentPhase = Phase.Start;
     private float currentMaxZoom,
                   currentMinZoom;
-    private float CameraYLimitUp = 180f,
-                  CameraYLimitDown = -5f;
+    private float CameraYLimitUp = 0.4f,
+                  CameraYLimitDown = 0.05f;
     private float currentZoom;
     //private float CameraXLimitRight = 21;
     //private float CameraXLimitLeft = -21;
@@ -42,18 +43,6 @@ public class CameraScript : MonoBehaviour
     {
         sun = GameObject.Find("Sun");
         camera = GetComponent<Camera>();
-        defaultPosition = transform.position;
-        defaultQuaternion = transform.rotation;
-    }
-    public void GoToPrevPhase()
-    {
-        switch (currentPhase)
-        {
-            case Phase.GoingPlanetLock:
-            case Phase.PlanetLock:
-                GoFree();
-                break;
-        }
     }
     public void GoFree()
     {
@@ -66,16 +55,9 @@ public class CameraScript : MonoBehaviour
         StartCoroutine(_LockOnTargetTransition(maxSolarZoom, new Vector3(0, 60, 0), Phase.Free));
     }
 
-    public bool IsCurrentPhaseMenu()
+    public bool IsCurrentPhaseStart()
     {
-        return (currentPhase == Phase.Menu);
-    }
-    public void GoMenu()
-    {
-        currentPhase = Phase.GoingMenu;
-        //transform.position = camStartPos.transform.position;
-        //transform.rotation = camStartPos.transform.rotation;
-        StartCoroutine(_MoveToPoint(camStartPos.transform.position, camStartPos.transform.rotation, Phase.Menu));
+        return (currentPhase == Phase.Start);
     }
     public bool ReadyForLock()
     {
@@ -166,7 +148,6 @@ public class CameraScript : MonoBehaviour
         if (Input.touchCount != 2)
             return;
 
-
         Touch touchZero = Input.GetTouch(0);
         Touch touchOne = Input.GetTouch(1);
 
@@ -215,8 +196,10 @@ public class CameraScript : MonoBehaviour
         }
         else
         {
+            //Debug.Log("CameraYLimitUp = " + CameraYLimitUp);
             if (deltaPos.y < 0 && transform.rotation.x < CameraYLimitUp)
             {
+                Debug.Log(transform.rotation.x +"<" + CameraYLimitUp);
                 moveDirection = Vector3.up;
             }
             else if (deltaPos.y > 0 && transform.rotation.x > CameraYLimitDown)
@@ -224,7 +207,7 @@ public class CameraScript : MonoBehaviour
                 moveDirection = Vector3.down;
             }
         }
-
+        
         transform.Translate(moveDirection * Time.deltaTime * rotationSpeed);
         transform.LookAt(target.transform);
     }

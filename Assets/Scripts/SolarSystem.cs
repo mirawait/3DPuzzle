@@ -15,13 +15,13 @@ public class SolarSystem : MonoBehaviour
         planets = GameObject.FindGameObjectsWithTag("Planet");
     }
 
-    public void EnableSolarSystemPhase(bool enable)
-    {
-        foreach (GameObject planet in planets)
-        {
-            planet.transform.GetComponent<PlanetScript>().EnableSolarRotation(enable);
-        }
-    }    
+    //public void EnableSolarSystemPhase(bool enable)
+    //{
+    //    foreach (GameObject planet in planets)
+    //    {
+    //        planet.transform.GetComponent<PlanetScript>().EnableSolarRotation(enable);
+    //    }
+    //}    
     // Update is called once per frame
     void Update()
     {

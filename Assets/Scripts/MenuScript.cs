@@ -1,85 +1,60 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuScript : MonoBehaviour
 {
-    private GameObject playButton, settingsButton, htpButton, exitButton, btmButton;
+    private GameObject playText, tapText, btmButton, fadeOutEffect;
     private SolarSystem solarSystem;
     private CameraScript mainCamera;
+    private bool fadeOutComplete = false;
     enum UI_Phase
     {
         PlanetInfo,
         SolarSystem,
-        MainMenu
+        Start
     }
     private UI_Phase currentPhase;
     // Start is called before the first frame update
     void Start()
     {
-        playButton = GameObject.Find("PlayButton");
-        settingsButton = GameObject.Find("SettingsButton");
-        htpButton = GameObject.Find("HowToPlayButton");
-        exitButton = GameObject.Find("ExitButton");
+        playText = GameObject.Find("3dPuzzleText");
+        tapText = GameObject.Find("TapToPlayText");
+        //tapText.SetActive(false);
         btmButton = GameObject.Find("BackToMenuButton");
-
-        playButton.GetComponent<Button>().onClick.AddListener(PlayTask);
+        fadeOutEffect = GameObject.Find("FadeOutEffect");
         btmButton.GetComponent<Button>().onClick.AddListener(BackTask);
-        exitButton.GetComponent<Button>().onClick.AddListener(Exit);
 
         btmButton.SetActive(false);
 
         solarSystem = GameObject.FindGameObjectWithTag("Sun").GetComponent<SolarSystem>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
 
-        currentPhase = UI_Phase.MainMenu;
+        currentPhase = UI_Phase.Start;
+        StartCoroutine(_FadeOut());
     }
-    void PlayTask()
+    IEnumerator _FadeOut()
     {
-        playButton.SetActive(false);
-        settingsButton.SetActive(false);
-        htpButton.SetActive(false);
-        exitButton.SetActive(false);
-        btmButton.SetActive(true);
-
-        solarSystem.EnableSolarSystemPhase(true);
-        mainCamera.GoFree();
-        currentPhase = UI_Phase.SolarSystem;
-    }
-    IEnumerator _WaitForCameraMenuPhase()
-    {
-        while (!mainCamera.IsCurrentPhaseMenu())
+        yield return new WaitForSeconds(2f);
+        fadeOutEffect.GetComponent<Image>().CrossFadeAlpha(0, 2, false);
+        yield return new WaitForSeconds(2f);
+        fadeOutComplete = true;
+        //tapText.SetActive(true);
+        while (tapText.GetComponent<TextMeshProUGUI>().color.a != 255)
         {
-            yield return new WaitForSeconds(0.01f);
+            float currentA = tapText.GetComponent<TextMeshProUGUI>().color.a;
+            tapText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, currentA + 0.1f);//CrossFadeAlpha(1, 1, false);
+            yield return new WaitForSeconds(0.05f);
         }
-        playButton.SetActive(true);
-        settingsButton.SetActive(true);
-        htpButton.SetActive(true);
-        exitButton.SetActive(true);
-        currentPhase = UI_Phase.MainMenu;
+
         yield break;
     }
     void BackTask()
     {
-        switch (currentPhase)
-        {
-            case UI_Phase.SolarSystem:
-                StartCoroutine(_WaitForCameraMenuPhase());
-                btmButton.SetActive(false);
-                solarSystem.EnableSolarSystemPhase(false);
-                mainCamera.GoMenu();
-                break;
-            case UI_Phase.PlanetInfo:
-                mainCamera.GoFree();
-                currentPhase = UI_Phase.SolarSystem;
-                break;
-        }
-
-    }
-    void Exit()
-    {
-        Application.Quit(0);
+        mainCamera.GoFree();
+        currentPhase = UI_Phase.SolarSystem;
+        btmButton.SetActive(false);
     }
     void _HandlePlanetClick()
     {
@@ -94,14 +69,34 @@ public class MenuScript : MonoBehaviour
                 {
                     mainCamera.FocusOn(raycastHit.transform.gameObject);
                     currentPhase = UI_Phase.PlanetInfo;
+                    btmButton.SetActive(true);
                 }
             }
+        }
+    }
+    void _HandleStartClick()
+    {
+        if (Input.touchCount > 0 && fadeOutComplete)
+        {
+            currentPhase = UI_Phase.SolarSystem;
+            mainCamera.GoFree();
+            playText.SetActive(false);
+            tapText.SetActive(false);
+            //btmButton.SetActive(true);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        _HandlePlanetClick();
+        switch (currentPhase)
+        {
+            case UI_Phase.Start:
+                _HandleStartClick();
+                break;
+            case UI_Phase.SolarSystem:
+                _HandlePlanetClick();
+                break;
+        }
     }
 }
