@@ -496,8 +496,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.1
-  solarRotationSpeed: 0.3
+  selfRotationSpeed: 5
+  solarRotationSpeed: 35
   planetIndex: 4
   distancingSpeed: 40
 --- !u!1 &372095109
@@ -608,8 +608,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.1
-  solarRotationSpeed: 0.3
+  selfRotationSpeed: 5
+  solarRotationSpeed: 30
   planetIndex: 5
   distancingSpeed: 40
 --- !u!1 &396501272
@@ -750,8 +750,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.1
-  solarRotationSpeed: 0.3
+  selfRotationSpeed: 5
+  solarRotationSpeed: 40
   planetIndex: 3
   distancingSpeed: 40
 --- !u!1 &553795897
@@ -982,8 +982,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.1
-  solarRotationSpeed: 0.3
+  selfRotationSpeed: 5
+  solarRotationSpeed: 25
   planetIndex: 6
   distancingSpeed: 40
 --- !u!1 &681508988
@@ -1094,8 +1094,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.1
-  solarRotationSpeed: 0.3
+  selfRotationSpeed: 5
+  solarRotationSpeed: 10
   planetIndex: 9
   distancingSpeed: 40
 --- !u!1 &746565636
@@ -1206,8 +1206,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.1
-  solarRotationSpeed: 0.3
+  selfRotationSpeed: 5
+  solarRotationSpeed: 45
   planetIndex: 2
   distancingSpeed: 40
 --- !u!1 &779704519
@@ -1598,8 +1598,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.1
-  solarRotationSpeed: 0.3
+  selfRotationSpeed: 5
+  solarRotationSpeed: 15
   planetIndex: 8
   distancingSpeed: 40
 --- !u!1 &1121918743
@@ -1844,8 +1844,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.1
-  solarRotationSpeed: 0.3
+  selfRotationSpeed: 5
+  solarRotationSpeed: 50
   planetIndex: 1
   distancingSpeed: 40
 --- !u!1 &1179216059
@@ -2315,8 +2315,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.1
-  solarRotationSpeed: 0.3
+  selfRotationSpeed: 5
+  solarRotationSpeed: 20
   planetIndex: 7
   distancingSpeed: 40
 --- !u!1 &1321325123
