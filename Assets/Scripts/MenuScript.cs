@@ -5,9 +5,10 @@ using UnityEngine.UI;
 
 public class MenuScript : MonoBehaviour
 {
-    private GameObject playText, tapText, btmButton, fadeOutEffect;
+    private GameObject playText, tapText, settingsButton, helpButton, btmButton, solveButton, fadeOutEffect;
     private SolarSystem solarSystem;
     private CameraScript mainCamera;
+    private GameObject[] planetInfoPanels;
     private bool fadeOutComplete = false;
     enum UI_Phase
     {
@@ -23,13 +24,25 @@ public class MenuScript : MonoBehaviour
         tapText = GameObject.Find("TapToPlayText");
         //tapText.SetActive(false);
         btmButton = GameObject.Find("BackToMenuButton");
+        solveButton = GameObject.Find("SolveButton");
+        settingsButton = GameObject.Find("SettingsButton");
+        helpButton = GameObject.Find("HelpButton");
         fadeOutEffect = GameObject.Find("FadeOutEffect");
         btmButton.GetComponent<Button>().onClick.AddListener(BackTask);
 
         btmButton.SetActive(false);
+        solveButton.SetActive(false);
+        settingsButton.SetActive(false);
+        helpButton.SetActive(false);
 
         solarSystem = GameObject.FindGameObjectWithTag("Sun").GetComponent<SolarSystem>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
+
+        planetInfoPanels = GameObject.FindGameObjectsWithTag("InfoPanel");
+        foreach (GameObject infoPanel in planetInfoPanels)
+        {
+            infoPanel.SetActive(false);
+        }
 
         currentPhase = UI_Phase.Start;
         StartCoroutine(_FadeOut());
@@ -50,11 +63,34 @@ public class MenuScript : MonoBehaviour
 
         yield break;
     }
+    IEnumerator _WaitForCameraLock(uint focusedPlanetInex)
+    {
+        while(!mainCamera.IsCurrentPhasePlanetLock())
+        {
+            yield return new WaitForSeconds(0.01f);
+        }
+        foreach (GameObject infoPanel in planetInfoPanels)
+        {
+            if (infoPanel.transform.GetComponent<PlanetInfoScript>().GetIndex() == focusedPlanetInex)
+            {
+                infoPanel.SetActive(true);
+            }
+        }
+        currentPhase = UI_Phase.PlanetInfo;
+        btmButton.SetActive(true);
+        solveButton.SetActive(true);
+        yield break;
+    }
     void BackTask()
     {
         mainCamera.GoFree();
         currentPhase = UI_Phase.SolarSystem;
+        foreach (GameObject infoPanel in planetInfoPanels)
+        {
+            infoPanel.SetActive(false);
+        }
         btmButton.SetActive(false);
+        solveButton.SetActive(false);
     }
     void _HandlePlanetClick()
     {
@@ -68,8 +104,7 @@ public class MenuScript : MonoBehaviour
                 if (raycastHit.transform.gameObject.tag == "Planet")
                 {
                     mainCamera.FocusOn(raycastHit.transform.gameObject);
-                    currentPhase = UI_Phase.PlanetInfo;
-                    btmButton.SetActive(true);
+                    StartCoroutine(_WaitForCameraLock(raycastHit.transform.gameObject.GetComponent<PlanetScript>().GetIndex()));
                 }
             }
         }
@@ -82,6 +117,8 @@ public class MenuScript : MonoBehaviour
             mainCamera.GoFree();
             playText.SetActive(false);
             tapText.SetActive(false);
+            settingsButton.SetActive(true);
+            helpButton.SetActive(true);
             //btmButton.SetActive(true);
         }
     }

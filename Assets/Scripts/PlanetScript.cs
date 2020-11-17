@@ -3,8 +3,9 @@
 public class PlanetScript : MonoBehaviour
 {
     public float selfRotationSpeed, solarRotationSpeed;
-    public int planetIndex;
     public int distancingSpeed = 40;
+    [SerializeField]
+    uint planetIndex;
     GameObject sun;
     CameraScript mainCamera;
 
@@ -14,6 +15,10 @@ public class PlanetScript : MonoBehaviour
     {
         sun = GameObject.FindGameObjectWithTag("Sun");
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
+    }
+    public uint GetIndex()
+    {
+        return planetIndex;
     }
     // Update is called once per frame
     void _Move()
@@ -34,22 +39,22 @@ public class PlanetScript : MonoBehaviour
     }
     void _HandleCameraHit()
     {
-        if (Vector3.Distance(mainCamera.transform.position, transform.position) < 3)
-        {
-            var renderer = gameObject.GetComponent<Renderer>();
-            renderer.material.shader = Shader.Find("Transparent/Diffuse");
-            var color = renderer.material.color;
-            color.a = 0.5f;
-            renderer.material.color = color;
-        }
-        else
-        {
-            var renderer = gameObject.GetComponent<Renderer>();
-            renderer.material.shader = Shader.Find("Transparent/Diffuse");
-            var color = renderer.material.color;
-            color.a = 1f;
-            renderer.material.color = color;
-        }
+        //if (Vector3.Distance(mainCamera.transform.position, transform.position) < 3)
+        //{
+        //    var renderer = gameObject.GetComponent<Renderer>();
+        //    renderer.material.shader = Shader.Find("Transparent/Diffuse");
+        //    var color = renderer.material.color;
+        //    color.a = 0.5f;
+        //    renderer.material.color = color;
+        //}
+        //else
+        //{
+        //    var renderer = gameObject.GetComponent<Renderer>();
+        //    renderer.material.shader = Shader.Find("Transparent/Diffuse");
+        //    var color = renderer.material.color;
+        //    color.a = 1f;
+        //    renderer.material.color = color;
+        //}
     }
     void Update()
     {
