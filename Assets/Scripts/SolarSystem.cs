@@ -22,7 +22,7 @@ public class SolarSystem : MonoBehaviour
             planet.transform.GetComponent<PlanetScript>().EnableSolarRotation(enable);
         }
     }    
-    // Update is called once per frame
+    //Update is called once per frame
     void Update()
     {
        
