@@ -55,11 +55,14 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\DificultySwitcherScript.cs" />
     <Compile Include="Assets\Scripts\SolarSystem.cs" />
     <Compile Include="Assets\Scripts\PlanetScript.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
-    <Compile Include="Assets\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Scripts\PlanetInfoScript.cs" />
+    <Compile Include="Assets\Scripts\MenuScript.cs" />
+    <Compile Include="Assets\Scripts\SoundSwitcherScript.cs" />
+    <Compile Include="Assets\Scripts\ConfirmSettingsScript.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

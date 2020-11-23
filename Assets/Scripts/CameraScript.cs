@@ -9,34 +9,31 @@ public class CameraScript : MonoBehaviour
                  minSolarZoom = 0.1f,
                  maxSolarZoom = 179.9f,
                  minPlanetZoom = 0.1f,
-                 maxPlanetZoom = 90f;
+                 maxPlanetZoom = 90f,
+                 CameraYLimitUp = 50,
+                 CameraYLimitDown = 90;
     public Vector3 focusOffset;
-    //public GameObject focusSphere;
-    [SerializeField]
-    private GameObject camStartPos;
-
-    private enum Phase
+    public GameObject camStartPos, camSettingsPos;
+    public enum Phase
     {
         Menu,
+        Settings,
         Free,
         PlanetLock,
         GoingMenu,
+        GoingSettings,
         GoingFree,
         GoingPlanetLock
     }
     private Phase currentPhase = Phase.Menu;
     private float currentMaxZoom,
-                  currentMinZoom;
-    private float CameraYLimitUp = 0.4f,
-                  CameraYLimitDown = 0.05f;
-    private float currentZoom;
+                  currentMinZoom,
+                  currentZoom;
     //private float CameraXLimitRight = 21;
     //private float CameraXLimitLeft = -21;
     private GameObject sun,
                        target;
     public Camera camera;
-    private Vector3 defaultPosition;
-    private Quaternion defaultQuaternion;
 
 
     // Start is called before the first frame update
@@ -64,18 +61,30 @@ public class CameraScript : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(_MoveToPoint(camStartPos.transform.position, camStartPos.transform.rotation, Phase.Menu));
     }
-    public bool IsCurrentPhaseMenu()
+    public void GoSettings()
     {
-        return (currentPhase == Phase.Menu);
+        currentPhase = Phase.GoingSettings;
+        StopAllCoroutines();
+        StartCoroutine(_MoveToPoint(camSettingsPos.transform.position, camSettingsPos.transform.rotation, Phase.Settings));
     }
-    public bool IsCurrentPhasePlanetLock()
+    
+    public bool isCurrentPhase(Phase phase)
     {
-        return (currentPhase == Phase.PlanetLock);
+        return (currentPhase == phase);
     }
-    public bool ReadyForLock()
-    {
-        return (currentPhase == Phase.Free);
-    }
+
+    //public bool IsCurrentPhaseMenu()
+    //{
+    //    return (currentPhase == Phase.Menu);
+    //}
+    //public bool IsCurrentPhasePlanetLock()
+    //{
+    //    return (currentPhase == Phase.PlanetLock);
+    //}
+    //public bool ReadyForLock()
+    //{
+    //    return (currentPhase == Phase.Free);
+    //}
     public void FocusOn(GameObject newTarget)
     {
         currentPhase = Phase.GoingPlanetLock;
@@ -155,7 +164,7 @@ public class CameraScript : MonoBehaviour
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * 2 * (initDist - dist) / initDist * Time.deltaTime);
 
-            if (transform.position == camStartPos.transform.position && transform.rotation == targetRot)
+            if (transform.position == targetPos && transform.rotation == targetRot)
             {
                 Debug.Log("_START POSITION SETTED");
                 currentPhase = targetPhase;
@@ -217,11 +226,11 @@ public class CameraScript : MonoBehaviour
             Vector3 direction = transform.position - target.transform.position;
             float angleY = Vector3.Angle(direction, Vector3.up);
             //Debug.Log("CameraYLimitUp = " + CameraYLimitUp);
-            if (deltaPos.y < 0 && angleY > 50)
+            if (deltaPos.y < 0 && angleY > CameraYLimitUp)
             {
                 moveDirection = Vector3.up;
             }
-            else if (deltaPos.y > 0 && angleY < 90)
+            else if (deltaPos.y > 0 && angleY < CameraYLimitDown)
             {
                 moveDirection = Vector3.down;
             }
