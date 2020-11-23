@@ -1475,7 +1475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
   solarRotationSpeed: 6
-  distancingSpeed: 40
+  distancingSpeed: 50
   planetIndex: 4
 --- !u!1 &238341008
 GameObject:
@@ -2271,7 +2271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
   solarRotationSpeed: 5
-  distancingSpeed: 40
+  distancingSpeed: 50
   planetIndex: 5
 --- !u!1 &385585814
 GameObject:
@@ -2282,6 +2282,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 385585815}
+  - component: {fileID: 385585816}
   m_Layer: 0
   m_Name: SettingsMenu
   m_TagString: Untagged
@@ -2312,6 +2313,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &385585816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 385585814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeab23f07baa8f84488502739a9687c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curDif: 1
+  curSoundStatus: 0
 --- !u!1 &396501272
 GameObject:
   m_ObjectHideFlags: 0
@@ -2452,7 +2467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
   solarRotationSpeed: 7
-  distancingSpeed: 40
+  distancingSpeed: 50
   planetIndex: 3
 --- !u!1 &436182697
 GameObject:
@@ -3324,7 +3339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
   solarRotationSpeed: 4
-  distancingSpeed: 40
+  distancingSpeed: 50
   planetIndex: 6
 --- !u!1 &649894873
 GameObject:
@@ -3487,7 +3502,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
   solarRotationSpeed: 1
-  distancingSpeed: 40
+  distancingSpeed: 50
   planetIndex: 9
 --- !u!1 &686449309
 GameObject:
@@ -3675,7 +3690,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
   solarRotationSpeed: 8
-  distancingSpeed: 40
+  distancingSpeed: 50
   planetIndex: 2
 --- !u!1 &767483992
 GameObject:
@@ -4669,7 +4684,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
   solarRotationSpeed: 2
-  distancingSpeed: 40
+  distancingSpeed: 50
   planetIndex: 8
 --- !u!1 &1061693435
 GameObject:
@@ -5049,7 +5064,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
   solarRotationSpeed: 9
-  distancingSpeed: 40
+  distancingSpeed: 50
   planetIndex: 1
 --- !u!1 &1155404130
 GameObject:
@@ -5775,7 +5790,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
   solarRotationSpeed: 3
-  distancingSpeed: 40
+  distancingSpeed: 50
   planetIndex: 7
 --- !u!1 &1282147224
 GameObject:
