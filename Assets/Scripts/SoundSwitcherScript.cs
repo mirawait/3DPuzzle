@@ -32,10 +32,10 @@ public class SoundSwitcherScript : MonoBehaviour
         switch (currentStatus)
         {
             case Sound.On:
-                text.GetComponent<TextMeshProUGUI>().text = "Включен";
+                text.GetComponent<TextMeshProUGUI>().text = "Вкл.";
                 break;
             case Sound.Off:
-                text.GetComponent<TextMeshProUGUI>().text = "Выключен";
+                text.GetComponent<TextMeshProUGUI>().text = "Выкл.";
                 break;
         }
     }
