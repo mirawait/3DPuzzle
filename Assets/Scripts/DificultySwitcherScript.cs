@@ -31,13 +31,13 @@ public class DificultySwitcherScript : MonoBehaviour
         switch (currentDifficulty)
         {
             case Difficulty.Easy:
-                text.GetComponent<TextMeshProUGUI>().text = "Легкая";
+                text.GetComponent<TextMeshProUGUI>().text = "Легко";
                 break;
             case Difficulty.Normal:
-                text.GetComponent<TextMeshProUGUI>().text = "Нормальная";
+                text.GetComponent<TextMeshProUGUI>().text = "Средне";
                 break;
             case Difficulty.Hard:
-                text.GetComponent<TextMeshProUGUI>().text = "Тяжелая";
+                text.GetComponent<TextMeshProUGUI>().text = "Сложно";
                 break;
         }
     }
