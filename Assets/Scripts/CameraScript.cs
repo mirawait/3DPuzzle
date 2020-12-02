@@ -95,6 +95,7 @@ public class CameraScript : MonoBehaviour
         Debug.Log("Going planet lock");
         StartCoroutine(_LockOnTargetTransition(maxPlanetZoom, new Vector3(0, 90, 0), Phase.PlanetLock));
     }
+
     void _FollowTarget()
     {
         float distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position),
@@ -103,7 +104,7 @@ public class CameraScript : MonoBehaviour
         targetDir.Normalize();
         if (distanceFromLockTarget != currentZoom)
         {
-            Debug.Log("diffDistance" + diffTargetDistance);
+            //Debug.Log("diffDistance" + diffTargetDistance);
             Vector3 targetPos = transform.position + targetDir * diffTargetDistance;
             transform.position = Vector3.MoveTowards(transform.position, targetPos, target.GetComponent<PlanetScript>().solarRotationSpeed);
         }
@@ -117,11 +118,13 @@ public class CameraScript : MonoBehaviour
 
         transform.RotateAround(sun.transform.position, new Vector3(0, 1, 0), target.GetComponent<PlanetScript>().solarRotationSpeed * Time.deltaTime);
         transform.LookAt(focusPoint);
-
     }
 
     IEnumerator _LockOnTargetTransition(float targetDistance, Vector3 targetAngle, Phase targetPhase)
     {
+        bool rotatedTo = false, 
+             rotatedAround = false, 
+             movedTo = false;
         while (true)
         {
             Debug.Log("_LockOnTargetTransition WHILE");
@@ -131,19 +134,41 @@ public class CameraScript : MonoBehaviour
 
             float distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position);
             float diffTargetDistance = targetDistance - distanceFromLockTarget;
-            float angleY = Vector3.Angle(targetDir, Vector3.up);
-            float diffAngle = angleY - targetAngle.y;
-            Debug.Log("diffAngle" + diffAngle);
-            Debug.Log("diffDistance" + diffTargetDistance);
-            Vector3 targetPos = transform.position + targetDir * diffTargetDistance
-                + new Vector3(0, 1, 0) * rotationSpeed * diffAngle * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 20 * Time.deltaTime);
+            
+            Debug.Log("_LockOnTargetTransition diffDistance" + diffTargetDistance);
 
-            Quaternion targetRot = Quaternion.LookRotation(-targetDir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * 3 * Time.deltaTime);
+            Vector3 targetPos = transform.position + targetDir * diffTargetDistance;
 
-            distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position);
-            if (Mathf.RoundToInt(Mathf.Abs(targetDistance - distanceFromLockTarget)) == 0 && transform.rotation == targetRot)
+            if (!rotatedTo)
+            {
+                float angleY = Vector3.Angle(targetDir, Vector3.up);
+                float diffAngle = angleY - targetAngle.y;
+                Debug.Log("_LockOnTargetTransition diffAngle" + diffAngle);
+                targetPos += new Vector3(0, 1, 0) * rotationSpeed * diffAngle * Time.deltaTime;
+                rotatedTo = (Mathf.Abs(diffAngle) < 5);
+            }
+            else
+                transform.LookAt(target.transform);
+
+            if (!movedTo)
+            {
+                
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 20 * Time.deltaTime);
+                distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position);
+                movedTo = Mathf.RoundToInt(Mathf.Abs(targetDistance - distanceFromLockTarget)) == 0;
+            }
+
+            if (!rotatedTo)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(-targetDir);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * 2 * Time.deltaTime);
+
+                rotatedTo = transform.rotation == targetRot;
+            }
+            //transform.RotateAround(sun.transform.position, new Vector3(1, 0 ,0), rotationSpeed * 0.12f * Time.deltaTime);
+
+            
+            if (movedTo && rotatedTo)
             {
                 currentPhase = targetPhase;
                 currentZoom = targetDistance;
@@ -242,12 +267,12 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (target != null)
-        {
-            Vector3 direction = transform.position - target.transform.position;
-            float angleY = Vector3.Angle(direction, Vector3.up);
-            Debug.Log(angleY);
-        }
+        //if (target != null)
+        //{
+        //    Vector3 direction = transform.position - target.transform.position;
+        //    float angleY = Vector3.Angle(direction, Vector3.up);
+        //    Debug.Log(angleY);
+        //}
         switch (currentPhase)
         {
             
