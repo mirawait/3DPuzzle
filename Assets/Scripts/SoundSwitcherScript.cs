@@ -53,13 +53,13 @@ public class SoundSwitcherScript : MonoBehaviour
 
     void NextTask()
     {
-        currentStatus = Sound.On;
+        currentStatus = Sound.Off;
         _UpdateText();
     }
 
     void PrevTask()
     {
-        currentStatus = Sound.Off;
+        currentStatus = Sound.On;
         _UpdateText();
     }
 
