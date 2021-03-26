@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using System;
+
 
 public class CameraScript : MonoBehaviour
 {
@@ -29,6 +31,7 @@ public class CameraScript : MonoBehaviour
     private float currentMaxZoom,
                   currentMinZoom,
                   currentZoom;
+    private uint planetClickSubscription;
     //private float CameraXLimitRight = 21;
     //private float CameraXLimitLeft = -21;
     private GameObject sun,
@@ -51,7 +54,17 @@ public class CameraScript : MonoBehaviour
 
         Debug.Log("Going free");
         StopAllCoroutines();
-        StartCoroutine(_LockOnTargetTransition(maxSolarZoom, new Vector3(0, 60, 0), Phase.Free));
+        StartCoroutine(_LockOnTargetTransition(maxSolarZoom, new Vector3(0, 60, 0), 
+            () => 
+            { 
+                currentPhase = Phase.Free;
+                planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
+                    (GameObject target) => 
+                        { 
+                            if (currentPhase == Phase.Free)
+                                FocusOn(target); 
+                        });
+            }));
     }
     public void GoMenu()
     {
@@ -59,6 +72,7 @@ public class CameraScript : MonoBehaviour
         //transform.position = camStartPos.transform.position;
         //transform.rotation = camStartPos.transform.rotation;
         StopAllCoroutines();
+        SolarSystemController.unsubscribeToPlanetClick(planetClickSubscription);
         StartCoroutine(_MoveToPoint(camStartPos.transform.position, camStartPos.transform.rotation, Phase.Menu));
     }
     public void GoSettings()
@@ -72,19 +86,6 @@ public class CameraScript : MonoBehaviour
     {
         return (currentPhase == phase);
     }
-
-    //public bool IsCurrentPhaseMenu()
-    //{
-    //    return (currentPhase == Phase.Menu);
-    //}
-    //public bool IsCurrentPhasePlanetLock()
-    //{
-    //    return (currentPhase == Phase.PlanetLock);
-    //}
-    //public bool ReadyForLock()
-    //{
-    //    return (currentPhase == Phase.Free);
-    //}
     public void FocusOn(GameObject newTarget)
     {
         currentPhase = Phase.GoingPlanetLock;
@@ -93,7 +94,12 @@ public class CameraScript : MonoBehaviour
         target = newTarget;
 
         Debug.Log("Going planet lock");
-        StartCoroutine(_LockOnTargetTransition(maxPlanetZoom, new Vector3(0, 90, 0), Phase.PlanetLock));
+        StartCoroutine(_LockOnTargetTransition(maxPlanetZoom, new Vector3(0, 90, 0), 
+            () =>
+            {
+                currentPhase = Phase.PlanetLock;
+                //planetClickSubscription = SolarSystemController.subscribeToPlanetClick((GameObject target) => { FocusOn(target); });
+            }));
     }
 
     void _FollowTarget()
@@ -120,7 +126,7 @@ public class CameraScript : MonoBehaviour
         transform.LookAt(focusPoint);
     }
 
-    IEnumerator _LockOnTargetTransition(float targetDistance, Vector3 targetAngle, Phase targetPhase)
+    IEnumerator _LockOnTargetTransition(float targetDistance, Vector3 targetAngle, Action onComplete)
     {
         bool rotatedTo = false, 
              rotatedAround = false, 
@@ -170,9 +176,10 @@ public class CameraScript : MonoBehaviour
             
             if (movedTo && rotatedTo)
             {
-                currentPhase = targetPhase;
+                //currentPhase = targetPhase;
                 currentZoom = targetDistance;
                 Debug.Log("_LockOnTargetTransition end");
+                onComplete();
                 yield break;
             }
             yield return new WaitForSeconds(0.01f);
@@ -213,6 +220,10 @@ public class CameraScript : MonoBehaviour
               touchDeltaMag = (touchZero.position - touchOne.position).magnitude,
               deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
+        if (deltaMagnitudeDiff > 0 && !TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraZoomOut)
+            || deltaMagnitudeDiff < 0 && !TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraZoomIn))
+            return;
+
         Vector3 direction = transform.position - target.transform.position;
         direction.Normalize();
         Vector3 newPos = transform.position + direction * deltaMagnitudeDiff * zoomSpeed * Time.deltaTime;
@@ -237,11 +248,11 @@ public class CameraScript : MonoBehaviour
 
         if (Mathf.Abs(deltaPos.x) > Mathf.Abs(deltaPos.y))
         {
-            if (deltaPos.x < 0/* && transform.position.x < CameraXLimitRight*/)
+            if (deltaPos.x < 0 && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationLeft))
             {
                 moveDirection = Vector3.right;
             }
-            else if (deltaPos.x > 0/* && transform.position.x > CameraXLimitLeft*/)
+            else if (deltaPos.x > 0 && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationRight))
             {
                 moveDirection = Vector3.left;
             }
@@ -251,11 +262,11 @@ public class CameraScript : MonoBehaviour
             Vector3 direction = transform.position - target.transform.position;
             float angleY = Vector3.Angle(direction, Vector3.up);
             //Debug.Log("CameraYLimitUp = " + CameraYLimitUp);
-            if (deltaPos.y < 0 && angleY > CameraYLimitUp)
+            if (deltaPos.y < 0 && angleY > CameraYLimitUp && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationDown))
             {
                 moveDirection = Vector3.up;
             }
-            else if (deltaPos.y > 0 && angleY < CameraYLimitDown)
+            else if (deltaPos.y > 0 && angleY < CameraYLimitDown && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationUp))
             {
                 moveDirection = Vector3.down;
             }
@@ -263,6 +274,7 @@ public class CameraScript : MonoBehaviour
         transform.Translate(moveDirection * Time.deltaTime * rotationSpeed);
         transform.LookAt(target.transform);
     }
+    
 
     // Update is called once per frame
     void Update()
@@ -277,7 +289,6 @@ public class CameraScript : MonoBehaviour
         {
             
             case Phase.Free:
-                //_HandlePlanetClick();
                 _HandleRotation();
                 _HandleZoom();
                 break;

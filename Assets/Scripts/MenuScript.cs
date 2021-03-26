@@ -11,6 +11,8 @@ public class MenuScript : MonoBehaviour
     private CameraScript mainCamera;
     private GameObject[] planetInfoPanels;
     ConfirmSettingsScript settingsSwitcher;
+    TutorialScript tutorial;
+    uint planetClickSubscription;
     enum UI_Phase
     {
         PlanetInfo,
@@ -22,6 +24,7 @@ public class MenuScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        tutorial = GameObject.Find("Tutorial").GetComponent<TutorialScript>();
         titleText = GameObject.Find("3dPuzzleText");
         playButton = GameObject.Find("PlayButton");
         settingsButton = GameObject.Find("SettingsButton");
@@ -35,6 +38,7 @@ public class MenuScript : MonoBehaviour
         settingsButton.GetComponent<Button>().onClick.AddListener(SettingsTask);
         btmButton.GetComponent<Button>().onClick.AddListener(BackTask);
         exitButton.GetComponent<Button>().onClick.AddListener(ExitTask);
+        htpButton.GetComponent<Button>().onClick.AddListener(HowToPlayTask);
 
         btmButton.SetActive(false);
         solveButton.SetActive(false);
@@ -60,7 +64,17 @@ public class MenuScript : MonoBehaviour
         btmButton.SetActive(true);
 
         solarSystem.EnableSolarSystemPhase(true);
+        _CheckoutToSolarSystemPhase();
+    }
+    void _CheckoutToSolarSystemPhase()
+    {
         mainCamera.GoFree();
+        planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
+            (GameObject target) => 
+            { 
+                if (currentPhase == UI_Phase.SolarSystem)
+                    StartCoroutine(_WaitForCameraLock(target.GetComponent<PlanetScript>().GetIndex()));
+            });
         currentPhase = UI_Phase.SolarSystem;
     }
     void BackTask()
@@ -73,6 +87,7 @@ public class MenuScript : MonoBehaviour
                 btmButton.SetActive(false);
                 solarSystem.EnableSolarSystemPhase(false);
                 mainCamera.GoMenu();
+                tutorial.DisableTutorial();
                 break;
             case UI_Phase.PlanetInfo:
                 mainCamera.GoFree();
@@ -102,6 +117,11 @@ public class MenuScript : MonoBehaviour
         exitButton.SetActive(false);
         btmButton.SetActive(true);
         StartCoroutine(_WaitForCameraSettingsPhase());
+    }
+    void HowToPlayTask()
+    {
+        tutorial.EnableTutorial();
+        PlayTask();
     }
     void ExitTask()
     {
@@ -150,32 +170,10 @@ public class MenuScript : MonoBehaviour
         yield break;
     }
    
-    void _HandlePlanetClick()
-    {
-        if ((Input.touchCount == 1) && (Input.GetTouch(0).phase == TouchPhase.Began) && mainCamera.isCurrentPhase(CameraScript.Phase.Free)) //ReadyForLock())
-        {
-            Ray raycast = mainCamera.camera.ScreenPointToRay(Input.GetTouch(0).position);
-            RaycastHit raycastHit;
-            if (Physics.Raycast(raycast, out raycastHit, Mathf.Infinity))
-            {
-                Debug.DrawRay(transform.position, raycastHit.point, Color.red, 5f);
-                if (raycastHit.transform.gameObject.tag == "Planet")
-                {
-                    mainCamera.FocusOn(raycastHit.transform.gameObject);
-                    StartCoroutine(_WaitForCameraLock(raycastHit.transform.gameObject.GetComponent<PlanetScript>().GetIndex()));
-                }
-            }
-        }
-    }
+   
 
     // Update is called once per frame
     void Update()
     {
-        switch (currentPhase)
-        {
-            case UI_Phase.SolarSystem:
-                _HandlePlanetClick();
-                break;
-        }
     }
 }
