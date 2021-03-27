@@ -2832,7 +2832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
-  solarRotationSpeed: 7
+  solarRotationSpeed: 0.7
   distancingSpeed: 50
   planetIndex: 3
 --- !u!1 &436182697
@@ -20919,7 +20919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 50
-  zoomSpeed: 10
+  zoomSpeed: 80
   minSolarZoom: 30
   maxSolarZoom: 179.9
   minPlanetZoom: 7.5

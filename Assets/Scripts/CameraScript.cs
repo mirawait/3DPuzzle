@@ -44,6 +44,77 @@ public class CameraScript : MonoBehaviour
     {
         sun = GameObject.Find("Sun");
         camera = GetComponent<Camera>();
+        Action<SolarSystemController.Gestures> rotationHandler = (SolarSystemController.Gestures gesture) =>
+        {
+            if (currentPhase == Phase.Free || currentPhase == Phase.PlanetLock)
+            {
+                transform.LookAt(target.transform);
+                Vector3 direction = Vector3.zero;
+                switch (gesture)
+                {
+                    case SolarSystemController.Gestures.SwipeRight:
+                        direction = Vector3.right;
+                        break;
+                    case SolarSystemController.Gestures.SwipeLeft:
+                        direction = Vector3.left;
+                        break;
+                    case SolarSystemController.Gestures.SwipeUp:
+                        direction = Vector3.up;
+                        break;
+                    case SolarSystemController.Gestures.SwipeDown:
+                        direction = Vector3.down;
+                        break;
+                }
+                if (direction == Vector3.up || direction == Vector3.down)
+                {
+                    Vector3 lockTargetDirection = transform.position - target.transform.position;
+                    float angleY = Vector3.Angle(lockTargetDirection, Vector3.up);
+                    Debug.Log(CameraYLimitUp + "<" + angleY + "<" + CameraYLimitDown);
+                    if ((angleY < CameraYLimitUp && direction == Vector3.up) || (angleY > CameraYLimitDown && direction == Vector3.down))
+                    {
+                        return;
+                    }
+                }
+                transform.Translate(direction * Time.deltaTime * rotationSpeed);
+                //_FollowTarget();
+                transform.LookAt(target.transform);
+            }
+        };
+
+        Action<SolarSystemController.Gestures> zoomHandler = (SolarSystemController.Gestures gesture) =>
+        {
+            if (currentPhase == Phase.Free)
+            {
+                transform.LookAt(target.transform);
+                int deltaMagnitudeDiff = 0;
+                switch (gesture)
+                {
+                    case SolarSystemController.Gestures.Spread:
+                        deltaMagnitudeDiff = -1;
+                        break;
+                    case SolarSystemController.Gestures.Pinch:
+                        deltaMagnitudeDiff = 1;
+                        break;
+                }
+                Vector3 targetDirection = transform.position - target.transform.position;
+                targetDirection.Normalize();
+                Vector3 newPos = transform.position + targetDirection * deltaMagnitudeDiff * zoomSpeed * Time.deltaTime;
+                Vector3 newDirection = newPos - target.transform.position;
+                newDirection.Normalize();
+                float newDistance = Vector3.Distance(target.transform.position, newPos);
+                if (newDistance > currentMinZoom && newDistance < currentMaxZoom && targetDirection == newDirection)
+                    transform.position = newPos;
+                currentZoom = Vector3.Distance(transform.position, target.transform.position);
+            }
+        };
+
+        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.SwipeDown, rotationHandler);
+        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.SwipeLeft, rotationHandler);
+        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.SwipeRight, rotationHandler);
+        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.SwipeUp, rotationHandler);
+
+        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.Spread, zoomHandler);
+        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.Pinch, zoomHandler);
     }
     public void GoFree()
     {
@@ -60,9 +131,11 @@ public class CameraScript : MonoBehaviour
                 currentPhase = Phase.Free;
                 planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
                     (GameObject target) => 
-                        { 
-                            if (currentPhase == Phase.Free)
-                                FocusOn(target); 
+                        {
+                            if (currentPhase == Phase.Free && target.tag == "Planet")
+                            {
+                                FocusOn(target);
+                            }
                         });
             }));
     }
@@ -98,32 +171,40 @@ public class CameraScript : MonoBehaviour
             () =>
             {
                 currentPhase = Phase.PlanetLock;
+                StartCoroutine(_FollowTarget());
                 //planetClickSubscription = SolarSystemController.subscribeToPlanetClick((GameObject target) => { FocusOn(target); });
             }));
     }
 
-    void _FollowTarget()
+    IEnumerator _FollowTarget()
     {
-        float distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position),
-                  diffTargetDistance = currentZoom - distanceFromLockTarget;
-        Vector3 targetDir = (transform.position - target.transform.position);
-        targetDir.Normalize();
-        if (distanceFromLockTarget != currentZoom)
+        while (true)
         {
-            //Debug.Log("diffDistance" + diffTargetDistance);
-            Vector3 targetPos = transform.position + targetDir * diffTargetDistance;
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, target.GetComponent<PlanetScript>().solarRotationSpeed);
+            var multiplier = Vector3.Distance(camera.transform.position, sun.transform.position) / Vector3.Distance(target.transform.position, sun.transform.position);
+            transform.RotateAround(sun.transform.position, new Vector3(0, 1, 0), target.GetComponent<PlanetScript>().solarRotationSpeed * Time.deltaTime * multiplier);
+
+            //transform.LookAt(focusPoint);
+            float distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position),
+                      diffTargetDistance = currentZoom - distanceFromLockTarget;
+            Vector3 targetDir = (transform.position - target.transform.position);
+            targetDir.Normalize();
+            if (distanceFromLockTarget != currentZoom)
+            {
+                //Debug.Log("diffDistance" + diffTargetDistance);
+                Vector3 targetPos = transform.position + targetDir * diffTargetDistance;
+                transform.position = targetPos;//Vector3.MoveTowards(transform.position, targetPos, target.GetComponent<PlanetScript>().solarRotationSpeed);
+            }
+
+            Vector3 focusDir = targetDir;
+            focusDir.y = 0;
+            focusDir *= (targetDir.magnitude / focusDir.magnitude);
+            Vector3 focusPoint = Quaternion.AngleAxis(90, Vector3.up) * focusDir;
+            focusPoint = target.transform.position + new Vector3(focusPoint.x * focusOffset.x, focusPoint.y * focusOffset.y, focusPoint.z * focusOffset.z);
+            //focusSphere.transform.position = focusPoint;
+            
+            transform.LookAt(focusPoint);
+            yield return new WaitForSeconds(0.001f);
         }
-
-        Vector3 focusDir = targetDir;
-        focusDir.y = 0;
-        focusDir *= (targetDir.magnitude / focusDir.magnitude);
-        Vector3 focusPoint = Quaternion.AngleAxis(90, Vector3.up) * focusDir;
-        focusPoint = target.transform.position + new Vector3(focusPoint.x * focusOffset.x, focusPoint.y * focusOffset.y, focusPoint.z * focusOffset.z);
-        //focusSphere.transform.position = focusPoint;
-
-        transform.RotateAround(sun.transform.position, new Vector3(0, 1, 0), target.GetComponent<PlanetScript>().solarRotationSpeed * Time.deltaTime);
-        transform.LookAt(focusPoint);
     }
 
     IEnumerator _LockOnTargetTransition(float targetDistance, Vector3 targetAngle, Action onComplete)
@@ -172,10 +253,11 @@ public class CameraScript : MonoBehaviour
                 rotatedTo = transform.rotation == targetRot;
             }
             //transform.RotateAround(sun.transform.position, new Vector3(1, 0 ,0), rotationSpeed * 0.12f * Time.deltaTime);
+            transform.LookAt(target.transform);
 
-            
             if (movedTo && rotatedTo)
             {
+                
                 //currentPhase = targetPhase;
                 currentZoom = targetDistance;
                 Debug.Log("_LockOnTargetTransition end");
@@ -205,75 +287,7 @@ public class CameraScript : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
     }
-    void _HandleZoom()
-    {
-        if (Input.touchCount != 2)
-            return;
 
-        Touch touchZero = Input.GetTouch(0);
-        Touch touchOne = Input.GetTouch(1);
-
-        Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition,
-                touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
-        float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude,
-              touchDeltaMag = (touchZero.position - touchOne.position).magnitude,
-              deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-
-        if (deltaMagnitudeDiff > 0 && !TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraZoomOut)
-            || deltaMagnitudeDiff < 0 && !TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraZoomIn))
-            return;
-
-        Vector3 direction = transform.position - target.transform.position;
-        direction.Normalize();
-        Vector3 newPos = transform.position + direction * deltaMagnitudeDiff * zoomSpeed * Time.deltaTime;
-        Vector3 newDirection = newPos - target.transform.position;
-        newDirection.Normalize();
-        float newDistance = Vector3.Distance(target.transform.position, newPos);
-        if (newDistance > currentMinZoom && newDistance < currentMaxZoom && direction == newDirection)
-            transform.position = newPos;
-        currentZoom = Vector3.Distance(transform.position, target.transform.position);
-    }
-    void _HandleRotation()
-    {
-        if (Input.touchCount != 1)
-            return;
-        transform.LookAt(target.transform);
-
-        Touch touch = Input.GetTouch(0);
-
-        Vector2 deltaPos = touch.deltaPosition;
-
-        Vector3 moveDirection = new Vector3(0, 0, 0);
-
-        if (Mathf.Abs(deltaPos.x) > Mathf.Abs(deltaPos.y))
-        {
-            if (deltaPos.x < 0 && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationLeft))
-            {
-                moveDirection = Vector3.right;
-            }
-            else if (deltaPos.x > 0 && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationRight))
-            {
-                moveDirection = Vector3.left;
-            }
-        }
-        else
-        {
-            Vector3 direction = transform.position - target.transform.position;
-            float angleY = Vector3.Angle(direction, Vector3.up);
-            //Debug.Log("CameraYLimitUp = " + CameraYLimitUp);
-            if (deltaPos.y < 0 && angleY > CameraYLimitUp && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationDown))
-            {
-                moveDirection = Vector3.up;
-            }
-            else if (deltaPos.y > 0 && angleY < CameraYLimitDown && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationUp))
-            {
-                moveDirection = Vector3.down;
-            }
-        }
-        transform.Translate(moveDirection * Time.deltaTime * rotationSpeed);
-        transform.LookAt(target.transform);
-    }
     
 
     // Update is called once per frame
@@ -285,18 +299,18 @@ public class CameraScript : MonoBehaviour
         //    float angleY = Vector3.Angle(direction, Vector3.up);
         //    Debug.Log(angleY);
         //}
-        switch (currentPhase)
-        {
-            
-            case Phase.Free:
-                _HandleRotation();
-                _HandleZoom();
-                break;
-            case Phase.PlanetLock:
-                _HandleRotation();
-                _HandleZoom();
-                _FollowTarget();
-                break;
+        //switch (currentPhase)
+        //{
+        //    
+        //    case Phase.Free:
+                //_HandleRotation();
+                //_HandleZoom();
+        //        break;
+        //    case Phase.PlanetLock:
+                //_HandleRotation();
+                //_HandleZoom();
+                //_FollowTarget();
+        //        break;
         }
     }
 }

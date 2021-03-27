@@ -72,7 +72,7 @@ public class MenuScript : MonoBehaviour
         planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
             (GameObject target) => 
             { 
-                if (currentPhase == UI_Phase.SolarSystem)
+                if (currentPhase == UI_Phase.SolarSystem && target.tag == "Planet")
                     StartCoroutine(_WaitForCameraLock(target.GetComponent<PlanetScript>().GetIndex()));
             });
         currentPhase = UI_Phase.SolarSystem;
