@@ -2832,7 +2832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selfRotationSpeed: 5
-  solarRotationSpeed: 0.7
+  solarRotationSpeed: 7
   distancingSpeed: 50
   planetIndex: 3
 --- !u!1 &436182697
