@@ -311,6 +311,6 @@ public class CameraScript : MonoBehaviour
                 //_HandleZoom();
                 //_FollowTarget();
         //        break;
-        }
+        //}
     }
 }
