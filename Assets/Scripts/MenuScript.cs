@@ -69,7 +69,7 @@ public class MenuScript : MonoBehaviour
     void _CheckoutToSolarSystemPhase()
     {
         mainCamera.GoFree();
-        planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
+        planetClickSubscription = GesturesController.subscribeToPlanetClick(
             (GameObject target) => 
             { 
                 if (currentPhase == UI_Phase.SolarSystem && target.tag == "Planet")

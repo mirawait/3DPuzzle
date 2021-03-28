@@ -44,7 +44,7 @@ public class CameraScript : MonoBehaviour
     {
         sun = GameObject.Find("Sun");
         camera = GetComponent<Camera>();
-        Action<SolarSystemController.Gestures> rotationHandler = (SolarSystemController.Gestures gesture) =>
+        Action<GesturesController.Gestures> rotationHandler = (GesturesController.Gestures gesture) =>
         {
             if (currentPhase == Phase.Free || currentPhase == Phase.PlanetLock)
             {
@@ -52,16 +52,16 @@ public class CameraScript : MonoBehaviour
                 Vector3 direction = Vector3.zero;
                 switch (gesture)
                 {
-                    case SolarSystemController.Gestures.SwipeRight:
+                    case GesturesController.Gestures.SwipeRight:
                         direction = Vector3.right;
                         break;
-                    case SolarSystemController.Gestures.SwipeLeft:
+                    case GesturesController.Gestures.SwipeLeft:
                         direction = Vector3.left;
                         break;
-                    case SolarSystemController.Gestures.SwipeUp:
+                    case GesturesController.Gestures.SwipeUp:
                         direction = Vector3.up;
                         break;
-                    case SolarSystemController.Gestures.SwipeDown:
+                    case GesturesController.Gestures.SwipeDown:
                         direction = Vector3.down;
                         break;
                 }
@@ -81,7 +81,7 @@ public class CameraScript : MonoBehaviour
             }
         };
 
-        Action<SolarSystemController.Gestures> zoomHandler = (SolarSystemController.Gestures gesture) =>
+        Action<GesturesController.Gestures> zoomHandler = (GesturesController.Gestures gesture) =>
         {
             if (currentPhase == Phase.Free)
             {
@@ -89,10 +89,10 @@ public class CameraScript : MonoBehaviour
                 int deltaMagnitudeDiff = 0;
                 switch (gesture)
                 {
-                    case SolarSystemController.Gestures.Spread:
+                    case GesturesController.Gestures.Spread:
                         deltaMagnitudeDiff = -1;
                         break;
-                    case SolarSystemController.Gestures.Pinch:
+                    case GesturesController.Gestures.Pinch:
                         deltaMagnitudeDiff = 1;
                         break;
                 }
@@ -108,13 +108,13 @@ public class CameraScript : MonoBehaviour
             }
         };
 
-        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.SwipeDown, rotationHandler);
-        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.SwipeLeft, rotationHandler);
-        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.SwipeRight, rotationHandler);
-        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.SwipeUp, rotationHandler);
+        GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDown, rotationHandler);
+        GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeLeft, rotationHandler);
+        GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeRight, rotationHandler);
+        GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeUp, rotationHandler);
 
-        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.Spread, zoomHandler);
-        SolarSystemController.subscribeToGesture(SolarSystemController.Gestures.Pinch, zoomHandler);
+        GesturesController.subscribeToGesture(GesturesController.Gestures.Spread, zoomHandler);
+        GesturesController.subscribeToGesture(GesturesController.Gestures.Pinch, zoomHandler);
     }
     public void GoFree()
     {
@@ -129,7 +129,7 @@ public class CameraScript : MonoBehaviour
             () => 
             { 
                 currentPhase = Phase.Free;
-                planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
+                planetClickSubscription = GesturesController.subscribeToPlanetClick(
                     (GameObject target) => 
                         {
                             if (currentPhase == Phase.Free && target.tag == "Planet")
@@ -145,7 +145,7 @@ public class CameraScript : MonoBehaviour
         //transform.position = camStartPos.transform.position;
         //transform.rotation = camStartPos.transform.rotation;
         StopAllCoroutines();
-        SolarSystemController.unsubscribeToPlanetClick(planetClickSubscription);
+        GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
         StartCoroutine(_MoveToPoint(camStartPos.transform.position, camStartPos.transform.rotation, Phase.Menu));
     }
     public void GoSettings()

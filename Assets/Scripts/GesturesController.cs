@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SolarSystemController : MonoBehaviour
+public class GesturesController : MonoBehaviour
 {
     public enum Gestures
     {
@@ -15,11 +15,15 @@ public class SolarSystemController : MonoBehaviour
         SwipeLeft = 3,
         SwipeRight = 4,
         Pinch = 5,
-        Spread = 6, 
+        Spread = 6,
+        Tapping = 7,
+        Any = 8,
+        Ending
     }
     static Dictionary<uint, Action<GameObject>> subscriptionsOnObjectTaps = new Dictionary<uint, Action<GameObject>>();
     static Dictionary<uint, Tuple<Gestures, Action<Gestures>>> subscriptionsOnGestures = new Dictionary<uint, Tuple<Gestures, Action<Gestures>>>();
-    private CameraScript mainCamera;
+    CameraScript mainCamera;
+    static public bool isGestureGoing = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +65,10 @@ public class SolarSystemController : MonoBehaviour
             subscriptionsOnGestures.Remove(key);
         }
     }
+    static public bool IsGestureGoing()
+    {
+        return isGestureGoing;
+    }
 
     void _HandleObjectTap()
     {
@@ -88,12 +96,18 @@ public class SolarSystemController : MonoBehaviour
                 //}
             }
         }
+        
     }
     void _HandleSwipes()
     {
         Gestures gesture = Gestures.Undefined;
 
-        if (Input.touchCount == 1)
+        if (Input.touchCount == 0 && isGestureGoing)
+        {
+            isGestureGoing = false;
+            gesture = Gestures.Ending;
+        }
+        else if (Input.touchCount == 1)
         {
             Touch touch = Input.GetTouch(0);
             Vector2 deltaPos = touch.deltaPosition;

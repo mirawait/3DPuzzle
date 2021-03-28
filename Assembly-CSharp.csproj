@@ -59,11 +59,13 @@
     <Compile Include="Assets\Scripts\DificultySwitcherScript.cs" />
     <Compile Include="Assets\Scripts\ConfirmSettingsScript.cs" />
     <Compile Include="Assets\Resources\Scripts\PlanetPuzzle.cs" />
+    <Compile Include="Assets\Scripts\GesturesController.cs" />
     <Compile Include="Assets\Resources\Scripts\Puzzle.cs" />
     <Compile Include="Assets\Scripts\SoundSwitcherScript.cs" />
     <Compile Include="Assets\Scripts\SolarSystem.cs" />
     <Compile Include="Assets\Scripts\PlanetScript.cs" />
     <Compile Include="Assets\Resources\Scripts\Piece.cs" />
+    <Compile Include="Assets\Scripts\TapOnObjectTutorial.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\TutorialSwipes.cs" />
     <Compile Include="Assets\Scripts\TutorialScript.cs" />
@@ -73,8 +75,6 @@
     <Compile Include="Assets\Resources\Scripts\Hud.cs" />
     <Compile Include="Assets\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotatable.cs" />
-    <Compile Include="Assets\Scripts\TapOnObjectTutorial.cs" />
-    <Compile Include="Assets\Scripts\SolarSystemController.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

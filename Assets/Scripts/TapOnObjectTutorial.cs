@@ -35,7 +35,7 @@ public class TapOnObjectTutorial : MonoBehaviour
     public void DisableTutorial()
     {
         arrowPointer.SetActive(false);
-        SolarSystemController.unsubscribeToPlanetClick(planetClickSubscription);
+        GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
         currentStage = Stages.WaitingForStart;
     }
     public void StartNextStep()
@@ -47,7 +47,7 @@ public class TapOnObjectTutorial : MonoBehaviour
                 break;
             case Stages.Tapping:
                 arrowPointer.SetActive(true);
-                planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
+                planetClickSubscription = GesturesController.subscribeToPlanetClick(
                     (GameObject target) =>
                     {
                         if (target == targetObject)
@@ -57,7 +57,7 @@ public class TapOnObjectTutorial : MonoBehaviour
                 break;
             case Stages.End:
                 arrowPointer.SetActive(false);
-                SolarSystemController.unsubscribeToPlanetClick(planetClickSubscription);
+                GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
                 permitedActionSetter(TutorialScript.Actions.Any);
                 currentStage = Stages.WaitingForStart;
                 actionOnComplete();
