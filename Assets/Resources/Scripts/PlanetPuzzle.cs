@@ -17,16 +17,16 @@ public class PlanetPuzzle : MonoBehaviour
         public string outlineMeshResourceName;
         public string puzzleMeshResourceName;
 
-        public string outlineMaterialResourceName;
-        public string puzzleMaterialResourceName;
+        public Material outlineMaterial;
+        public Material puzzleMaterial;
     }
 
     public Error Init(Config config)
     {
         outlineMeshResourceName = config.outlineMeshResourceName;
         puzzleMeshResourceName = config.puzzleMeshResourceName;
-        outlineMaterialResourceName = config.outlineMaterialResourceName;
-        puzzleMaterialResourceName = config.puzzleMaterialResourceName;
+        outlineMaterial = config.outlineMaterial;
+        puzzleMaterial = config.puzzleMaterial;
 
         isInited = true;
 
@@ -55,15 +55,15 @@ public class PlanetPuzzle : MonoBehaviour
         Error error;
 
         error = CreatePlanetOutline();
-        if (Error.OK != error)
+        if (error != Error.OK)
             return error;
 
         error = CreatePuzzleFrame();
-        if (Error.OK != error)
+        if (error != Error.OK)
             return error;
 
         error = CreatePuzzle();
-        if (Error.OK != error)
+        if (error != Error.OK)
             return error;
 
         isSplitUp = true;
@@ -73,7 +73,7 @@ public class PlanetPuzzle : MonoBehaviour
 
     public bool IsPuzzleAssembled()
     {
-        if (null == puzzle)
+        if (puzzle == null)
             return false;
 
         return puzzle.GetComponent<Puzzle>().IsAssembled();
@@ -95,8 +95,8 @@ public class PlanetPuzzle : MonoBehaviour
     private string outlineMeshResourceName;
     private string puzzleMeshResourceName;
 
-    private string outlineMaterialResourceName;
-    private string puzzleMaterialResourceName;
+    private Material outlineMaterial;
+    private Material puzzleMaterial;
 
     private GameObject planetOutline;
     private GameObject puzzle;
@@ -116,20 +116,16 @@ public class PlanetPuzzle : MonoBehaviour
     {
         var prefab = Resources.Load(outlineMeshResourceName) as GameObject;
 
-        if (null == prefab)
+        if (prefab == null)
             return Error.CANNOT_LOAD_RESOURCE;
 
         planetOutline = Instantiate(prefab) as GameObject;
 
-        var material = Resources.Load(outlineMaterialResourceName) as Material;
-
-        if (null == material)
-            return Error.CANNOT_LOAD_RESOURCE;
-
-        planetOutline.GetComponent<Renderer>().material = material;
+        planetOutline.GetComponent<Renderer>().material = outlineMaterial;
 
         planetOutline.transform.position = transform.position;
         planetOutline.transform.rotation = transform.rotation;
+        planetOutline.transform.localScale = new Vector3(0.96f, 0.96f, 0.96f);
 
         SetRotatable(planetOutline);
 
@@ -140,7 +136,7 @@ public class PlanetPuzzle : MonoBehaviour
     {
         var prefab = Resources.Load(puzzleMeshResourceName) as GameObject;
 
-        if (null == prefab)
+        if (prefab == null)
             return Error.CANNOT_LOAD_RESOURCE;
 
         puzzleFrame = Instantiate(prefab) as GameObject;
@@ -157,7 +153,7 @@ public class PlanetPuzzle : MonoBehaviour
     {
         var prefab = Resources.Load(puzzleMeshResourceName) as GameObject;
 
-        if (null == prefab)
+        if (prefab == null)
             return Error.CANNOT_LOAD_RESOURCE;
 
         puzzle = Instantiate(prefab) as GameObject;
@@ -169,26 +165,19 @@ public class PlanetPuzzle : MonoBehaviour
 
         Puzzle.Config config;
 
-        config.materialResourceName = puzzleMaterialResourceName;
+        config.material = puzzleMaterial;
         config.planetOutline = planetOutline;
         config.puzzleFrame = puzzleFrame;
         config.pieceFitOnPos = CountPieceFitOnPos();
 
-        Puzzle.Error error;
-
-        error = puzzleScript.Init(config);
-        if (Puzzle.Error.OK != error)
-        {
-            if (Puzzle.Error.CANNOT_LOAD_RESOURCE == error)
-                return Error.CANNOT_LOAD_RESOURCE;
-        }
+        puzzleScript.Init(config);
 
         return Error.OK;
     }
 
     private Vector3 CountPieceFitOnPos()
     {
-        var outlineBounds = planetOutline.GetComponent<MeshFilter>().mesh.bounds.size.x * transform.localScale.x;
+        var outlineBounds = planetOutline.GetComponent<MeshFilter>().mesh.bounds.size.x;
         var currentPos = transform.position;
 
         return (new Vector3(currentPos.x, currentPos.y, currentPos.z - (outlineBounds / 2)));

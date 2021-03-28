@@ -3,15 +3,9 @@ using UnityEngine;
 
 public class Puzzle : MonoBehaviour
 {
-    public enum Error
-    {
-        OK,
-        CANNOT_LOAD_RESOURCE
-    }
-
     public struct Config
     {
-        public string materialResourceName;
+        public Material material;
 
         public GameObject planetOutline;
         public GameObject puzzleFrame;
@@ -19,9 +13,9 @@ public class Puzzle : MonoBehaviour
         public Vector3 pieceFitOnPos;
     }
 
-    public Error Init(Config config)
+    public void Init(Config config)
     {
-        materialResourceName = config.materialResourceName;
+        material = config.material;
         puzzleFrame = config.puzzleFrame;
         planetOutline = config.planetOutline;
         pieceFitOnPos = config.pieceFitOnPos;
@@ -30,25 +24,18 @@ public class Puzzle : MonoBehaviour
         puzzleFramePieces = ExtractPieces(puzzleFrame);
         fitPieces = new List<GameObject>();
 
-        Error error;
-
-        error = InitPieces();
-        if (Error.OK != error)
-            return error;
-
+        InitPieces();
         InitHud();
 
         puzzleFrame.GetComponent<Rotatable>().Permit();
         planetOutline.GetComponent<Rotatable>().Permit();
 
         isInited = true;
-
-        return Error.OK;
     }
 
     public bool IsAssembled()
     {
-        return (0 == pieces.Count);
+        return (pieces.Count == 0);
     }
 
     void Start()
@@ -73,7 +60,7 @@ public class Puzzle : MonoBehaviour
     private System.DateTime lastMouseUpDateTime;
     private int mouseClickCount = 0;
 
-    private string materialResourceName;
+    private Material material;
 
     private GameObject hud;
 
@@ -100,7 +87,7 @@ public class Puzzle : MonoBehaviour
         return pieces;
     }
 
-    private Error InitPieces()
+    private void InitPieces()
     {
         var pieceZoomablePos = CountPieceZoomablePos();
         var pieceTravelSpeed = CountPieceTravelSpeed();
@@ -113,7 +100,7 @@ public class Puzzle : MonoBehaviour
 
             Piece.Config config;
 
-            config.materialResourceName = materialResourceName;
+            config.material = material;
             config.twin = puzzleFramePieces[i];
             config.centerPos = transform.position;
             config.zoomablePos = pieceZoomablePos;
@@ -122,17 +109,8 @@ public class Puzzle : MonoBehaviour
             config.maxZoomIn = pieceMaxZoomIn;
             config.maxZoomOut = 0;
 
-            Piece.Error error;
-
-            error = pieceScript.Init(config);
-            if (Piece.Error.OK != error)
-            {
-                if (Piece.Error.CANNOT_LOAD_RESOURCE == error)
-                    return Error.CANNOT_LOAD_RESOURCE;
-            }
+            pieceScript.Init(config);
         }
-
-        return Error.OK;
     }
 
     private void InitHud()
@@ -189,35 +167,35 @@ public class Puzzle : MonoBehaviour
 #if UNITY_ANDROID
         if (Input.touchCount == 1)
         {
-            //Touch touch = Input.GetTouch(0);
+            Touch touch = Input.GetTouch(0);
 
-            //if (touch.phase == TouchPhase.Began)
-            //{
-            //    lastMouseDownDateTime = System.DateTime.Now;
-            //}
+            if (touch.phase == TouchPhase.Began)
+            {
+                lastMouseDownDateTime = System.DateTime.Now;
+            }
 
-            //if (touch.phase == TouchPhase.Ended)
-            //{
-            //    mouseClickCount++;
+            if (touch.phase == TouchPhase.Ended)
+            {
+                mouseClickCount++;
 
-            //    if ((System.DateTime.Now - lastMouseDownDateTime) < mouseClickInterval)
-            //    {
-            //        HandleMouseUp();
-            //    }
+                if ((System.DateTime.Now - lastMouseDownDateTime) < mouseClickInterval)
+                {
+                    HandleMouseUp();
+                }
 
-            //    lastMouseUpDateTime = System.DateTime.Now;
-            //}
-            //else
-            //{
-            //    if ((System.DateTime.Now - lastMouseUpDateTime) >= mouseDoubleClickInterval)
-            //    {
-            //        mouseClickCount = 0;
-            //    }
-            //}
+                lastMouseUpDateTime = System.DateTime.Now;
+            }
+            else
+            {
+                if ((System.DateTime.Now - lastMouseUpDateTime) >= mouseDoubleClickInterval)
+                {
+                    mouseClickCount = 0;
+                }
+            }
 
-            mouseClickCount = Input.GetTouch(0).tapCount;
+            //mouseClickCount = Input.GetTouch(0).tapCount;
 
-            HandleMouseUp();
+            //HandleMouseUp();
         }
 #endif
     }
@@ -225,7 +203,7 @@ public class Puzzle : MonoBehaviour
     private void HandleMouseUp()
     {
         var clickedPiece = DetectClickedPiece();
-        Debug.Log(clickedPiece);
+
         if (clickedPiece != null)
         {
             HandlePieceClicked(clickedPiece);
@@ -244,17 +222,18 @@ public class Puzzle : MonoBehaviour
 
 #if UNITY_ANDROID
         Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-        //Debug.Log(Input.GetTouch(0).position);
 #endif
 
-        RaycastHit hit;
-
         GameObject clickedPiece = null;
+
+        RaycastHit hit;
         Physics.Raycast(Camera.main.transform.position, ray.direction, out hit, Mathf.Infinity);
+
         //if (gameObject.GetComponent<LineRenderer>() != null)
         //{
         //    Destroy(gameObject.GetComponent<LineRenderer>());
         //}
+
         //LineRenderer line = gameObject.AddComponent<LineRenderer>();
         //line.material = new Material(Shader.Find("Sprites/Default"));
         //line.positionCount = 2;
@@ -268,20 +247,24 @@ public class Puzzle : MonoBehaviour
         //{
         //    hit.transform.gameObject.SetActive(false);
         //}
+
         //if (hit.transform != null)
         //{
         //    pieces[0].SetActive(false);
         //}
+
         //Debug.DrawRay(Camera.main.transform.position, ray.direction, Color.green, Mathf.Infinity);
-        //Debug.Log(hit.transform.gameObject);
+
         foreach (var piece in pieces)
         {
             //Physics.Raycast(ray, out hit);
+
             //if (hit.transform.gameObject && piece == hit.transform.gameObject) 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity) && piece.Equals(hit.transform.gameObject))
             {
                 clickedPiece = piece;
                 //clickedPiece.SetActive(false);
+
                 break;
             }
         }
@@ -291,16 +274,19 @@ public class Puzzle : MonoBehaviour
     private void HandlePieceClicked(GameObject clickedPiece)
     {
         if (!clickedPiece.GetComponent<Renderer>().enabled
-            || (Piece.Condition.SELECTED == clickedPiece.GetComponent<Piece>().GetCondition())
-            || (Piece.Condition.FIT == clickedPiece.GetComponent<Piece>().GetCondition()))
+            || (clickedPiece.GetComponent<Piece>().GetCondition() == Piece.Condition.SELECTED)
+            || (clickedPiece.GetComponent<Piece>().GetCondition() == Piece.Condition.FIT))
         {
             return;
         }
 
-        if (clickedPiece != currentPiece)
+        if (currentPiece != clickedPiece)
         {
-            if (null != currentPiece)
+            if (currentPiece != null)
             {
+                if (currentPiece.GetComponent<Piece>().IsTravelling())
+                    return;
+
                 currentPiece.GetComponent<Piece>().Release();
             }
 
@@ -316,7 +302,7 @@ public class Puzzle : MonoBehaviour
         {
             var pieceScript = currentPiece.GetComponent<Piece>();
 
-            if (Piece.Condition.FOCUSED == pieceScript.GetCondition())
+            if (pieceScript.GetCondition() == Piece.Condition.FOCUSED)
             {
                 if (!pieceScript.Select())
                     return;
@@ -329,7 +315,7 @@ public class Puzzle : MonoBehaviour
 
     private void HandlePieceMisclicked()
     {
-        if (null == currentPiece)
+        if (currentPiece == null)
         {
             if (mouseClickCount == 2)
             {
@@ -369,12 +355,12 @@ public class Puzzle : MonoBehaviour
 
     private void HandleCurrentPiece()
     {
-        if (null == currentPiece)
+        if (currentPiece == null)
             return;
 
         var pieceScript = currentPiece.GetComponent<Piece>();
 
-        if (Piece.Condition.SELECTED == pieceScript.GetCondition())
+        if (pieceScript.GetCondition() == Piece.Condition.SELECTED)
         {
             if (pieceScript.GetComponent<Piece>().TryFit())
             {
@@ -419,7 +405,7 @@ public class Puzzle : MonoBehaviour
             case 24:
                 return 30.0f;
             case 96:
-                return 20.0f;
+                return 15.0f;
         }
     }
 

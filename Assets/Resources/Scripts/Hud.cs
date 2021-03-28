@@ -104,13 +104,14 @@ public class Hud : MonoBehaviour
 
         // 6 'cells' for currently selectable pieces
         piecesStandPos = new List<Vector3>(new Vector3[]{
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 6, Screen.height - (1 * (Screen.height / 4)), pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 6, Screen.height - (2 * (Screen.height / 4)), pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 6, Screen.height - (3 * (Screen.height / 4)), pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 6, 1 * (Screen.height / 3), pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 6, 2 * (Screen.height / 3), pieceDistanceToCamera)),
 
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - (Screen.width / 6), Screen.height - (1 * (Screen.height / 4)), pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - (Screen.width / 6), Screen.height - (2 * (Screen.height / 4)), pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width - (Screen.width / 6), Screen.height - (3 * (Screen.height / 4)), pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(5 * (Screen.width / 6), 1 * (Screen.height / 3), pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(5 * (Screen.width / 6), 2 * (Screen.height / 3), pieceDistanceToCamera)),
+
+            Camera.main.ScreenToWorldPoint(new Vector3(3 * (Screen.width / 8), Screen.height / 7, pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(5 * (Screen.width / 8), Screen.height / 7, pieceDistanceToCamera)),
         });
     }
 
@@ -122,11 +123,11 @@ public class Hud : MonoBehaviour
         {
             case 6:
             default:
-                return 15;
+                return 10.0f;
             case 24:
-                return 10;
+                return 6.0f;
             case 96:
-                return 5;
+                return 3.5f;
         }
     }
 }

@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class Piece : MonoBehaviour
 {
-    public enum Error
-    {
-        OK,
-        CANNOT_LOAD_RESOURCE,
-    }
-
     public enum Condition
     {
         RELEASED,
@@ -20,7 +14,7 @@ public class Piece : MonoBehaviour
 
     public struct Config
     {
-        public string materialResourceName;
+        public Material material;
 
         public GameObject twin;
 
@@ -34,9 +28,9 @@ public class Piece : MonoBehaviour
         public float maxZoomOut;
     }
 
-    public Error Init(Config config)
+    public void Init(Config config)
     {
-        materialResourceName = config.materialResourceName;
+        material = config.material;
         twin = config.twin;
         centerPos = config.centerPos;
         zoomablePos = config.zoomablePos;
@@ -45,12 +39,7 @@ public class Piece : MonoBehaviour
         maxZoomIn = config.maxZoomIn;
         maxZoomOut = config.maxZoomOut;
 
-        Error error;
-
-        error = SetMaterial();
-        if (Error.OK != error)
-            return error;
-
+        SetMaterial();
         SetCollider();
         SetZoomable();
         SetRotatable();
@@ -64,13 +53,16 @@ public class Piece : MonoBehaviour
         SetCondition(Condition.RELEASED);
 
         isInited = true;
-
-        return Error.OK;
     }
 
     public Condition GetCondition()
     {
         return condition;
+    }
+
+    public bool IsTravelling()
+    {
+        return isTravelling;
     }
 
     public void MoveToStand(Vector3 standPos)
@@ -141,7 +133,7 @@ public class Piece : MonoBehaviour
 
     public bool TryFit()
     {
-        if (Condition.FIT == condition)
+        if (condition == Condition.FIT)
             return true;
 
         if (IsFitToTwin())
@@ -187,14 +179,14 @@ public class Piece : MonoBehaviour
     }
 
     private const float straightenSpeed = 1000.0f;
-    private const float maxFitDistanceFault = 0.2f;
-    private const float maxFitAngleFault = 10.0f;
+    private const float maxFitDistanceFault = 0.25f;
+    private const float maxFitAngleFault = 15.0f;
 
     private bool isInited = false;
     private bool isTravelling = false;
     private bool isStraightening = false;
 
-    private string materialResourceName;
+    private Material material;
 
     private GameObject twin;
 
@@ -213,16 +205,9 @@ public class Piece : MonoBehaviour
 
     private Quaternion defaultRotation;
 
-    private Error SetMaterial()
+    private void SetMaterial()
     {
-        var material = Resources.Load(materialResourceName) as Material;
-
-        if (null == material)
-            return Error.CANNOT_LOAD_RESOURCE;
-
         GetComponent<Renderer>().material = material;
-
-        return Error.OK;
     }
 
     private void SetCollider()
@@ -267,7 +252,7 @@ public class Piece : MonoBehaviour
 
     private bool IsFitToTwin()
     {
-        if (Condition.SELECTED != condition)
+        if (condition != Condition.SELECTED)
             return false;
 
         if ((Vector3.Distance(transform.position, twin.transform.position) > maxFitDistanceFault)
@@ -281,7 +266,7 @@ public class Piece : MonoBehaviour
 
     private void HandleCondition()
     {
-        if (Condition.FIT == condition)
+        if (condition == Condition.FIT)
         {
             RepeatAfterTwin();
         }

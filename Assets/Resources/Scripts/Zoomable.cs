@@ -42,7 +42,7 @@ public class Zoomable : MonoBehaviour
         HandleInput();
     }
 
-    private const float zoomSpeed = 0.1f;
+    private const float zoomSpeed = 0.01f;
 
     private bool isInited = false;
     private bool isPermited = false;
@@ -55,33 +55,33 @@ public class Zoomable : MonoBehaviour
     {
         if (isPermited)
         {
-#if UNITY_STANDALONE
-            int zoomDir = 0;
+        #if UNITY_STANDALONE
+                    int zoomDir = 0;
 
-            if (Input.GetAxis("Mouse ScrollWheel") > 0)
-                zoomDir = -1;
-            else if (Input.GetAxis("Mouse ScrollWheel") < 0)
-                zoomDir = 1;
+                    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                        zoomDir = -1;
+                    else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                        zoomDir = 1;
 
-            Zoom(zoomDir);
-#endif
+                    Zoom(zoomDir);
+        #endif
 
-#if UNITY_ANDROID
-            if (Input.touchCount == 2)
-            {
-                Touch touchZero = Input.GetTouch(0);
-                Touch touchOne = Input.GetTouch(1);
+        #if UNITY_ANDROID
+                    if (Input.touchCount == 2)
+                    {
+                        Touch touchZero = Input.GetTouch(0);
+                        Touch touchOne = Input.GetTouch(1);
 
-                Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-                Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+                        Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+                        Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 
-                float prevTouchDeltaMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-                float touchDeltaMagnitude = (touchZero.position - touchOne.position).magnitude;
-                float zoomDir = prevTouchDeltaMagnitude - touchDeltaMagnitude;
+                        float prevTouchDeltaMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+                        float touchDeltaMagnitude = (touchZero.position - touchOne.position).magnitude;
+                        float zoomDir = prevTouchDeltaMagnitude - touchDeltaMagnitude;
 
-                Zoom((int) zoomDir);
-            }
-#endif
+                        Zoom((int) zoomDir);
+                    }
+        #endif
         }
     }
 

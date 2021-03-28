@@ -10,13 +10,13 @@ public class Manager : MonoBehaviour
         MERCURY,
         VENUS,
         EARTH,
-        MOON,
         MARS,
-        //JUPITER,
-        //SATURN,
-        //URANUS,
-        //NEPTUNE,
-        //PLUTO
+        JUPITER,
+        SATURN,
+        URANUS,
+        NEPTUNE,
+        PLUTO,
+        MOON,
     }
 
     public enum PuzzleLevel
@@ -29,53 +29,55 @@ public class Manager : MonoBehaviour
     public PlanetType planetType = PlanetType.EARTH;
     public PuzzleLevel puzzleLevel = PuzzleLevel.PUZZLE_24_PARTS;
 
+    /*private string log;
+    private const int MAXCHARS = 10000;
+    private Queue myLogQueue = new Queue();*/
+
     private bool isPlanetPuzzleSplitUp = false;
     private bool isEnd = false;
     private GameObject planetPuzzle;
+    private GameObject targetGameObject;
 
-    void Start()
+
+    public void Start()
     {
+        if (targetGameObject == null)
+            targetGameObject = GameObject.FindWithTag("Text");
+        if (targetGameObject != null)
+            targetGameObject.SetActive(false);
+
         PlanetPuzzle.Config config;
-        Material material;
 
         switch (planetType)
         {
+            default:
+                config.outlineMaterial = Resources.Load("Materials/EarthTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/EarthOpaque") as Material;
+                break;
             case PlanetType.SUN:
-                config.outlineMaterialResourceName = "Materials/SunTransparent";
-                config.puzzleMaterialResourceName = "Materials/SunOpaque";
-                material = Resources.Load("Materials/SunOpaque") as Material;
+                config.outlineMaterial = Resources.Load("Materials/SunTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/SunOpaque") as Material;
                 break;
             case PlanetType.MERCURY:
-                config.outlineMaterialResourceName = "Materials/MercuryTransparent";
-                config.puzzleMaterialResourceName = "Materials/MercuryOpaque";
-                material = Resources.Load("Materials/MercuryOpaque") as Material;
+                config.outlineMaterial = Resources.Load("Materials/MercuryTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/MercuryOpaque") as Material;
                 break;
             case PlanetType.VENUS:
-                config.outlineMaterialResourceName = "Materials/VenusTransparent";
-                config.puzzleMaterialResourceName = "Materials/VenusOpaque";
-                material = Resources.Load("Materials/VenusOpaque") as Material;
-                break;
-            case PlanetType.EARTH:
-            default:
-                config.outlineMaterialResourceName = "Materials/EarthTransparent";
-                config.puzzleMaterialResourceName = "Materials/EarthOpaque";
-                material = Resources.Load("Materials/EarthOpaque") as Material;
+                config.outlineMaterial = Resources.Load("Materials/VenusTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/VenusOpaque") as Material;
                 break;
             case PlanetType.MOON:
-                config.outlineMaterialResourceName = "Materials/MoonTransparent";
-                config.puzzleMaterialResourceName = "Materials/MoonOpaque";
-                material = Resources.Load("Materials/MoonOpaque") as Material;
+                config.outlineMaterial = Resources.Load("Materials/MoonTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/MoonOpaque") as Material;
                 break;
             case PlanetType.MARS:
-                config.outlineMaterialResourceName = "Materials/MarsTransparent";
-                config.puzzleMaterialResourceName = "Materials/MarsOpaque";
-                material = Resources.Load("Materials/MarsOpaque") as Material;
+                config.outlineMaterial = Resources.Load("Materials/MarsTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/MarsOpaque") as Material;
                 break;
         }
 
         switch (puzzleLevel)
         {
-            case PuzzleLevel.PUZZLE_6_PARTS:
             default:
                 config.puzzleMeshResourceName = "Meshes/DividedBy6Planet";
                 break;
@@ -90,7 +92,7 @@ public class Manager : MonoBehaviour
         var prefab = Resources.Load("Meshes/WholePlanet") as GameObject;
         planetPuzzle = Instantiate(prefab) as GameObject;
 
-        planetPuzzle.GetComponent<Renderer>().material = material;
+        planetPuzzle.GetComponent<Renderer>().material = config.puzzleMaterial;
 
         var cameraPos = Camera.main.transform.position;
         planetPuzzle.transform.position = new Vector3(cameraPos.x, cameraPos.y, cameraPos.z + 6);
@@ -104,13 +106,21 @@ public class Manager : MonoBehaviour
 
     void Update()
     {
+
+
         if (isEnd)
+        {
             return;
+        }
+
+            
 
         if (!isEnd)
         {
             if (planetPuzzle.GetComponent<PlanetPuzzle>().IsPuzzleAssembled())
             {
+                if (targetGameObject != null)
+                    targetGameObject.SetActive(true);
                 print("victory!");
                 isEnd = true;
                 return;
@@ -127,4 +137,6 @@ public class Manager : MonoBehaviour
             }
         }
     }
+
+ 
 }

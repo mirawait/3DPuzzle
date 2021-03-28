@@ -23,7 +23,7 @@ public class Rotatable : MonoBehaviour
         HandleInput();
     }
 
-    private const float rotationSpeed = 3.0f;
+    private const float rotationSpeed = 3f;
 
     private bool isPermited = false;
 
@@ -51,9 +51,10 @@ public class Rotatable : MonoBehaviour
             }
 #endif
 
-#if UNITY_ANDROID
+
             int rotationDirX = 0;
             int rotationDirY = 0;
+            int rotationDirZ = 0;
 
             if (Input.touchCount == 1)
             {
@@ -61,9 +62,12 @@ public class Rotatable : MonoBehaviour
 
                 Vector2 deltaPos = touch.deltaPosition;
                 Vector3 moveDirection = new Vector3(0, 0, 0);
+                Vector3 axis = Vector3.zero;
+
 
                 if (Mathf.Abs(deltaPos.x) > Mathf.Abs(deltaPos.y))
                 {
+                    axis = Vector3.left;
                     if (deltaPos.x < 0)
                     {
                         rotationDirY = 1;
@@ -73,8 +77,9 @@ public class Rotatable : MonoBehaviour
                         rotationDirY = -1;
                     }
                 }
-                else
+                if (Mathf.Abs(deltaPos.x) < Mathf.Abs(deltaPos.y))
                 {
+                    axis = Vector3.left;
                     if (deltaPos.y < 0)
                     {
                         rotationDirX = -1;
@@ -85,14 +90,63 @@ public class Rotatable : MonoBehaviour
                     }
                 }
 
-                Rotate(rotationDirX, rotationDirY);
+                if (Mathf.Abs(deltaPos.x) == Mathf.Abs(deltaPos.y))
+                {
+                    axis = Vector3.left;
+                    if (deltaPos.y < 0)
+                    {
+                        rotationDirY = 1;
+                        rotationDirX = -1;
+                    }
+                    else if (deltaPos.y > 0)
+                    {
+                        rotationDirY = -1;
+                        rotationDirX = 1;
+                    }
+                }
+                Rotate(rotationDirX, rotationDirY, rotationDirZ);
+
             }
-#endif
+            else if (Input.touchCount == 2)
+            {
+                Touch touch0 = Input.GetTouch(0);
+                Touch touch1 = Input.GetTouch(1);
+
+                Vector2 deltaPos0 = touch0.deltaPosition;
+                Vector2 deltaPos1 = touch1.deltaPosition;
+
+                Vector3 moveDirection = new Vector3(0, 0, 0);
+                Vector3 axis = Vector3.zero;
+
+
+                
+                    if ((deltaPos0.y < 0) && (deltaPos1.y > 0))
+                    {
+                        rotationDirZ = 1;
+                    }
+                    else if ((deltaPos0.y > 0) && (deltaPos1.y < 0))
+                    {
+                        rotationDirZ = -1;
+                    }
+                
+
+                
+                Rotate(rotationDirX, rotationDirY, rotationDirZ);
+            }
+
         }
     }
 
-    void Rotate(int dirX, int dirY)
+    void Rotate(int dirX, int dirY, int dirZ)
     {
-        transform.Rotate(dirX * rotationSpeed, dirY * rotationSpeed, 0, Space.World);
+        transform.Rotate(dirX * rotationSpeed, dirY * rotationSpeed, rotationSpeed * dirZ, Space.World);
+
+        //transform.Rotate(0f, dirY * rotationSpeed, 0f, Space.World);
+       // transform.Rotate(dirX * rotationSpeed, 0f, 0f, Space.World);
+
+        //transform.Rotate(-Vector3.left, rotationSpeed * dirX);
+        //transform.Rotate(0f,0f , rotationSpeed * dirZ, Space.World);
+
+
     }
 }
