@@ -1,90 +1,88 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Manager : MonoBehaviour
 {
-    public enum PlanetType
-    {
-        SUN,
-        MERCURY,
-        VENUS,
-        EARTH,
-        MARS,
-        JUPITER,
-        SATURN,
-        URANUS,
-        NEPTUNE,
-        PLUTO,
-        MOON,
-    }
+    //Planets
+        //0 - SUN,
+        //1 - MERCURY,
+        //2 - VENUS,
+        //3 - EARTH,
+        //4 - MOON,
+        //5 - MARS,
+        //6 - JUPITER,
+        //7 - SATURN,
+        //8 - URANUS,
+        //9 - NEPTUNE,
+        //10 - PLUTO
 
-    public enum PuzzleLevel
-    {
-        PUZZLE_6_PARTS,
-        PUZZLE_24_PARTS,
-        PUZZLE_96_PARTS
-    }
-
-    public PlanetType planetType = PlanetType.EARTH;
-    public PuzzleLevel puzzleLevel = PuzzleLevel.PUZZLE_24_PARTS;
-
-    /*private string log;
-    private const int MAXCHARS = 10000;
-    private Queue myLogQueue = new Queue();*/
+    //Parts
+        //0 - PUZZLE_6_PARTS,
+        //1 - PUZZLE_24_PARTS,
+        //2 - PUZZLE_96_PARTS
+        
 
     private bool isPlanetPuzzleSplitUp = false;
     private bool isEnd = false;
     private GameObject planetPuzzle;
     private GameObject targetGameObject;
 
+    //void Start() 
+    //{
+    //    Start_Puzzles(2, 0);
+    //}
 
-    public void Start()
+    void Start_Puzzles(int PlanetType, int PuzzleLevel)
     {
         if (targetGameObject == null)
             targetGameObject = GameObject.FindWithTag("Text");
         if (targetGameObject != null)
             targetGameObject.SetActive(false);
 
+        //Debug.Log("Screen logger started");
+
         PlanetPuzzle.Config config;
 
-        switch (planetType)
+        switch (PlanetType)
         {
+            case 0:
+                config.outlineMaterial = Resources.Load("Materials/SunTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/SunOpaque") as Material;
+                break;
+            case 1:
+                config.outlineMaterial = Resources.Load("Materials/MercuryTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/MercuryOpaque") as Material;
+                break;
+            case 2:
+                config.outlineMaterial = Resources.Load("Materials/VenusTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/VenusOpaque") as Material;
+                break;
+            case 3:
             default:
                 config.outlineMaterial = Resources.Load("Materials/EarthTransparent") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/EarthOpaque") as Material;
                 break;
-            case PlanetType.SUN:
-                config.outlineMaterial = Resources.Load("Materials/SunTransparent") as Material;
-                config.puzzleMaterial = Resources.Load("Materials/SunOpaque") as Material;
-                break;
-            case PlanetType.MERCURY:
-                config.outlineMaterial = Resources.Load("Materials/MercuryTransparent") as Material;
-                config.puzzleMaterial = Resources.Load("Materials/MercuryOpaque") as Material;
-                break;
-            case PlanetType.VENUS:
-                config.outlineMaterial = Resources.Load("Materials/VenusTransparent") as Material;
-                config.puzzleMaterial = Resources.Load("Materials/VenusOpaque") as Material;
-                break;
-            case PlanetType.MOON:
+            case 4:
                 config.outlineMaterial = Resources.Load("Materials/MoonTransparent") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/MoonOpaque") as Material;
                 break;
-            case PlanetType.MARS:
+            case 5:
                 config.outlineMaterial = Resources.Load("Materials/MarsTransparent") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/MarsOpaque") as Material;
                 break;
         }
 
-        switch (puzzleLevel)
+        switch (PuzzleLevel)
         {
+            case 0:
             default:
                 config.puzzleMeshResourceName = "Meshes/DividedBy6Planet";
                 break;
-            case PuzzleLevel.PUZZLE_24_PARTS:
+            case 1:
                 config.puzzleMeshResourceName = "Meshes/DividedBy24Planet";
                 break;
-            case PuzzleLevel.PUZZLE_96_PARTS:
+            case 2:
                 config.puzzleMeshResourceName = "Meshes/DividedBy96Planet";
                 break;
         }
@@ -106,7 +104,10 @@ public class Manager : MonoBehaviour
 
     void Update()
     {
-
+        /*while (myLogQueue.Count > 0)
+            log = myLogQueue.Dequeue() + log;
+        if (log.Length > MAXCHARS)
+            log = log.Substring(0, MAXCHARS);*/
 
         if (isEnd)
         {
@@ -138,5 +139,25 @@ public class Manager : MonoBehaviour
         }
     }
 
- 
+    /*void OnEnable()
+    {
+        Application.logMessageReceived += HandleLog;
+    }
+
+    void OnDisable()
+    {
+        Application.logMessageReceived -= HandleLog;
+    }
+
+    void HandleLog(string logString, string stackTrace, LogType type)
+    {
+        myLogQueue.Enqueue("\n [" + type + "] : " + logString);
+        if (type == LogType.Exception)
+            myLogQueue.Enqueue("\n" + stackTrace);
+    }
+
+    void OnGUI()
+    {
+        GUILayout.Label(log);
+    }*/
 }
