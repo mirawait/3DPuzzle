@@ -18,9 +18,9 @@ public class Manager : MonoBehaviour
         //10 - PLUTO
 
     //Parts
-        //0 - PUZZLE_6_PARTS,
-        //1 - PUZZLE_24_PARTS,
-        //2 - PUZZLE_96_PARTS
+        //0 - 6_PARTS,
+        //1 - 24_PARTS,
+        //2 - 96_PARTS
         
 
     private bool isPlanetPuzzleSplitUp = false;
