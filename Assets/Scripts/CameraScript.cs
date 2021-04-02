@@ -16,6 +16,7 @@ public class CameraScript : MonoBehaviour
                  CameraYLimitDown = 90;
     public Vector3 focusOffset;
     public GameObject camStartPos, camSettingsPos;
+    
     public enum Phase
     {
         Menu,
@@ -28,6 +29,7 @@ public class CameraScript : MonoBehaviour
         GoingFree,
         GoingPlanetLock
     }
+    private IEnumerator curentCoroutine;
     private Phase currentPhase = Phase.Menu;
     private float currentMaxZoom,
                   currentMinZoom,
@@ -125,35 +127,38 @@ public class CameraScript : MonoBehaviour
         target = sun;
 
         Debug.Log("Going free");
-        StopAllCoroutines();
-        StartCoroutine(_LockOnTargetTransition(maxSolarZoom, new Vector3(0, 60, 0), 
-            () => 
-            { 
+        StopCoroutine(curentCoroutine);
+        curentCoroutine = _LockOnTargetTransition(maxSolarZoom, new Vector3(0, 60, 0),
+            () =>
+            {
                 currentPhase = Phase.Free;
                 planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
-                    (GameObject target) => 
+                    (GameObject target) =>
+                    {
+                        if (currentPhase == Phase.Free && target.tag == "Planet")
                         {
-                            if (currentPhase == Phase.Free && target.tag == "Planet")
-                            {
-                                FocusOn(target);
-                            }
-                        });
-            }));
+                            FocusOn(target);
+                        }
+                    });
+            });
+        StartCoroutine(curentCoroutine);
     }
     public void GoMenu()
     {
         currentPhase = Phase.GoingMenu;
         //transform.position = camStartPos.transform.position;
         //transform.rotation = camStartPos.transform.rotation;
-        StopAllCoroutines();
+        StopCoroutine(curentCoroutine);
+        curentCoroutine = _MoveToPoint(camStartPos.transform.position, camStartPos.transform.rotation, Phase.Menu);
         SolarSystemController.unsubscribeToPlanetClick(planetClickSubscription);
-        StartCoroutine(_MoveToPoint(camStartPos.transform.position, camStartPos.transform.rotation, Phase.Menu));
+        StartCoroutine(curentCoroutine);
     }
     public void GoSettings()
     {
         currentPhase = Phase.GoingSettings;
-        StopAllCoroutines();
-        StartCoroutine(_MoveToPoint(camSettingsPos.transform.position, camSettingsPos.transform.rotation, Phase.Settings));
+        StopCoroutine(curentCoroutine);
+        curentCoroutine = _MoveToPoint(camSettingsPos.transform.position, camSettingsPos.transform.rotation, Phase.Settings);
+        StartCoroutine(curentCoroutine);
     }
     
     public bool isCurrentPhase(Phase phase)
@@ -168,31 +173,35 @@ public class CameraScript : MonoBehaviour
         target = newTarget;
 
         Debug.Log("Going planet lock");
-        StartCoroutine(_LockOnTargetTransition(maxPlanetZoom, new Vector3(0, 90, 0), 
+        curentCoroutine = _LockOnTargetTransition(maxPlanetZoom, new Vector3(0, 90, 0),
             () =>
             {
                 currentPhase = Phase.PlanetLock;
-                StartCoroutine(_FollowTarget());
+                curentCoroutine = _FollowTarget();
+                StartCoroutine(curentCoroutine);
                 //planetClickSubscription = SolarSystemController.subscribeToPlanetClick((GameObject target) => { FocusOn(target); });
-            }));
+            });
+        StartCoroutine(curentCoroutine);
     }
     public void EnablePuzzleLock(bool enable)
     {
         if (enable)
         {
             currentPhase = Phase.PuzzleLock;
-            StopAllCoroutines();
+            StopCoroutine(curentCoroutine);
         }
         else
         {
             currentPhase = Phase.PlanetLock;
-            StartCoroutine(_LockOnTargetTransition(maxPlanetZoom, new Vector3(0, 90, 0),
+            curentCoroutine = _LockOnTargetTransition(maxPlanetZoom, new Vector3(0, 90, 0),
             () =>
             {
                 currentPhase = Phase.PlanetLock;
-                StartCoroutine(_FollowTarget());
+                curentCoroutine = _FollowTarget();
+                StartCoroutine(curentCoroutine);
                 //planetClickSubscription = SolarSystemController.subscribeToPlanetClick((GameObject target) => { FocusOn(target); });
-            }));
+            });
+            StartCoroutine(curentCoroutine);
         }
     }
     IEnumerator _FollowTarget()
