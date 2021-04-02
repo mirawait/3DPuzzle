@@ -15,7 +15,7 @@ public class LoadGameScene : MonoBehaviour
         DificultySwitcherScript.GetChosenDifficulty();
         if (!isLoaded)
         {
-            Sun.GetComponent<SolarSystem>().EnableSolarSystemMoving(false);
+            //Sun.GetComponent<SolarSystem>().EnableSolarSystemMoving(false);
             StartCoroutine(LoadSceneAsync());
             clickedPlanet.SetActive(false);
             isLoaded = true;
