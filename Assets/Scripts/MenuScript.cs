@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class MenuScript : MonoBehaviour
 {
+    
     private GameObject titleText, playButton, settingsButton, htpButton, exitButton, btmButton, solveButton,
                        settingsMenu;
     private SolarSystem solarSystem;
     private CameraScript mainCamera;
+    private LoadGameScene loadGameScene;
     private GameObject[] planetInfoPanels;
     ConfirmSettingsScript settingsSwitcher;
     TutorialScript tutorial;
@@ -26,6 +28,7 @@ public class MenuScript : MonoBehaviour
     void Start()
     {
         tutorial = GameObject.Find("Tutorial").GetComponent<TutorialScript>();
+        loadGameScene = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<LoadGameScene>();
         titleText = GameObject.Find("3dPuzzleText");
         playButton = GameObject.Find("PlayButton");
         settingsButton = GameObject.Find("SettingsButton");
@@ -60,6 +63,7 @@ public class MenuScript : MonoBehaviour
     {
         currentPhase = UI_Phase.Puzzle;
         mainCamera.EnablePuzzleLock(true);
+        loadGameScene.LoadScene();
     }
     void PlayTask()
     {

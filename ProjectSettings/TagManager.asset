@@ -10,6 +10,7 @@ TagManager:
   - InfoPanel
   - Text
   - Manager
+  - LoadSceneTag
   layers:
   - Default
   - TransparentFX
