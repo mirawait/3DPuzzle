@@ -22,6 +22,7 @@ public class CameraScript : MonoBehaviour
         Settings,
         Free,
         PlanetLock,
+        PuzzleLock,
         GoingMenu,
         GoingSettings,
         GoingFree,
@@ -175,7 +176,25 @@ public class CameraScript : MonoBehaviour
                 //planetClickSubscription = SolarSystemController.subscribeToPlanetClick((GameObject target) => { FocusOn(target); });
             }));
     }
-
+    public void EnablePuzzleLock(bool enable)
+    {
+        if (enable)
+        {
+            currentPhase = Phase.PuzzleLock;
+            StopAllCoroutines();
+        }
+        else
+        {
+            currentPhase = Phase.PlanetLock;
+            StartCoroutine(_LockOnTargetTransition(maxPlanetZoom, new Vector3(0, 90, 0),
+            () =>
+            {
+                currentPhase = Phase.PlanetLock;
+                StartCoroutine(_FollowTarget());
+                //planetClickSubscription = SolarSystemController.subscribeToPlanetClick((GameObject target) => { FocusOn(target); });
+            }));
+        }
+    }
     IEnumerator _FollowTarget()
     {
         while (true)

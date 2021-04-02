@@ -12,13 +12,14 @@ public class MenuScript : MonoBehaviour
     private GameObject[] planetInfoPanels;
     ConfirmSettingsScript settingsSwitcher;
     TutorialScript tutorial;
-    uint planetClickSubscription;
+    uint lastActiveInfoPanel;
     enum UI_Phase
     {
         PlanetInfo,
         SolarSystem,
         MainMenu,
         Settings,
+        Puzzle,
     }
     private UI_Phase currentPhase;
     // Start is called before the first frame update
@@ -39,6 +40,7 @@ public class MenuScript : MonoBehaviour
         btmButton.GetComponent<Button>().onClick.AddListener(BackTask);
         exitButton.GetComponent<Button>().onClick.AddListener(ExitTask);
         htpButton.GetComponent<Button>().onClick.AddListener(HowToPlayTask);
+        solveButton.GetComponent<Button>().onClick.AddListener(SolveTask);
 
         btmButton.SetActive(false);
         solveButton.SetActive(false);
@@ -53,6 +55,11 @@ public class MenuScript : MonoBehaviour
         }
 
         currentPhase = UI_Phase.MainMenu;
+    }
+    void SolveTask()
+    {
+        currentPhase = UI_Phase.Puzzle;
+        mainCamera.EnablePuzzleLock(true);
     }
     void PlayTask()
     {
@@ -69,11 +76,14 @@ public class MenuScript : MonoBehaviour
     void _CheckoutToSolarSystemPhase()
     {
         mainCamera.GoFree();
-        planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
+        SolarSystemController.subscribeToPlanetClick(
             (GameObject target) => 
-            { 
+            {
                 if (currentPhase == UI_Phase.SolarSystem && target.tag == "Planet")
-                    StartCoroutine(_WaitForCameraLock(target.GetComponent<PlanetScript>().GetIndex()));
+                {
+                    lastActiveInfoPanel = target.GetComponent<PlanetScript>().GetIndex();
+                    StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));
+                }
             });
         currentPhase = UI_Phase.SolarSystem;
     }
@@ -96,7 +106,12 @@ public class MenuScript : MonoBehaviour
                 {
                     infoPanel.SetActive(false);
                 }
-                solveButton.SetActive(false);
+                break;
+            case UI_Phase.Puzzle:
+                mainCamera.EnablePuzzleLock(false);
+                currentPhase = UI_Phase.PlanetInfo;
+                StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));
+                solveButton.SetActive(true);
                 break;
             case UI_Phase.Settings:
                 StartCoroutine(_WaitForCameraMenuPhase());
