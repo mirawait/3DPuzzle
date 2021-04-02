@@ -63,6 +63,11 @@ public class MenuScript : MonoBehaviour
     {
         currentPhase = UI_Phase.Puzzle;
         mainCamera.EnablePuzzleLock(true);
+        foreach (GameObject infoPanel in planetInfoPanels)
+        {
+            infoPanel.SetActive(false);
+        }
+        solveButton.SetActive(false);
         loadGameScene.LoadScene();
     }
     void PlayTask()
@@ -110,12 +115,14 @@ public class MenuScript : MonoBehaviour
                 {
                     infoPanel.SetActive(false);
                 }
+                solveButton.SetActive(false);
                 break;
             case UI_Phase.Puzzle:
                 mainCamera.EnablePuzzleLock(false);
                 currentPhase = UI_Phase.PlanetInfo;
                 StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));
                 solveButton.SetActive(true);
+                loadGameScene.UnloadScene();
                 break;
             case UI_Phase.Settings:
                 StartCoroutine(_WaitForCameraMenuPhase());
