@@ -123,11 +123,11 @@ public class Hud : MonoBehaviour
         {
             case 6:
             default:
-                return 10.0f;
+                return 10f;
             case 24:
-                return 6.0f;
+                return 10f;
             case 96:
-                return 3.5f;
+                return 10f;
         }
     }
 }

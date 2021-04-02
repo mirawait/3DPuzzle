@@ -21,7 +21,26 @@ public class SolarSystem : MonoBehaviour
         {
             planet.transform.GetComponent<PlanetScript>().EnableSolarRotation(enable);
         }
-    }    
+    }
+    public void EnableSolarSystemMoving(bool enable)
+    {
+        foreach (GameObject planet in planets)
+        {
+            planet.transform.GetComponent<PlanetScript>().EnableMoving(enable);
+        }
+    }
+
+    public GameObject FindPlanetByIndex(uint index)
+    {
+        foreach (GameObject planet in planets)
+        {
+            if (planet.transform.GetComponent<PlanetScript>().GetIndex() == index)
+            {
+                return planet;
+            }
+        }
+        return null;
+    }
     //Update is called once per frame
     void Update()
     {

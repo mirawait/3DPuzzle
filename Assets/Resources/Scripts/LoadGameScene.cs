@@ -1,32 +1,37 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LoadGameScene : MonoBehaviour
 {
     private bool isLoaded = false;
-    private GameObject go;
+    private uint planetType = 0;
+    private GameObject manager;
+    private SolarSystem solarSystemManager;
+    private GameObject clickedPlanet;
     public void LoadScene()
     {
         GameObject Sun = GameObject.Find("Sun");
-
+        DificultySwitcherScript.GetChosenDifficulty();
         if (!isLoaded)
         {
-            Sun.GetComponent<SolarSystem>().EnableSolarSystemPhase(false);
-            go = transform.gameObject;
-            go.SetActive(false);
-            uint planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
-                (GameObject target) =>
-                {
-                    if (target.tag == "Planet")
-                        target.GetComponent<PlanetScript>().GetIndex();
-                });
-            SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
-            GameObject manager = GameObject.FindGameObjectWithTag("Manager");
-            //manager.GetComponent<Manager>().StartPuzzle(1);
+            Sun.GetComponent<SolarSystem>().EnableSolarSystemMoving(false);
+            StartCoroutine(LoadSceneAsync());
+            clickedPlanet.SetActive(false);
             isLoaded = true;
         }
+    }
+
+    IEnumerator LoadSceneAsync()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+        manager = GameObject.FindGameObjectWithTag("Manager");
+        manager.GetComponent<Manager>().Start_Puzzles((int)planetType, (int)DificultySwitcherScript.GetChosenDifficulty());
     }
 
     public void UnloadScene()
@@ -36,5 +41,18 @@ public class LoadGameScene : MonoBehaviour
             SceneManager.UnloadSceneAsync(gameObject.name);
             isLoaded = false;
         }
+    }
+
+    void Start()
+    {
+        uint planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
+            (GameObject target) =>
+            {
+                if (target.tag == "Planet")
+                {
+                    planetType = target.GetComponent<PlanetScript>().GetIndex();
+                    clickedPlanet = target;
+                }
+            });
     }
 }

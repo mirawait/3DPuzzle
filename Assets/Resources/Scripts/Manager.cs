@@ -1,39 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class Manager : MonoBehaviour
 {
     //Planets
-        //0 - SUN,
-        //1 - MERCURY,
-        //2 - VENUS,
-        //3 - EARTH,
-        //4 - MOON,
-        //5 - MARS,
-        //6 - JUPITER,
-        //7 - SATURN,
-        //8 - URANUS,
-        //9 - NEPTUNE,
-        //10 - PLUTO
+    //0 - SUN,
+    //1 - MERCURY,
+    //2 - VENUS,
+    //3 - EARTH,
+    //4 - MOON,
+    //5 - MARS,
+    //6 - JUPITER,
+    //7 - SATURN,
+    //8 - URANUS,
+    //9 - NEPTUNE,
+    //10 - PLUTO
 
     //Parts
-        //0 - 6_PARTS,
-        //1 - 24_PARTS,
-        //2 - 96_PARTS
-        
+    //0 - 6_PARTS,
+    //1 - 24_PARTS,
+    //2 - 96_PARTS
+
 
     private bool isPlanetPuzzleSplitUp = false;
     private bool isEnd = false;
     private GameObject planetPuzzle;
     private GameObject targetGameObject;
+    private bool loaded = false;
 
     //void Start() 
     //{
     //    Start_Puzzles(2, 0);
     //}
 
-    void Start_Puzzles(int PlanetType, int PuzzleLevel)
+    public void Start_Puzzles(int PlanetType, int PuzzleLevel)
     {
         if (targetGameObject == null)
             targetGameObject = GameObject.FindWithTag("Text");
@@ -64,18 +65,18 @@ public class Manager : MonoBehaviour
                 config.puzzleMaterial = Resources.Load("Materials/EarthOpaque") as Material;
                 break;
             case 4:
-                config.outlineMaterial = Resources.Load("Materials/MoonTransparent") as Material;
-                config.puzzleMaterial = Resources.Load("Materials/MoonOpaque") as Material;
-                break;
-            case 5:
                 config.outlineMaterial = Resources.Load("Materials/MarsTransparent") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/MarsOpaque") as Material;
+                break;
+            case 5:
+                config.outlineMaterial = Resources.Load("Materials/MoonTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/MoonOpaque") as Material;
                 break;
         }
 
         switch (PuzzleLevel)
         {
-            case 0:
+
             default:
                 config.puzzleMeshResourceName = "Meshes/DividedBy6Planet";
                 break;
@@ -88,18 +89,17 @@ public class Manager : MonoBehaviour
         }
 
         var prefab = Resources.Load("Meshes/WholePlanet") as GameObject;
-        planetPuzzle = Instantiate(prefab) as GameObject;
+        var spawnPos = Camera.main.transform.position + Camera.main.transform.forward * 10;
+        planetPuzzle = Instantiate(prefab, spawnPos, Quaternion.identity) as GameObject;
 
         planetPuzzle.GetComponent<Renderer>().material = config.puzzleMaterial;
-
-        var cameraPos = Camera.main.transform.position;
-        planetPuzzle.transform.position = new Vector3(cameraPos.x, cameraPos.y, cameraPos.z + 6);
-
+            
         planetPuzzle.AddComponent<PlanetPuzzle>();
 
         config.outlineMeshResourceName = "Meshes/WholePlanet";
 
         planetPuzzle.GetComponent<PlanetPuzzle>().Init(config);
+        loaded = true;
     }
 
     void Update()
@@ -109,32 +109,36 @@ public class Manager : MonoBehaviour
         if (log.Length > MAXCHARS)
             log = log.Substring(0, MAXCHARS);*/
 
-        if (isEnd)
+        if (loaded)
         {
-            return;
-        }
-
-            
-
-        if (!isEnd)
-        {
-            if (planetPuzzle.GetComponent<PlanetPuzzle>().IsPuzzleAssembled())
+            if (isEnd)
             {
-                if (targetGameObject != null)
-                    targetGameObject.SetActive(true);
-                print("victory!");
-                isEnd = true;
                 return;
             }
-        }
 
-        if (!isPlanetPuzzleSplitUp)
-        {
-            if (Input.GetMouseButtonUp(0))
+
+
+            if (!isEnd)
             {
-                planetPuzzle.GetComponent<PlanetPuzzle>().SplitUp();
+                if (planetPuzzle.GetComponent<PlanetPuzzle>().IsPuzzleAssembled())
+                {
+                    if (targetGameObject != null)
+                        targetGameObject.SetActive(true);
+                    print("victory!");
+                    isEnd = true;
+                    return;
+                }
+            }
 
-                isPlanetPuzzleSplitUp = true;
+
+            if (!isPlanetPuzzleSplitUp)
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    planetPuzzle.GetComponent<PlanetPuzzle>().SplitUp();
+
+                    isPlanetPuzzleSplitUp = true;
+                }
             }
         }
     }

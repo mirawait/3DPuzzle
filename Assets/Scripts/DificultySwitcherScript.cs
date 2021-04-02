@@ -14,7 +14,7 @@ public class DificultySwitcherScript : MonoBehaviour
         Normal,
         Hard
     }
-    Difficulty currentDifficulty = Difficulty.Normal;
+    static Difficulty currentDifficulty = Difficulty.Normal;
     // Start is called before the first frame update
     void Start()
     {
@@ -80,7 +80,7 @@ public class DificultySwitcherScript : MonoBehaviour
         _UpdateText();
     }
 
-    public Difficulty GetChosenDifficulty()
+    public static Difficulty GetChosenDifficulty()
     {
         return currentDifficulty;
     }

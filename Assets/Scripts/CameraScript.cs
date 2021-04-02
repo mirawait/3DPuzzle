@@ -29,7 +29,7 @@ public class CameraScript : MonoBehaviour
         GoingFree,
         GoingPlanetLock
     }
-    private IEnumerator curentCoroutine;
+    private IEnumerator curentCoroutine = null;
     private Phase currentPhase = Phase.Menu;
     private float currentMaxZoom,
                   currentMinZoom,
@@ -127,7 +127,8 @@ public class CameraScript : MonoBehaviour
         target = sun;
 
         Debug.Log("Going free");
-        StopCoroutine(curentCoroutine);
+        if (curentCoroutine != null)
+            StopCoroutine(curentCoroutine);
         curentCoroutine = _LockOnTargetTransition(maxSolarZoom, new Vector3(0, 60, 0),
             () =>
             {
@@ -148,7 +149,8 @@ public class CameraScript : MonoBehaviour
         currentPhase = Phase.GoingMenu;
         //transform.position = camStartPos.transform.position;
         //transform.rotation = camStartPos.transform.rotation;
-        StopCoroutine(curentCoroutine);
+        if (curentCoroutine != null)
+            StopCoroutine(curentCoroutine);
         curentCoroutine = _MoveToPoint(camStartPos.transform.position, camStartPos.transform.rotation, Phase.Menu);
         SolarSystemController.unsubscribeToPlanetClick(planetClickSubscription);
         StartCoroutine(curentCoroutine);
@@ -156,7 +158,8 @@ public class CameraScript : MonoBehaviour
     public void GoSettings()
     {
         currentPhase = Phase.GoingSettings;
-        StopCoroutine(curentCoroutine);
+        if (curentCoroutine != null)
+            StopCoroutine(curentCoroutine);
         curentCoroutine = _MoveToPoint(camSettingsPos.transform.position, camSettingsPos.transform.rotation, Phase.Settings);
         StartCoroutine(curentCoroutine);
     }
@@ -188,7 +191,8 @@ public class CameraScript : MonoBehaviour
         if (enable)
         {
             currentPhase = Phase.PuzzleLock;
-            StopCoroutine(curentCoroutine);
+            if (curentCoroutine != null)
+                StopCoroutine(curentCoroutine);
         }
         else
         {

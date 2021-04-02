@@ -85,7 +85,7 @@ public class ConfirmSettingsScript : MonoBehaviour
 
     private void ConfirmSettings()
     {
-        curDif = dificultySwitcher.GetChosenDifficulty();
+        curDif = DificultySwitcherScript.GetChosenDifficulty();
         curSoundStatus = soundSwitcher.GetSoundStatus();
         Debug.Log("Sound to confirm:" + _SoundToString(curSoundStatus));
         Debug.Log("Dificulty to confirm:" + _DificultyToString(curDif));
