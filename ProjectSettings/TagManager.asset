@@ -11,6 +11,7 @@ TagManager:
   - Text
   - Manager
   - LoadSceneTag
+  - puzzle
   layers:
   - Default
   - TransparentFX

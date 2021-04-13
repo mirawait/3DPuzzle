@@ -120,7 +120,8 @@ public class PlanetPuzzle : MonoBehaviour
             return Error.CANNOT_LOAD_RESOURCE;
 
         planetOutline = Instantiate(prefab) as GameObject;
-
+        planetOutline.tag = "puzzle";
+        Debug.LogError(planetOutline.tag);
         planetOutline.GetComponent<Renderer>().material = outlineMaterial;
 
         planetOutline.transform.position = transform.position;
@@ -140,7 +141,7 @@ public class PlanetPuzzle : MonoBehaviour
             return Error.CANNOT_LOAD_RESOURCE;
 
         puzzleFrame = Instantiate(prefab) as GameObject;
-
+        puzzleFrame.tag = "puzzle";
         puzzleFrame.transform.position = transform.position;
         puzzleFrame.transform.rotation = transform.rotation;
 
@@ -157,7 +158,8 @@ public class PlanetPuzzle : MonoBehaviour
             return Error.CANNOT_LOAD_RESOURCE;
 
         puzzle = Instantiate(prefab) as GameObject;
-
+        puzzle.tag = "puzzle";
+        Debug.LogError(puzzle.tag);
         puzzle.transform.position = transform.position;
 
         puzzle.AddComponent<Puzzle>();

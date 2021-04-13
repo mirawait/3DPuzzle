@@ -116,6 +116,7 @@ public class Puzzle : MonoBehaviour
     private void InitHud()
     {
         hud = new GameObject("PuzzleHud", typeof(Hud));
+        hud.tag = "puzzle";
         var hudScript = hud.GetComponent<Hud>();
 
         Hud.Config config;

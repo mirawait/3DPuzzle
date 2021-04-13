@@ -1,6 +1,5 @@
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
 
 public class Manager : MonoBehaviour
 {
@@ -91,15 +90,23 @@ public class Manager : MonoBehaviour
         var prefab = Resources.Load("Meshes/WholePlanet") as GameObject;
         var spawnPos = Camera.main.transform.position + Camera.main.transform.forward * 10;
         planetPuzzle = Instantiate(prefab, spawnPos, Quaternion.identity) as GameObject;
-
+        planetPuzzle.tag = "puzzle";
         planetPuzzle.GetComponent<Renderer>().material = config.puzzleMaterial;
-            
+
         planetPuzzle.AddComponent<PlanetPuzzle>();
 
         config.outlineMeshResourceName = "Meshes/WholePlanet";
 
         planetPuzzle.GetComponent<PlanetPuzzle>().Init(config);
         loaded = true;
+
+        if (!isPlanetPuzzleSplitUp)
+        {
+
+            planetPuzzle.GetComponent<PlanetPuzzle>().SplitUp();
+            isPlanetPuzzleSplitUp = true;
+
+        }
     }
 
     void Update()
@@ -131,15 +138,6 @@ public class Manager : MonoBehaviour
             }
 
 
-            if (!isPlanetPuzzleSplitUp)
-            {
-                if (Input.GetMouseButtonUp(0))
-                {
-                    planetPuzzle.GetComponent<PlanetPuzzle>().SplitUp();
-
-                    isPlanetPuzzleSplitUp = true;
-                }
-            }
         }
     }
 

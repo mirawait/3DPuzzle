@@ -38,8 +38,17 @@ public class LoadGameScene : MonoBehaviour
     {
         if (isLoaded)
         {
+            foreach (var obj in GameObject.FindGameObjectsWithTag("puzzle"))
+            {
+                Destroy(obj);
+            }
+
+            GameObject go = GameObject.Find("PuzzleHud");
+
             SceneManager.UnloadSceneAsync(gameObject.name);
+            clickedPlanet.SetActive(true);
             isLoaded = false;
+            
         }
     }
 
