@@ -99,6 +99,15 @@ public class MenuScript : MonoBehaviour
     void BackTask()
     {
         Debug.Log("Back clicked");
+        if (tutorial.IsTutorialEnabled())
+        {
+            currentPhase = UI_Phase.SolarSystem;
+            foreach (GameObject infoPanel in planetInfoPanels)
+            {
+                infoPanel.SetActive(false);
+            }
+            solveButton.SetActive(false);
+        }
         switch (currentPhase)
         {
             case UI_Phase.SolarSystem:

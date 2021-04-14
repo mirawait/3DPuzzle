@@ -27,7 +27,7 @@ public class TutorialScript : MonoBehaviour
         End = 4
     }
 
-    public bool isTutorialEnabled;
+    bool isTutorialEnabled;
     public TutorialStage currentStage = TutorialStage.WaitingForStart;
     static public GameObject tappingTarget;
     static public Actions pertitedAction = Actions.Any;
@@ -44,11 +44,17 @@ public class TutorialScript : MonoBehaviour
         isTutorialEnabled = true;
         StartNextStep();
     }
+    public bool IsTutorialEnabled()
+    {
+        return isTutorialEnabled;
+    }
     public void DisableTutorial()
     {
         isTutorialEnabled = false;
         swipeTutorial.DisableTutorial();
         tappingTutorial.DisableTutorial();
+        pertitedAction = Actions.Any;
+        currentStage = TutorialStage.WaitingForStart;
     }
 
     static public bool IsActionPermitted(Actions action, GameObject target = null)
