@@ -6,7 +6,8 @@ using System;
 
 public class CameraScript : MonoBehaviour
 {
-    public float rotationSpeed = 0.8f,
+    public float solarRotationSpeed = 0.8f,
+                 planetRotationSpeed = 0.4f,
                  zoomSpeed = 0.2f,
                  minSolarZoom = 0.1f,
                  maxSolarZoom = 179.9f,
@@ -33,7 +34,9 @@ public class CameraScript : MonoBehaviour
     private Phase currentPhase = Phase.Menu;
     private float currentMaxZoom,
                   currentMinZoom,
-                  currentZoom;
+                  currentZoom,
+                  currentRotationSpeed;
+                  
     private uint planetClickSubscription;
     //private float CameraXLimitRight = 21;
     //private float CameraXLimitLeft = -21;
@@ -78,7 +81,7 @@ public class CameraScript : MonoBehaviour
                         return;
                     }
                 }
-                transform.Translate(direction * Time.deltaTime * rotationSpeed);
+                transform.Translate(direction * Time.deltaTime * currentRotationSpeed);
                 //_FollowTarget();
                 transform.LookAt(target.transform);
             }
@@ -124,6 +127,7 @@ public class CameraScript : MonoBehaviour
         currentPhase = Phase.GoingFree;
         currentMaxZoom = maxSolarZoom;
         currentMinZoom = minSolarZoom;
+        currentRotationSpeed = solarRotationSpeed;
         target = sun;
 
         Debug.Log("Going free");
@@ -171,6 +175,7 @@ public class CameraScript : MonoBehaviour
         currentPhase = Phase.GoingPlanetLock;
         currentMaxZoom = maxPlanetZoom;
         currentMinZoom = minPlanetZoom;
+        currentRotationSpeed = planetRotationSpeed;
         target = newTarget;
 
         Debug.Log("Going planet lock");
@@ -254,7 +259,7 @@ public class CameraScript : MonoBehaviour
                 float angleY = Vector3.Angle(targetDir, Vector3.up);
                 float diffAngle = angleY - targetAngle.y;
                 Debug.Log("_LockOnTargetTransition diffAngle" + diffAngle);
-                targetPos += new Vector3(0, 1, 0) * rotationSpeed * diffAngle * Time.deltaTime;
+                targetPos += new Vector3(0, 1, 0) * currentRotationSpeed * diffAngle * Time.deltaTime;
                 rotatedTo = (Mathf.Abs(diffAngle) < 5);
             }
             else
@@ -263,7 +268,7 @@ public class CameraScript : MonoBehaviour
             if (!movedTo)
             {
                 
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 20 * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 8 * Time.deltaTime);
                 distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position);
                 movedTo = Mathf.RoundToInt(Mathf.Abs(targetDistance - distanceFromLockTarget)) == 0;
             }
@@ -271,7 +276,7 @@ public class CameraScript : MonoBehaviour
             if (!rotatedTo)
             {
                 Quaternion targetRot = Quaternion.LookRotation(-targetDir);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * 2 * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 2 * Time.deltaTime);
 
                 rotatedTo = transform.rotation == targetRot;
             }
@@ -296,10 +301,10 @@ public class CameraScript : MonoBehaviour
         while (true)
         {
             float dist = Vector3.Distance(transform.position, targetPos);
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 20 * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 8 * Time.deltaTime);
             Debug.Log("CAMERA POSITION = " + transform.position);
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * 2 * (initDist - dist) / initDist * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 2 * (initDist - dist) / initDist * Time.deltaTime);
 
             if (transform.position == targetPos && transform.rotation == targetRot)
             {

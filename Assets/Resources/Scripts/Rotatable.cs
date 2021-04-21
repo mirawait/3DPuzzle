@@ -23,7 +23,7 @@ public class Rotatable : MonoBehaviour
         HandleInput();
     }
 
-    private const float rotationSpeed = 3f;
+    private const float rotationSpeed = 50f;
 
     private bool isPermited = false;
 
@@ -147,6 +147,6 @@ public class Rotatable : MonoBehaviour
 
     void Rotate(Vector3 axis)
     {
-        transform.Rotate(axis * rotationSpeed, Space.World);
+        transform.Rotate(axis * rotationSpeed * Time.deltaTime, Space.World);
     }
 }

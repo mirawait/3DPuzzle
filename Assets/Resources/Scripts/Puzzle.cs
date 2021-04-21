@@ -51,7 +51,7 @@ public class Puzzle : MonoBehaviour
         HandleCurrentPiece();
     }
 
-    private static System.TimeSpan mouseClickInterval = System.TimeSpan.FromMilliseconds(250);
+    private static System.TimeSpan mouseClickInterval = System.TimeSpan.FromMilliseconds(150);
     private static System.TimeSpan mouseDoubleClickInterval = System.TimeSpan.FromMilliseconds(300);
 
     private bool isInited = false;
