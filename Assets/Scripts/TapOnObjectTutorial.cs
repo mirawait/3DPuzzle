@@ -26,16 +26,18 @@ public class TapOnObjectTutorial : MonoBehaviour
     }
     public void EnableTutorial(GameObject target, Action onComplete, Action<TutorialScript.Actions> actionRestricter)
     {
+        Debug.LogError("Tapping tutorial enabled");
         targetObject = target;
         actionOnComplete = onComplete;
         permitedActionSetter = actionRestricter;
+        currentStage = Stages.WaitingForStart;
         StartNextStep();
     }
 
     public void DisableTutorial()
     {
         arrowPointer.SetActive(false);
-        SolarSystemController.unsubscribeToPlanetClick(planetClickSubscription);
+        GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
         currentStage = Stages.WaitingForStart;
     }
     public void StartNextStep()
@@ -46,18 +48,22 @@ public class TapOnObjectTutorial : MonoBehaviour
             case Stages.WaitingForStart:
                 break;
             case Stages.Tapping:
+                Debug.LogError("Tappong stage setted");
                 arrowPointer.SetActive(true);
-                planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
+                planetClickSubscription = GesturesController.subscribeToPlanetClick(
                     (GameObject target) =>
                     {
+                        Debug.LogError("Handling tutorial tap object");
                         if (target == targetObject)
                             StartNextStep();
+                        else
+                            Debug.LogError("something went wrong");
                     });
                 permitedActionSetter(TutorialScript.Actions.Tapping);
                 break;
             case Stages.End:
                 arrowPointer.SetActive(false);
-                SolarSystemController.unsubscribeToPlanetClick(planetClickSubscription);
+                GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
                 permitedActionSetter(TutorialScript.Actions.Any);
                 currentStage = Stages.WaitingForStart;
                 actionOnComplete();

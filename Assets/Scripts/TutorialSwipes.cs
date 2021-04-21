@@ -33,6 +33,7 @@ public class TutorialSwipes : MonoBehaviour
     Action<TutorialScript.Actions> permitedActionSetter;
     bool isZoomTutorialEnabled;
     public ActionStatus actionStatus = ActionStatus.NothingHappened;
+    uint gestureSubscriptionID, endingSubscriptionID;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,6 +61,7 @@ public class TutorialSwipes : MonoBehaviour
     }
     public void DisableTutorial()
     {
+        GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
         tutorialSwipeDown.SetActive(false);
         tutorialSwipeUp.SetActive(false);
         tutorialSwipeLeft.SetActive(false);
@@ -70,6 +72,15 @@ public class TutorialSwipes : MonoBehaviour
     }
     public void StartNextStep()
     {
+        Action<GesturesController.Gestures> gestureNotificationHandler = (GesturesController.Gestures gesture) => {
+                GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
+                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.Ending,
+                    (GesturesController.Gestures endingGesture) =>
+                    {
+                        GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
+                        StartNextStep();
+                    });
+        };
         currentStage++;
         switch (currentStage)
         {
@@ -78,22 +89,25 @@ public class TutorialSwipes : MonoBehaviour
             case Stages.SwipeUp:
                 permitedActionSetter(TutorialScript.Actions.CameraRotationUp);
                 tutorialSwipeUp.SetActive(true);
+                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeUp, gestureNotificationHandler);
                 break;
             case Stages.SwipeDown:
                 permitedActionSetter(TutorialScript.Actions.CameraRotationDown);
                 tutorialSwipeUp.SetActive(false);
                 tutorialSwipeDown.SetActive(true);
+                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDown, gestureNotificationHandler);
                 break;
             case Stages.SwipeLeft:
                 permitedActionSetter(TutorialScript.Actions.CameraRotationLeft);
                 tutorialSwipeDown.SetActive(false);
                 tutorialSwipeLeft.SetActive(true);
+                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeLeft, gestureNotificationHandler);
                 break;
             case Stages.SwipeRight:
                 permitedActionSetter(TutorialScript.Actions.CameraRotationRight);
                 tutorialSwipeLeft.SetActive(false);
                 tutorialSwipeRight.SetActive(true);
-                
+                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeRight, gestureNotificationHandler);
                 break;
             case Stages.ZoomIn:
                 tutorialSwipeRight.SetActive(false);
@@ -101,6 +115,7 @@ public class TutorialSwipes : MonoBehaviour
                 {
                     permitedActionSetter(TutorialScript.Actions.CameraZoomIn);
                     tutorialZoomIn.SetActive(true);
+                    gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.Spread, gestureNotificationHandler);
                 }
                 else
                 {
@@ -112,6 +127,7 @@ public class TutorialSwipes : MonoBehaviour
                 permitedActionSetter(TutorialScript.Actions.CameraZoomOut);
                 tutorialZoomIn.SetActive(false);
                 tutorialZoomOut.SetActive(true);
+                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.Pinch, gestureNotificationHandler);
                 break;
             case Stages.End:
                 tutorialZoomOut.SetActive(false);
@@ -120,77 +136,74 @@ public class TutorialSwipes : MonoBehaviour
                 currentStage = Stages.WaitingForStart;
                 break;
         }
-        
     }
 
-    void _CheckForSwipes()
+    //void _CheckForSwipes()
+    //{
+    //    if (actionStatus != ActionStatus.NothingHappened)
+    //        return;
+    //    if (Input.touchCount == 1)
+    //    {
+    //        Touch touch = Input.GetTouch(0);
+    //        Vector2 deltaPos = touch.deltaPosition;
+    //
+    //        if (Mathf.Abs(deltaPos.x) > 0 || Mathf.Abs(deltaPos.y) > 0)
+    //        {
+    //            if (Mathf.Abs(deltaPos.x) > Mathf.Abs(deltaPos.y) && (deltaPos.x > 0 && currentStage == Stages.SwipeRight || deltaPos.x < 0 && currentStage == Stages.SwipeLeft)
+    //            || Mathf.Abs(deltaPos.x) < Mathf.Abs(deltaPos.y) && (deltaPos.y > 0 && currentStage == Stages.SwipeUp || deltaPos.y < 0 && currentStage == Stages.SwipeDown))
+    //            {
+    //                actionStatus = ActionStatus.CorrectAction;
+    //            }
+    //            else
+    //            {
+    //                actionStatus = ActionStatus.WrongAction;
+    //            }
+    //            StartCoroutine(_WaitForTouchCountEqualsZero());
+    //        }
+    //    }
+    //    if (Input.touchCount == 2)
+    //    {
+    //        Touch touchZero = Input.GetTouch(0);
+    //        Touch touchOne = Input.GetTouch(1);
+    //
+    //        Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition,
+    //                touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+    //
+    //        float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude,
+    //              touchDeltaMag = (touchZero.position - touchOne.position).magnitude,
+    //              deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+    //        if (deltaMagnitudeDiff != 0)
+    //        {
+    //            if (deltaMagnitudeDiff > 0 && currentStage == Stages.ZoomOut
+    //            || deltaMagnitudeDiff < 0 && currentStage == Stages.ZoomIn)
+    //            {
+    //                actionStatus = ActionStatus.CorrectAction;
+    //            }
+    //            else
+    //            {
+    //                actionStatus = ActionStatus.WrongAction;
+    //            }
+    //            StartCoroutine(_WaitForTouchCountEqualsZero());
+    //        }
+    //    }
+    //}
+
+    IEnumerator _WaitForEndOfGesture()
     {
-        if (actionStatus != ActionStatus.NothingHappened)
-            return;
-        if (Input.touchCount == 1)
+        while (GesturesController.IsGestureGoing())
         {
-            Touch touch = Input.GetTouch(0);
-            Vector2 deltaPos = touch.deltaPosition;
-
-            if (Mathf.Abs(deltaPos.x) > 0 || Mathf.Abs(deltaPos.y) > 0)
-            {
-                if (Mathf.Abs(deltaPos.x) > Mathf.Abs(deltaPos.y) && (deltaPos.x > 0 && currentStage == Stages.SwipeRight || deltaPos.x < 0 && currentStage == Stages.SwipeLeft)
-                || Mathf.Abs(deltaPos.x) < Mathf.Abs(deltaPos.y) && (deltaPos.y > 0 && currentStage == Stages.SwipeUp || deltaPos.y < 0 && currentStage == Stages.SwipeDown))
-                {
-                    actionStatus = ActionStatus.CorrectAction;
-                }
-                else
-                {
-                    actionStatus = ActionStatus.WrongAction;
-                }
-                StartCoroutine(_WaitForTouchCountEqualsZero());
-            }
+            yield return new WaitForSeconds(0.001f);
         }
-        if (Input.touchCount == 2)
-        {
-            Touch touchZero = Input.GetTouch(0);
-            Touch touchOne = Input.GetTouch(1);
-
-            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition,
-                    touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
-            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude,
-                  touchDeltaMag = (touchZero.position - touchOne.position).magnitude,
-                  deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-            if (deltaMagnitudeDiff != 0)
-            {
-                if (deltaMagnitudeDiff > 0 && currentStage == Stages.ZoomOut
-                || deltaMagnitudeDiff < 0 && currentStage == Stages.ZoomIn)
-                {
-                    actionStatus = ActionStatus.CorrectAction;
-                }
-                else
-                {
-                    actionStatus = ActionStatus.WrongAction;
-                }
-                StartCoroutine(_WaitForTouchCountEqualsZero());
-            }
-        }
-    }
-
-    IEnumerator _WaitForTouchCountEqualsZero()
-    {
-        while (Input.touchCount != 0)// IsCurrentPhaseMenu())
-        {
-            yield return new WaitForSeconds(0.01f);
-        }
-        if (actionStatus == ActionStatus.CorrectAction)
-            StartNextStep();
-        actionStatus = ActionStatus.NothingHappened;
+        StartNextStep();
         yield break;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currentStage != Stages.WaitingForStart)
-        {
-            _CheckForSwipes();
-        }
+        //if (currentStage != Stages.WaitingForStart)
+        //{
+        //    _CheckForSwipes();
+        //}
     }
 }

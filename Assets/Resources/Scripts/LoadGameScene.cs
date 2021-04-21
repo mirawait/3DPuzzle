@@ -56,7 +56,7 @@ public class LoadGameScene : MonoBehaviour
 
     public void start()
     {
-        subsctiptionID = SolarSystemController.subscribeToPlanetClick(
+        subsctiptionID = GesturesController.subscribeToPlanetClick(
             (GameObject target) =>
             {
                 Debug.LogError("Im inside load scene handler");
@@ -70,6 +70,6 @@ public class LoadGameScene : MonoBehaviour
     }
     public void stop()
     {
-        SolarSystemController.unsubscribeToPlanetClick(subsctiptionID);
+        GesturesController.unsubscribeToPlanetClick(subsctiptionID);
     }
 }
