@@ -67,44 +67,57 @@ public class Rotatable : MonoBehaviour
 
                 if (Mathf.Abs(deltaPos.x) > Mathf.Abs(deltaPos.y))
                 {
-                    axis = Vector3.left;
+                    
                     if (deltaPos.x < 0)
                     {
+                        axis += Camera.main.transform.up;
                         rotationDirY = 1;
                     }
                     else if (deltaPos.x > 0)
                     {
+                        axis += Camera.main.transform.up * -1;
                         rotationDirY = -1;
                     }
                 }
                 if (Mathf.Abs(deltaPos.x) < Mathf.Abs(deltaPos.y))
                 {
-                    axis = Vector3.left;
                     if (deltaPos.y < 0)
                     {
+                        axis += Camera.main.transform.right * -1;
                         rotationDirX = -1;
                     }
                     else if (deltaPos.y > 0)
                     {
+                        axis += Camera.main.transform.right;
                         rotationDirX = 1;
                     }
                 }
 
-                if (Mathf.Abs(deltaPos.x) == Mathf.Abs(deltaPos.y))
+                if (Mathf.Abs(Mathf.Abs(deltaPos.x) - Mathf.Abs(deltaPos.y)) < 5)
                 {
-                    axis = Vector3.left;
+                    if (deltaPos.x < 0)
+                    {
+                        axis += Camera.main.transform.up;
+                        rotationDirY = 1;
+                    }
+                    else if (deltaPos.x > 0)
+                    {
+                        axis += Camera.main.transform.up * -1;
+                        rotationDirY = -1;
+                    }
+
                     if (deltaPos.y < 0)
                     {
-                        rotationDirY = 1;
+                        axis += Camera.main.transform.right * -1;
                         rotationDirX = -1;
                     }
                     else if (deltaPos.y > 0)
                     {
-                        rotationDirY = -1;
+                        axis += Camera.main.transform.right;
                         rotationDirX = 1;
                     }
                 }
-                Rotate(rotationDirX, rotationDirY, rotationDirZ);
+                Rotate(axis);
 
             }
             else if (Input.touchCount == 2)
@@ -118,35 +131,22 @@ public class Rotatable : MonoBehaviour
                 Vector3 moveDirection = new Vector3(0, 0, 0);
                 Vector3 axis = Vector3.zero;
 
-
-                
-                    if ((deltaPos0.y < 0) && (deltaPos1.y > 0))
-                    {
-                        rotationDirZ = 1;
-                    }
-                    else if ((deltaPos0.y > 0) && (deltaPos1.y < 0))
-                    {
-                        rotationDirZ = -1;
-                    }
-                
-
-                
-                Rotate(rotationDirX, rotationDirY, rotationDirZ);
+                if ((deltaPos0.y < 0) && (deltaPos1.y > 0))
+                {
+                    axis += Camera.main.transform.forward;
+                }
+                else if ((deltaPos0.y > 0) && (deltaPos1.y < 0))
+                {
+                    axis += Camera.main.transform.forward * -1;
+                }
+                Rotate(axis);
             }
 
         }
     }
 
-    void Rotate(int dirX, int dirY, int dirZ)
+    void Rotate(Vector3 axis)
     {
-        transform.Rotate(dirX * rotationSpeed, dirY * rotationSpeed, rotationSpeed * dirZ, Space.World);
-
-        //transform.Rotate(0f, dirY * rotationSpeed, 0f, Space.World);
-       // transform.Rotate(dirX * rotationSpeed, 0f, 0f, Space.World);
-
-        //transform.Rotate(-Vector3.left, rotationSpeed * dirX);
-        //transform.Rotate(0f,0f , rotationSpeed * dirZ, Space.World);
-
-
+        transform.Rotate(axis * rotationSpeed, Space.World);
     }
 }

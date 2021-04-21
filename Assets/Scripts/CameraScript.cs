@@ -56,16 +56,16 @@ public class CameraScript : MonoBehaviour
                 switch (gesture)
                 {
                     case GesturesController.Gestures.SwipeRight:
-                        direction = Vector3.right;
-                        break;
-                    case GesturesController.Gestures.SwipeLeft:
                         direction = Vector3.left;
                         break;
+                    case GesturesController.Gestures.SwipeLeft:
+                        direction = Vector3.right;
+                        break;
                     case GesturesController.Gestures.SwipeUp:
-                        direction = Vector3.up;
+                        direction = Vector3.down;
                         break;
                     case GesturesController.Gestures.SwipeDown:
-                        direction = Vector3.down;
+                        direction = Vector3.up;
                         break;
                 }
                 if (direction == Vector3.up || direction == Vector3.down)
