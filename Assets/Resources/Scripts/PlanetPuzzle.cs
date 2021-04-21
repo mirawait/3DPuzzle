@@ -182,6 +182,8 @@ public class PlanetPuzzle : MonoBehaviour
         var outlineBounds = planetOutline.GetComponent<MeshFilter>().mesh.bounds.size.x;
         var currentPos = transform.position;
 
-        return (new Vector3(currentPos.x, currentPos.y, currentPos.z - (outlineBounds / 2)));
+        var delta = Camera.main.transform.forward * (-1) * (outlineBounds / 2);
+
+        return currentPos + delta;//(new Vector3(currentPos.x, currentPos.y, currentPos.z - (outlineBounds / 2)));
     }
 }

@@ -369,6 +369,6 @@ public class Piece : MonoBehaviour
             }
         }
 
-        transform.Rotate(0, 0, Random.Range(0, 179), Space.World);
+        //transform.Rotate(0, 0, Random.Range(0, 179), Space.World);
     }
 }

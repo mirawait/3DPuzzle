@@ -376,18 +376,20 @@ public class Puzzle : MonoBehaviour
         var distance = Vector3.Distance(pieceFitOnPos, Camera.main.transform.position);
         Vector3 pieceZoomablePos;
 
+        var dir = Camera.main.transform.forward * (-1);
+
         switch (pieces.Count)
         {
             // the greater a piece count, the less a piece, the less its distance to camera
             case 6:
             default:
-                pieceZoomablePos = new Vector3(pieceFitOnPos.x, pieceFitOnPos.y, pieceFitOnPos.z - (distance / 5));
+                pieceZoomablePos = pieceFitOnPos + dir * (distance / 5);// new Vector3(pieceFitOnPos.x, pieceFitOnPos.y, pieceFitOnPos.z - (distance / 5));
                 break;
             case 24:
-                pieceZoomablePos = new Vector3(pieceFitOnPos.x, pieceFitOnPos.y, pieceFitOnPos.z - (distance / 3));
+                pieceZoomablePos = pieceFitOnPos + dir * (distance / 3);//new Vector3(pieceFitOnPos.x, pieceFitOnPos.y, pieceFitOnPos.z - (distance / 3));
                 break;
             case 96:
-                pieceZoomablePos = new Vector3(pieceFitOnPos.x, pieceFitOnPos.y, pieceFitOnPos.z - (distance / 2));
+                pieceZoomablePos = pieceFitOnPos + dir * (distance / 2);//new Vector3(pieceFitOnPos.x, pieceFitOnPos.y, pieceFitOnPos.z - (distance / 2));
                 break;
         }
 
