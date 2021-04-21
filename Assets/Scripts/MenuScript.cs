@@ -70,6 +70,7 @@ public class MenuScript : MonoBehaviour
         }
         solveButton.SetActive(false);
         loadGameScene.LoadScene();
+        loadGameScene.stopWaitingForPlanetClick();
     }
     void PlayTask()
     {
@@ -79,7 +80,7 @@ public class MenuScript : MonoBehaviour
         htpButton.SetActive(false);
         exitButton.SetActive(false);
         btmButton.SetActive(true);
-        loadGameScene.start();
+        loadGameScene.startWaitingForPlanetClick();
         solarSystem.EnableSolarSystemPhase(true);
         _CheckoutToSolarSystemPhase();
     }
@@ -93,6 +94,7 @@ public class MenuScript : MonoBehaviour
                 {
                     lastActiveInfoPanel = target.GetComponent<PlanetScript>().GetIndex();
                     StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));
+                    loadGameScene.stopWaitingForPlanetClick();
                 }
             });
         currentPhase = UI_Phase.SolarSystem;
@@ -117,10 +119,11 @@ public class MenuScript : MonoBehaviour
                 solarSystem.EnableSolarSystemPhase(false);
                 mainCamera.GoMenu();
                 tutorial.DisableTutorial();
-                loadGameScene.stop();
+                loadGameScene.stopWaitingForPlanetClick();
                 break;
             case UI_Phase.PlanetInfo:
                 mainCamera.GoFree();
+                loadGameScene.startWaitingForPlanetClick();
                 currentPhase = UI_Phase.SolarSystem;
                 foreach (GameObject infoPanel in planetInfoPanels)
                 {

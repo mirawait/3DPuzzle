@@ -10,6 +10,7 @@ public class LoadGameScene : MonoBehaviour
     private SolarSystem solarSystemManager;
     private GameObject clickedPlanet;
     uint subsctiptionID;
+    bool isWaitingForPlanetClick = false;
     public void LoadScene()
     {
         GameObject Sun = GameObject.Find("Sun");
@@ -54,22 +55,30 @@ public class LoadGameScene : MonoBehaviour
         }
     }
 
-    public void start()
+    public void startWaitingForPlanetClick()
     {
-        subsctiptionID = GesturesController.subscribeToPlanetClick(
-            (GameObject target) =>
-            {
-                Debug.LogError("Im inside load scene handler");
-                if (target.tag == "Planet")
+        if (!isWaitingForPlanetClick)
+        {
+            subsctiptionID = GesturesController.subscribeToPlanetClick(
+                (GameObject target) =>
                 {
-                    planetType = target.GetComponent<PlanetScript>().GetIndex();
-                    clickedPlanet = target;
-                    Debug.LogError("NEW PLANET TYPE SETTED:" + planetType);
-                }
-            });
+                    Debug.LogError("Im inside load scene handler");
+                    if (target.tag == "Planet")
+                    {
+                        planetType = target.GetComponent<PlanetScript>().GetIndex();
+                        clickedPlanet = target;
+                        Debug.LogError("NEW PLANET TYPE SETTED:" + planetType);
+                    }
+                });
+            isWaitingForPlanetClick = true;
+        }
     }
-    public void stop()
+    public void stopWaitingForPlanetClick()
     {
-        GesturesController.unsubscribeToPlanetClick(subsctiptionID);
+        if (isWaitingForPlanetClick)
+        {
+            GesturesController.unsubscribeToPlanetClick(subsctiptionID);
+            isWaitingForPlanetClick = false;
+        }
     }
 }
