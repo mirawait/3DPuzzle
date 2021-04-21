@@ -1306,7 +1306,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0421\u043E\u0431\u0440\u0430\u0442\u044C"
+  m_text: "\u041D\u0430\u0447\u0430\u0442\u044C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 61dd8b8ff3c977745a5ec85d85d22d82, type: 2}
   m_sharedMaterial: {fileID: -1139681564141944805, guid: 61dd8b8ff3c977745a5ec85d85d22d82, type: 2}
@@ -19506,7 +19506,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C"
+  m_text: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 61dd8b8ff3c977745a5ec85d85d22d82, type: 2}
   m_sharedMaterial: {fileID: -1139681564141944805, guid: 61dd8b8ff3c977745a5ec85d85d22d82, type: 2}
@@ -19730,7 +19730,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 145}
-  m_SizeDelta: {x: 600, y: 50}
+  m_SizeDelta: {x: 885.9492, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1061693437
 MonoBehaviour:
@@ -19752,7 +19752,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0421\u043B\u043E\u0436\u043D\u043E\u0441\u0442\u044C"
+  m_text: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C \u0441\u043B\u043E\u0436\u043D\u043E\u0441\u0442\u0438"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 875a785fe72275c409b0bef3735022a4, type: 2}
   m_sharedMaterial: {fileID: -8264460453621894634, guid: 875a785fe72275c409b0bef3735022a4, type: 2}
@@ -19815,7 +19815,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -41.512943, y: 0, z: -45.16254, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -23503,7 +23503,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041C\u0443\u0437\u044B\u043A\u0430"
+  m_text: "\u0417\u0432\u0443\u043A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 875a785fe72275c409b0bef3735022a4, type: 2}
   m_sharedMaterial: {fileID: -8264460453621894634, guid: 875a785fe72275c409b0bef3735022a4, type: 2}
