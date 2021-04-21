@@ -195,14 +195,7 @@ public class CameraScript : MonoBehaviour
         else
         {
             currentPhase = Phase.PlanetLock;
-            curentCoroutine = _LockOnTargetTransition(maxPlanetZoom, new Vector3(0, 90, 0),
-            () =>
-            {
-                currentPhase = Phase.PlanetLock;
-                curentCoroutine = _FollowTarget();
-                StartCoroutine(curentCoroutine);
-                //planetClickSubscription = SolarSystemController.subscribeToPlanetClick((GameObject target) => { FocusOn(target); });
-            });
+            curentCoroutine = _FollowTarget();
             StartCoroutine(curentCoroutine);
         }
     }
@@ -294,7 +287,7 @@ public class CameraScript : MonoBehaviour
                 onComplete();
                 yield break;
             }
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.001f);
         }
     }
     IEnumerator _MoveToPoint(Vector3 targetPos, Quaternion targetRot, Phase targetPhase)
@@ -314,7 +307,7 @@ public class CameraScript : MonoBehaviour
                 currentPhase = targetPhase;
                 yield break;
             }
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.001f);
         }
     }
 
