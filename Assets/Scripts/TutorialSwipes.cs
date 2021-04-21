@@ -119,8 +119,10 @@ public class TutorialSwipes : MonoBehaviour
                 }
                 else
                 {
-                    StartNextStep();
-                    StartNextStep();
+                    tutorialZoomOut.SetActive(false);
+                    permitedActionSetter(TutorialScript.Actions.Any);
+                    actionOnComplete();
+                    currentStage = Stages.WaitingForStart;
                 }
                 break;
             case Stages.ZoomOut:

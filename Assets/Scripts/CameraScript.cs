@@ -37,7 +37,15 @@ public class CameraScript : MonoBehaviour
                   currentZoom,
                   currentRotationSpeed;
                   
-    private uint planetClickSubscription;
+    private uint planetClickSubscription,
+                 swipeUpSubscription,
+                 swipeDownSubscription,
+                 swipeLeftSubscription,
+                 swipeRightSubscription,
+                 spreadSubscription,
+                 pinchSubscription;
+    private bool isSubscribedToGestures = false;
+    
     //private float CameraXLimitRight = 21;
     //private float CameraXLimitLeft = -21;
     private GameObject sun,
@@ -50,80 +58,108 @@ public class CameraScript : MonoBehaviour
     {
         sun = GameObject.Find("Sun");
         camera = GetComponent<Camera>();
-        Action<GesturesController.Gestures> rotationHandler = (GesturesController.Gestures gesture) =>
+        
+    }
+
+    void subscribeToGestures()
+    {
+        if (!isSubscribedToGestures)
         {
-            if (currentPhase == Phase.Free || currentPhase == Phase.PlanetLock)
+            Action<GesturesController.Gestures> rotationHandler = (GesturesController.Gestures gesture) =>
             {
-                transform.LookAt(target.transform);
-                Vector3 direction = Vector3.zero;
-                switch (gesture)
+                if (currentPhase == Phase.Free || currentPhase == Phase.PlanetLock)
                 {
-                    case GesturesController.Gestures.SwipeRight:
-                        direction = Vector3.left;
-                        break;
-                    case GesturesController.Gestures.SwipeLeft:
-                        direction = Vector3.right;
-                        break;
-                    case GesturesController.Gestures.SwipeUp:
-                        direction = Vector3.down;
-                        break;
-                    case GesturesController.Gestures.SwipeDown:
-                        direction = Vector3.up;
-                        break;
-                }
-                if (direction == Vector3.up || direction == Vector3.down)
-                {
-                    Vector3 lockTargetDirection = transform.position - target.transform.position;
-                    float angleY = Vector3.Angle(lockTargetDirection, Vector3.up);
-                    Debug.Log(CameraYLimitUp + "<" + angleY + "<" + CameraYLimitDown);
-                    if ((angleY < CameraYLimitUp && direction == Vector3.up) || (angleY > CameraYLimitDown && direction == Vector3.down))
+                    transform.LookAt(target.transform);
+                    Vector3 direction = Vector3.zero;
+                    switch (gesture)
                     {
-                        return;
+                        case GesturesController.Gestures.SwipeRight:
+                            direction = Vector3.left;
+                            break;
+                        case GesturesController.Gestures.SwipeLeft:
+                            direction = Vector3.right;
+                            break;
+                        case GesturesController.Gestures.SwipeUp:
+                            direction = Vector3.down;
+                            break;
+                        case GesturesController.Gestures.SwipeDown:
+                            Debug.Log("Handling swipe down");
+                            direction = Vector3.up;
+                            break;
                     }
-                }
-                transform.Translate(direction * Time.deltaTime * currentRotationSpeed);
+                    if (direction == Vector3.up || direction == Vector3.down)
+                    {
+                        Vector3 lockTargetDirection = transform.position - target.transform.position;
+                        float angleY = Vector3.Angle(lockTargetDirection, Vector3.up);
+                        Debug.Log(CameraYLimitUp + "<" + angleY + "<" + CameraYLimitDown);
+                        if ((angleY < CameraYLimitUp && direction == Vector3.up) || (angleY > CameraYLimitDown && direction == Vector3.down))
+                        {
+                            return;
+                        }
+                    }
+                    transform.Translate(direction * Time.deltaTime * currentRotationSpeed);
                 //_FollowTarget();
                 transform.LookAt(target.transform);
-            }
-        };
-
-        Action<GesturesController.Gestures> zoomHandler = (GesturesController.Gestures gesture) =>
-        {
-            if (currentPhase == Phase.Free)
-            {
-                transform.LookAt(target.transform);
-                int deltaMagnitudeDiff = 0;
-                switch (gesture)
-                {
-                    case GesturesController.Gestures.Spread:
-                        deltaMagnitudeDiff = -1;
-                        break;
-                    case GesturesController.Gestures.Pinch:
-                        deltaMagnitudeDiff = 1;
-                        break;
                 }
-                Vector3 targetDirection = transform.position - target.transform.position;
-                targetDirection.Normalize();
-                Vector3 newPos = transform.position + targetDirection * deltaMagnitudeDiff * zoomSpeed * Time.deltaTime;
-                Vector3 newDirection = newPos - target.transform.position;
-                newDirection.Normalize();
-                float newDistance = Vector3.Distance(target.transform.position, newPos);
-                if (newDistance > currentMinZoom && newDistance < currentMaxZoom && targetDirection == newDirection)
-                    transform.position = newPos;
-                currentZoom = Vector3.Distance(transform.position, target.transform.position);
-            }
-        };
+            };
 
-        GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDown, rotationHandler);
-        GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeLeft, rotationHandler);
-        GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeRight, rotationHandler);
-        GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeUp, rotationHandler);
+            Action<GesturesController.Gestures> zoomHandler = (GesturesController.Gestures gesture) =>
+            {
+                if (currentPhase == Phase.Free)
+                {
+                    transform.LookAt(target.transform);
+                    int deltaMagnitudeDiff = 0;
+                    switch (gesture)
+                    {
+                        case GesturesController.Gestures.Spread:
+                            deltaMagnitudeDiff = -1;
+                            break;
+                        case GesturesController.Gestures.Pinch:
+                            deltaMagnitudeDiff = 1;
+                            break;
+                    }
+                    Vector3 targetDirection = transform.position - target.transform.position;
+                    targetDirection.Normalize();
+                    Vector3 newPos = transform.position + targetDirection * deltaMagnitudeDiff * zoomSpeed * Time.deltaTime;
+                    Vector3 newDirection = newPos - target.transform.position;
+                    newDirection.Normalize();
+                    float newDistance = Vector3.Distance(target.transform.position, newPos);
+                    if (newDistance > currentMinZoom && newDistance < currentMaxZoom && targetDirection == newDirection)
+                        transform.position = newPos;
+                    currentZoom = Vector3.Distance(transform.position, target.transform.position);
+                }
+            };
 
-        GesturesController.subscribeToGesture(GesturesController.Gestures.Spread, zoomHandler);
-        GesturesController.subscribeToGesture(GesturesController.Gestures.Pinch, zoomHandler);
+            swipeDownSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDown, rotationHandler);
+            swipeLeftSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeLeft, rotationHandler);
+            swipeRightSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeRight, rotationHandler);
+            swipeUpSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeUp, rotationHandler);
+
+            spreadSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.Spread, zoomHandler);
+            pinchSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.Pinch, zoomHandler);
+            isSubscribedToGestures = true;
+        }
     }
+
+    void unsubscribeToGestures()
+    {
+        if (isSubscribedToGestures)
+        {
+            GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
+            GesturesController.unsubscribeFromGesture(swipeDownSubscription);
+            GesturesController.unsubscribeFromGesture(swipeLeftSubscription);
+            GesturesController.unsubscribeFromGesture(swipeRightSubscription);
+            GesturesController.unsubscribeFromGesture(swipeUpSubscription);
+            GesturesController.unsubscribeFromGesture(spreadSubscription);
+            GesturesController.unsubscribeFromGesture(pinchSubscription);
+            isSubscribedToGestures = false;
+        }
+    }
+
     public void GoFree()
     {
+        subscribeToGestures();
+
         currentPhase = Phase.GoingFree;
         currentMaxZoom = maxSolarZoom;
         currentMinZoom = minSolarZoom;
@@ -140,8 +176,11 @@ public class CameraScript : MonoBehaviour
                 planetClickSubscription = GesturesController.subscribeToPlanetClick(
                     (GameObject target) => 
                         {
-                            GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
-                            FocusOn(target);
+                            if (target.tag == "Planet")
+                            {
+                                GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
+                                FocusOn(target);
+                            }
                         });
             });
         StartCoroutine(curentCoroutine);
@@ -154,7 +193,7 @@ public class CameraScript : MonoBehaviour
         if (curentCoroutine != null)
             StopCoroutine(curentCoroutine);
         curentCoroutine = _MoveToPoint(camStartPos.transform.position, camStartPos.transform.rotation, Phase.Menu);
-        GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
+        unsubscribeToGestures();
         StartCoroutine(curentCoroutine);
     }
     public void GoSettings()
@@ -304,7 +343,7 @@ public class CameraScript : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 8 * Time.deltaTime);
             Debug.Log("CAMERA POSITION = " + transform.position);
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 2 * (initDist - dist) / initDist * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 5 * (initDist - dist) / initDist * Time.deltaTime);
 
             if (transform.position == targetPos && transform.rotation == targetRot)
             {
