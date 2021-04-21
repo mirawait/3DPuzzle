@@ -35,6 +35,8 @@ public class Manager : MonoBehaviour
 
     public void Start_Puzzles(int PlanetType, int PuzzleLevel)
     {
+        Debug.LogError("MANAGER PUZZLE TYPE " + PlanetType);
+
         if (targetGameObject == null)
             targetGameObject = GameObject.FindWithTag("Text");
         if (targetGameObject != null)

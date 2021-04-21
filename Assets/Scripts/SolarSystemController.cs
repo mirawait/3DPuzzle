@@ -73,12 +73,13 @@ public class SolarSystemController : MonoBehaviour
                 Debug.DrawRay(transform.position, raycastHit.point, Color.red, 5f);
                 //if (raycastHit.transform.gameObject.tag == "Planet")
                 //{
-                    Debug.Log("Clicked object name:" + raycastHit.transform.gameObject.name);
+                    Debug.LogError("Clicked object name:" + raycastHit.transform.gameObject.name);
                     if (!TutorialScript.IsActionPermitted(TutorialScript.Actions.Tapping, raycastHit.transform.gameObject))
                     {
                         Debug.Log("Click on " + raycastHit.transform.gameObject.name + "is not permited");
                         return;
                     }
+                Debug.LogError("Notyfiing " + subscriptionsOnObjectTaps.Count + " subs");
                     foreach (Action<GameObject> actionOnClick in subscriptionsOnObjectTaps.Values)
                     {
                         actionOnClick(raycastHit.transform.gameObject);

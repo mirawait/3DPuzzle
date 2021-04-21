@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 public class LoadGameScene : MonoBehaviour
 {
     private bool isLoaded = false;
-    private uint planetType = 0;
+    public uint planetType = 0;
     private GameObject manager;
     private SolarSystem solarSystemManager;
     private GameObject clickedPlanet;
+    uint subsctiptionID;
     public void LoadScene()
     {
         GameObject Sun = GameObject.Find("Sun");
@@ -31,6 +32,7 @@ public class LoadGameScene : MonoBehaviour
             yield return null;
         }
         manager = GameObject.FindGameObjectWithTag("Manager");
+        Debug.LogError("LOAD SCENE ASYNC PUZZLE TYPE " + planetType);
         manager.GetComponent<Manager>().Start_Puzzles((int)planetType, (int)DificultySwitcherScript.GetChosenDifficulty());
     }
 
@@ -52,16 +54,22 @@ public class LoadGameScene : MonoBehaviour
         }
     }
 
-    void Start()
+    public void start()
     {
-        uint planetClickSubscription = SolarSystemController.subscribeToPlanetClick(
+        subsctiptionID = SolarSystemController.subscribeToPlanetClick(
             (GameObject target) =>
             {
+                Debug.LogError("Im inside load scene handler");
                 if (target.tag == "Planet")
                 {
                     planetType = target.GetComponent<PlanetScript>().GetIndex();
                     clickedPlanet = target;
+                    Debug.LogError("NEW PLANET TYPE SETTED:" + planetType);
                 }
             });
+    }
+    public void stop()
+    {
+        SolarSystemController.unsubscribeToPlanetClick(subsctiptionID);
     }
 }

@@ -78,7 +78,7 @@ public class MenuScript : MonoBehaviour
         htpButton.SetActive(false);
         exitButton.SetActive(false);
         btmButton.SetActive(true);
-
+        loadGameScene.start();
         solarSystem.EnableSolarSystemPhase(true);
         _CheckoutToSolarSystemPhase();
     }
@@ -116,6 +116,7 @@ public class MenuScript : MonoBehaviour
                 solarSystem.EnableSolarSystemPhase(false);
                 mainCamera.GoMenu();
                 tutorial.DisableTutorial();
+                loadGameScene.stop();
                 break;
             case UI_Phase.PlanetInfo:
                 mainCamera.GoFree();
