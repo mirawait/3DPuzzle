@@ -304,7 +304,7 @@ public class Piece : MonoBehaviour
 
         while (true)
         {
-            transform.RotateAround(centerPos, Vector3.up, rotationDir * 1);
+            transform.RotateAround(centerPos, Camera.main.transform.up, rotationDir * 1);
 
             var currentDistanceToFitOnPos = Vector3.Distance(fitOnPos, transform.position);
 
@@ -312,7 +312,7 @@ public class Piece : MonoBehaviour
                 lastDistanceToFitOnPos = currentDistanceToFitOnPos;
             else
             {
-                transform.RotateAround(centerPos, Vector3.down, rotationDir * 1);
+                transform.RotateAround(centerPos, Camera.main.transform.up * -1, rotationDir * 1);
 
                 rotationDir *= -1;
 
@@ -327,7 +327,7 @@ public class Piece : MonoBehaviour
 
         while (true)
         {
-            transform.RotateAround(centerPos, Vector3.forward, rotationDir * 1);
+            transform.RotateAround(centerPos, Camera.main.transform.forward, rotationDir * 1);
 
             var currentDistanceToFitOnPos = Vector3.Distance(fitOnPos, transform.position);
 
@@ -335,7 +335,7 @@ public class Piece : MonoBehaviour
                 lastDistanceToFitOnPos = currentDistanceToFitOnPos;
             else
             {
-                transform.RotateAround(centerPos, Vector3.back, rotationDir * 1);
+                transform.RotateAround(centerPos, Camera.main.transform.forward * -1, rotationDir * 1);
 
                 rotationDir *= -1;
 
@@ -350,7 +350,7 @@ public class Piece : MonoBehaviour
 
         while (true)
         {
-            transform.RotateAround(centerPos, Vector3.left, rotationDir * 1);
+            transform.RotateAround(centerPos, Camera.main.transform.right * -1, rotationDir * 1);
 
             var currentDistanceToFitOnPos = Vector3.Distance(fitOnPos, transform.position);
 
@@ -358,7 +358,7 @@ public class Piece : MonoBehaviour
                 lastDistanceToFitOnPos = currentDistanceToFitOnPos;
             else
             {
-                transform.RotateAround(centerPos, Vector3.right, rotationDir * 1);
+                transform.RotateAround(centerPos, Camera.main.transform.right, rotationDir * 1);
 
                 rotationDir *= -1;
 
