@@ -108,8 +108,8 @@ public class Piece : MonoBehaviour
 
         SetCondition(Condition.FOCUSED);
 
-        GetComponent<Zoomable>().Permit();
-        GetComponent<Rotatable>().Permit();
+        //GetComponent<Zoomable>().Permit();
+        GetComponent<Rotatable>().Permit(true);
 
         TravelToPos(zoomablePos);
 
@@ -167,12 +167,12 @@ public class Piece : MonoBehaviour
 
         if (isStraightening)
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, defaultRotation, Time.deltaTime * straightenSpeed);
+            //transform.rotation = Quaternion.RotateTowards(transform.rotation, defaultRotation, Time.deltaTime * straightenSpeed);
 
-            if (transform.rotation == defaultRotation)
-            {
+            //if (transform.rotation == defaultRotation)
+            //{
                 isStraightening = false;
-            }
+            //}
         }
 
         HandleCondition();

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Rotatable : MonoBehaviour
 {
-    public void Permit()
+    public void Permit(bool aroundOnly = false)
     {
+        isAroundOnlyPermited = aroundOnly;
         isPermited = true;
     }
 
@@ -26,6 +27,7 @@ public class Rotatable : MonoBehaviour
     private const float rotationSpeed = 50f;
 
     private bool isPermited = false;
+    private bool isAroundOnlyPermited = false;
 
     void HandleInput()
     {
@@ -56,7 +58,7 @@ public class Rotatable : MonoBehaviour
             int rotationDirY = 0;
             int rotationDirZ = 0;
 
-            if (Input.touchCount == 1)
+            if (Input.touchCount == 1 && !isAroundOnlyPermited)
             {
                 Touch touch = Input.GetTouch(0);
 
