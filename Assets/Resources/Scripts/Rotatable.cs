@@ -33,27 +33,6 @@ public class Rotatable : MonoBehaviour
     {
         if (isPermited)
         {
-#if UNITY_STANDALONE
-            if (Input.GetMouseButton(0))
-            {
-                int rotationDirX = 0;
-                int rotationDirY = 0;
-
-                if (Input.GetAxis("Mouse X") < 0)
-                    rotationDirY = 1;
-                else if (Input.GetAxis("Mouse X") > 0)
-                    rotationDirY = -1;
-
-                if (Input.GetAxis("Mouse Y") < 0)
-                    rotationDirX = -1;
-                else if (Input.GetAxis("Mouse Y") > 0)
-                    rotationDirX = 1;
-
-                Rotate(rotationDirX, rotationDirY);
-            }
-#endif
-
-
             int rotationDirX = 0;
             int rotationDirY = 0;
             int rotationDirZ = 0;
@@ -124,8 +103,17 @@ public class Rotatable : MonoBehaviour
             }
             else if (Input.touchCount == 2)
             {
-                Touch touch0 = Input.GetTouch(0);
-                Touch touch1 = Input.GetTouch(1);
+                Touch touch0, touch1;
+                if (Input.GetTouch(0).position.x <= Input.GetTouch(1).position.x)
+                {
+                    touch0 = Input.GetTouch(0);
+                    touch1 = Input.GetTouch(1);
+                }
+                else
+                {
+                    touch1 = Input.GetTouch(0);
+                    touch0 = Input.GetTouch(1);
+                }
 
                 Vector2 deltaPos0 = touch0.deltaPosition;
                 Vector2 deltaPos1 = touch1.deltaPosition;
