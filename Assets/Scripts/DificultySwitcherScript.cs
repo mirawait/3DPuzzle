@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class DificultySwitcherScript : MonoBehaviour
 {
-    GameObject nextButton, prevButton, text;
-
+    GameObject  text;
+    public GameObject nextButton, prevButton;
     public enum Difficulty
     {
         Easy,
