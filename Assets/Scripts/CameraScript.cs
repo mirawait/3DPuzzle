@@ -42,6 +42,10 @@ public class CameraScript : MonoBehaviour
                  swipeDownSubscription,
                  swipeLeftSubscription,
                  swipeRightSubscription,
+                 swipeUpLeftSubscription,
+                 swipeDownLeftSubscription,
+                 swipeUpRightSubscription,
+                 swipeDownRightSubscription,
                  spreadSubscription,
                  pinchSubscription;
     private bool isSubscribedToGestures = false;
@@ -74,32 +78,47 @@ public class CameraScript : MonoBehaviour
                     switch (gesture)
                     {
                         case GesturesController.Gestures.SwipeRight:
-                            direction = Vector3.left;
+                            direction += Vector3.left;
                             break;
                         case GesturesController.Gestures.SwipeLeft:
-                            direction = Vector3.right;
+                            direction += Vector3.right;
                             break;
                         case GesturesController.Gestures.SwipeUp:
-                            direction = Vector3.down;
+                            direction += Vector3.down;
                             break;
                         case GesturesController.Gestures.SwipeDown:
-                            Debug.Log("Handling swipe down");
-                            direction = Vector3.up;
+                            direction += Vector3.up;
+                            break;
+
+                        case GesturesController.Gestures.SwipeDownLeft:
+                            direction += Vector3.up;
+                            direction += Vector3.right;
+                            break;
+                        case GesturesController.Gestures.SwipeDownRight:
+                            direction += Vector3.up;
+                            direction += Vector3.left;
+                            break;
+                        case GesturesController.Gestures.SwipeTopleft:
+                            direction += Vector3.down;
+                            direction += Vector3.right;
+                            break;
+                        case GesturesController.Gestures.SwipeTopRight:
+                            direction += Vector3.down;
+                            direction += Vector3.left;
                             break;
                     }
-                    if (direction == Vector3.up || direction == Vector3.down)
+                    if (direction.y != 0)
                     {
                         Vector3 lockTargetDirection = transform.position - target.transform.position;
                         float angleY = Vector3.Angle(lockTargetDirection, Vector3.up);
                         Debug.Log(CameraYLimitUp + "<" + angleY + "<" + CameraYLimitDown);
-                        if ((angleY < CameraYLimitUp && direction == Vector3.up) || (angleY > CameraYLimitDown && direction == Vector3.down))
+                        if ((angleY < CameraYLimitUp && direction.y == 1) || (angleY > CameraYLimitDown && direction.y == -1))
                         {
-                            return;
+                            direction.y = 0;
                         }
                     }
                     transform.Translate(direction * Time.deltaTime * currentRotationSpeed);
-                //_FollowTarget();
-                transform.LookAt(target.transform);
+                    transform.LookAt(target.transform);
                 }
             };
 
@@ -135,6 +154,11 @@ public class CameraScript : MonoBehaviour
             swipeRightSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeRight, rotationHandler);
             swipeUpSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeUp, rotationHandler);
 
+            swipeUpLeftSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeTopleft, rotationHandler);
+            swipeDownLeftSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDownLeft, rotationHandler);
+            swipeUpRightSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeTopRight, rotationHandler);
+            swipeDownRightSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDownRight, rotationHandler);
+
             spreadSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.Spread, zoomHandler);
             pinchSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.Pinch, zoomHandler);
             isSubscribedToGestures = true;
@@ -150,6 +174,12 @@ public class CameraScript : MonoBehaviour
             GesturesController.unsubscribeFromGesture(swipeLeftSubscription);
             GesturesController.unsubscribeFromGesture(swipeRightSubscription);
             GesturesController.unsubscribeFromGesture(swipeUpSubscription);
+
+            GesturesController.unsubscribeFromGesture(swipeUpLeftSubscription);
+            GesturesController.unsubscribeFromGesture(swipeDownLeftSubscription);
+            GesturesController.unsubscribeFromGesture(swipeUpRightSubscription);
+            GesturesController.unsubscribeFromGesture(swipeDownRightSubscription);
+
             GesturesController.unsubscribeFromGesture(spreadSubscription);
             GesturesController.unsubscribeFromGesture(pinchSubscription);
             isSubscribedToGestures = false;
@@ -360,24 +390,5 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (target != null)
-        //{
-        //    Vector3 direction = transform.position - target.transform.position;
-        //    float angleY = Vector3.Angle(direction, Vector3.up);
-        //    Debug.Log(angleY);
-        //}
-        //switch (currentPhase)
-        //{
-        //    
-        //    case Phase.Free:
-                //_HandleRotation();
-                //_HandleZoom();
-        //        break;
-        //    case Phase.PlanetLock:
-                //_HandleRotation();
-                //_HandleZoom();
-                //_FollowTarget();
-        //        break;
-        //}
     }
 }
