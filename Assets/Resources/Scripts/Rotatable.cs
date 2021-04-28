@@ -75,7 +75,6 @@ public class Rotatable : MonoBehaviour
 
     void Update()
     {
-        //HandleInput();
     }
 
     private const float rotationSpeed = 50f;

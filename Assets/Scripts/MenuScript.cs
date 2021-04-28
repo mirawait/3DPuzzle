@@ -297,6 +297,10 @@ public class MenuScript : MonoBehaviour
             {
                 infoPanel.SetActive(true);
             }
+            else
+            {
+                infoPanel.SetActive(false);
+            }
         }
         currentPhase = UI_Phase.PlanetInfo;
         btmButton.SetActive(true);
