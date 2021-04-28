@@ -21,6 +21,7 @@ public class MenuScript : MonoBehaviour
     private GameObject planetNameInGame;
     uint lastActiveInfoPanel;
     uint planetClickSubscription;
+    private static bool isOnPause = false;
     enum UI_Phase
     {
         PlanetInfo,
@@ -181,6 +182,7 @@ public class MenuScript : MonoBehaviour
                 dificultySwitcherScript.prevButton.GetComponent<Button>().interactable = false;
                 currentPhase = UI_Phase.Pause;
                 Time.timeScale = 0;
+                isOnPause = true;
                 pauseMenuBG.SetActive(true);
                 break;
             case UI_Phase.Settings:
@@ -201,7 +203,9 @@ public class MenuScript : MonoBehaviour
                 pauseMenuBG.SetActive(false);
                 //settingsMenu.SetActive(false);
                 pauseMenuCanvas.SetActive(false);
-                
+                isOnPause = false;
+
+
                 break;
             case UI_Phase.PauseSettings:
                 currentPhase = UI_Phase.Pause;
@@ -243,11 +247,18 @@ public class MenuScript : MonoBehaviour
     {
        areYouSurePanel = Instantiate(Resources.Load("Prefabs/AreYouSurePanel") as GameObject, pauseMenuCanvas.transform);
     }
+
+    public static bool IsOnPause()
+    {
+        return isOnPause;
+    }
+
     public void GoToMainMenu()
     {
         Destroy(GameObject.Find("AreYouSurePanel(Clone)"));
         planetNameInGame.SetActive(false);
         Time.timeScale = 1;
+        isOnPause = false;
         mainCamera.EnablePuzzleLock(false);
         currentPhase = UI_Phase.PlanetInfo;
         StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));

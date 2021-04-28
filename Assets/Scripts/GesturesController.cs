@@ -279,7 +279,10 @@ public class GesturesController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _HandleSwipes();
-        _HandleObjectTap();
+        if (!MenuScript.IsOnPause())
+        {
+            _HandleSwipes();
+            _HandleObjectTap();
+        }
     }
 }
