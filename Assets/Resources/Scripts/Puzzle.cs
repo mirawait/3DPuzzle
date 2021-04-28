@@ -40,6 +40,64 @@ public class Puzzle : MonoBehaviour
 
     void Start()
     {
+        doubleTapSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.DoubleTap, 
+            (GesturesController.Gestures gesture) => {
+            if (currentPiece == null)
+            { 
+                hud.GetComponent<Hud>().ShufflePieces(); 
+            }
+        });
+        freeAreaTapSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.FreeAreaTap, 
+            (GesturesController.Gestures gesture) => {
+            if (currentPiece != null)
+            {
+                var pieceScript = currentPiece.GetComponent<Piece>();
+
+                switch (pieceScript.GetCondition())
+                {
+                    case Piece.Condition.FOCUSED:
+                        if (!pieceScript.Release())
+                            return;
+
+                        currentPiece = null;
+
+                        puzzleFrame.GetComponent<Rotatable>().Permit();
+                        planetOutline.GetComponent<Rotatable>().Permit();
+
+                        break;
+
+                    case Piece.Condition.SELECTED:
+                        if (!pieceScript.Focus())
+                            return;
+
+                        puzzleFrame.GetComponent<Rotatable>().Forbid();
+                        planetOutline.GetComponent<Rotatable>().Forbid();
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
+        pieceTapSubscription = GesturesController.subscribeToPlanetClick(
+            (GameObject obj) => {
+                if (!isInited)
+                    return;
+
+                bool isPiece = isOneOfPieces(obj);
+                if (isPiece)
+                {
+                    HandlePieceClicked(obj);
+                }
+            });
+    }
+
+    private void OnDestroy()
+    {
+        GesturesController.unsubscribeFromGesture(doubleTapSubscription);
+        GesturesController.unsubscribeFromGesture(freeAreaTapSubscription);
+        GesturesController.unsubscribeFromGesture(pieceTapSubscription);
     }
 
     void Update()
@@ -47,18 +105,12 @@ public class Puzzle : MonoBehaviour
         if (!isInited)
             return;
 
-        HandleInput();
         HandleCurrentPiece();
     }
 
-    private static System.TimeSpan mouseClickInterval = System.TimeSpan.FromMilliseconds(150);
-    private static System.TimeSpan mouseDoubleClickInterval = System.TimeSpan.FromMilliseconds(300);
-
+    private uint doubleTapSubscription, freeAreaTapSubscription, pieceTapSubscription;
+    
     private bool isInited = false;
-
-    private System.DateTime lastMouseDownDateTime;
-    private System.DateTime lastMouseUpDateTime;
-    private int mouseClickCount = 0;
 
     private Material material;
 
@@ -137,139 +189,16 @@ public class Puzzle : MonoBehaviour
         currentPiece = null;
     }
 
-    private void HandleInput()
+    private bool isOneOfPieces(GameObject obj)
     {
-#if UNITY_STANDALONE
-        if (Input.GetMouseButtonDown(0))
-        {
-            lastMouseDownDateTime = System.DateTime.Now;
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            mouseClickCount++;
-
-            if ((System.DateTime.Now - lastMouseDownDateTime) < mouseClickInterval)
-            {
-                HandleMouseUp();
-            }
-
-            lastMouseUpDateTime = System.DateTime.Now;
-        }
-        else
-        {
-            if ((System.DateTime.Now - lastMouseUpDateTime) >= mouseDoubleClickInterval)
-            {
-                mouseClickCount = 0;
-            }
-        }
-#endif
-
-#if UNITY_ANDROID
-        if (Input.touchCount == 1)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-            {
-                lastMouseDownDateTime = System.DateTime.Now;
-            }
-
-            if (touch.phase == TouchPhase.Ended)
-            {
-                mouseClickCount++;
-
-                if ((System.DateTime.Now - lastMouseDownDateTime) < mouseClickInterval)
-                {
-                    HandleMouseUp();
-                }
-
-                lastMouseUpDateTime = System.DateTime.Now;
-            }
-            else
-            {
-                if ((System.DateTime.Now - lastMouseUpDateTime) >= mouseDoubleClickInterval)
-                {
-                    mouseClickCount = 0;
-                }
-            }
-
-            //mouseClickCount = Input.GetTouch(0).tapCount;
-
-            //HandleMouseUp();
-        }
-#endif
-    }
-
-    private void HandleMouseUp()
-    {
-        var clickedPiece = DetectClickedPiece();
-
-        if (clickedPiece != null)
-        {
-            HandlePieceClicked(clickedPiece);
-        }
-        else
-        {
-            HandlePieceMisclicked();
-        }
-    }
-
-    private GameObject DetectClickedPiece()
-    {
-#if UNITY_STANDALONE
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-#endif
-
-#if UNITY_ANDROID
-        Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-#endif
-
-        GameObject clickedPiece = null;
-
-        RaycastHit hit;
-        Physics.Raycast(Camera.main.transform.position, ray.direction, out hit, Mathf.Infinity);
-
-        //if (gameObject.GetComponent<LineRenderer>() != null)
-        //{
-        //    Destroy(gameObject.GetComponent<LineRenderer>());
-        //}
-
-        //LineRenderer line = gameObject.AddComponent<LineRenderer>();
-        //line.material = new Material(Shader.Find("Sprites/Default"));
-        //line.positionCount = 2;
-        //line.SetPosition(0, Camera.main.transform.position - new Vector3(0, 1, 0));
-        //line.SetPosition(1, Camera.main.transform.position + (ray.direction * 10));
-        //line.startColor = Color.green;
-        //line.startWidth = 0.5f;
-        //line.enabled = true;
-
-        //if (hit.transform.name == "Test")
-        //{
-        //    hit.transform.gameObject.SetActive(false);
-        //}
-
-        //if (hit.transform != null)
-        //{
-        //    pieces[0].SetActive(false);
-        //}
-
-        //Debug.DrawRay(Camera.main.transform.position, ray.direction, Color.green, Mathf.Infinity);
-
         foreach (var piece in pieces)
         {
-            //Physics.Raycast(ray, out hit);
-
-            //if (hit.transform.gameObject && piece == hit.transform.gameObject) 
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity) && piece.Equals(hit.transform.gameObject))
+            if (piece.Equals(obj))
             {
-                clickedPiece = piece;
-                //clickedPiece.SetActive(false);
-
-                break;
+                return true;
             }
         }
-        return clickedPiece;
+        return false;
     }
 
     private void HandlePieceClicked(GameObject clickedPiece)
@@ -311,46 +240,6 @@ public class Puzzle : MonoBehaviour
                 puzzleFrame.GetComponent<Rotatable>().Permit();
                 planetOutline.GetComponent<Rotatable>().Permit();
             }
-        }
-    }
-
-    private void HandlePieceMisclicked()
-    {
-        if (currentPiece == null)
-        {
-            if (mouseClickCount == 2)
-            {
-                hud.GetComponent<Hud>().ShufflePieces();
-            }
-            return;
-        }
-
-        var pieceScript = currentPiece.GetComponent<Piece>();
-
-        switch (pieceScript.GetCondition())
-        {
-            case Piece.Condition.FOCUSED:
-                if (!pieceScript.Release())
-                    return;
-
-                currentPiece = null;
-
-                puzzleFrame.GetComponent<Rotatable>().Permit();
-                planetOutline.GetComponent<Rotatable>().Permit();
-
-                break;
-
-            case Piece.Condition.SELECTED:
-                if (!pieceScript.Focus())
-                    return;
-
-                puzzleFrame.GetComponent<Rotatable>().Forbid();
-                planetOutline.GetComponent<Rotatable>().Forbid();
-
-                break;
-
-            default:
-                break;
         }
     }
 

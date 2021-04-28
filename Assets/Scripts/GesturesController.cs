@@ -25,6 +25,7 @@ public class GesturesController : MonoBehaviour
         SwipeDownRight = 13,
         SwipeDownLeft = 14,
         DoubleTap = 15,
+        FreeAreaTap = 16,
         Ending
     }
     static Dictionary<uint, Action<GameObject>> subscriptionsOnObjectTaps = new Dictionary<uint, Action<GameObject>>();
@@ -32,6 +33,10 @@ public class GesturesController : MonoBehaviour
     CameraScript mainCamera;
     static public bool isGestureGoing = false;
     static Gestures currentGesture = Gestures.Undefined;
+    private System.DateTime lastTapStartDateTime, lastTapEndDateTime;
+    private System.TimeSpan singleTapInterval = System.TimeSpan.FromMilliseconds(200),
+                            doubleTapInterval = System.TimeSpan.FromMilliseconds(300);
+    private int tapsCount = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -83,29 +88,35 @@ public class GesturesController : MonoBehaviour
 
     void _HandleObjectTap()
     {
-        if ((Input.touchCount == 1) && (Input.GetTouch(0).phase == TouchPhase.Began)/* && isCurrentPhase(CameraScript.Phase.Free)*/) //ReadyForLock())
+        if ((Input.touchCount == 1) && !isGestureGoing)
         {
-            Ray raycast = mainCamera.camera.ScreenPointToRay(Input.GetTouch(0).position);
-            RaycastHit raycastHit;
-            if (Physics.Raycast(raycast, out raycastHit, Mathf.Infinity))
+            if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
-                Debug.DrawRay(transform.position, raycastHit.point, Color.red, 5f);
-                Debug.LogError("Clicked object name:" + raycastHit.transform.gameObject.name);
-                if (!TutorialScript.IsActionPermitted(TutorialScript.Actions.Tapping, raycastHit.transform.gameObject))
+                if ((System.DateTime.Now - lastTapStartDateTime) < singleTapInterval)
                 {
-                    Debug.Log("Click on " + raycastHit.transform.gameObject.name + "is not permited");
-                    return;
+                    Ray raycast = mainCamera.camera.ScreenPointToRay(Input.GetTouch(0).position);
+                    RaycastHit raycastHit;
+                    if (Physics.Raycast(raycast, out raycastHit, Mathf.Infinity))
+                    {
+                        Debug.DrawRay(transform.position, raycastHit.point, Color.red, 5f);
+                        _notifyAboutObjectTap(raycastHit.transform.gameObject);
+                    }
+                    else if (lastTapStartDateTime - lastTapEndDateTime <= doubleTapInterval)
+                    {
+                        _notifyAboutGesture(Gestures.DoubleTap);
+                    }
+                    else
+                    {
+                        _notifyAboutGesture(Gestures.FreeAreaTap);
+                    }
                 }
-                Debug.LogError("Notyfiing " + subscriptionsOnObjectTaps.Count + " subs");
-                Action<GameObject>[] values = new Action<GameObject>[subscriptionsOnObjectTaps.Values.Count];
-                subscriptionsOnObjectTaps.Values.CopyTo(values, 0);
-                foreach (Action<GameObject> actionOnClick in values)
-                {
-                    actionOnClick(raycastHit.transform.gameObject);
-                }
+                lastTapEndDateTime = System.DateTime.Now;
+            }
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                lastTapStartDateTime = System.DateTime.Now;
             }
         }
-        
     }
     void _HandleSwipes()
     {
@@ -228,14 +239,7 @@ public class GesturesController : MonoBehaviour
         if (currentGesture != Gestures.Undefined)
         {
             isGestureGoing = true;
-            Tuple<Gestures,Action<Gestures>>[] values = new Tuple<Gestures, Action<Gestures>>[subscriptionsOnGestures.Values.Count];
-            subscriptionsOnGestures.Values.CopyTo(values, 0);
-            Debug.LogError("Norifing " + values.Length +" about " + currentGesture);
-            foreach (Tuple<Gestures, Action<Gestures>> subscription in values)
-            {
-                if (subscription.Item1 == currentGesture)
-                    subscription.Item2(currentGesture);
-            }
+            _notifyAboutGesture(currentGesture);
             if (currentGesture == Gestures.Ending)
             {
                 isGestureGoing = false;
@@ -243,11 +247,39 @@ public class GesturesController : MonoBehaviour
             }
         }
     }
+    void _notifyAboutGesture(Gestures gesture)
+    {
+        Tuple<Gestures, Action<Gestures>>[] values = new Tuple<Gestures, Action<Gestures>>[subscriptionsOnGestures.Values.Count];
+        subscriptionsOnGestures.Values.CopyTo(values, 0);
+        Debug.LogError("Norifing " + values.Length + " about " + gesture);
+        foreach (Tuple<Gestures, Action<Gestures>> subscription in values)
+        {
+            if (subscription.Item1 == gesture)
+                subscription.Item2(gesture);
+        }
+    }
+
+    void _notifyAboutObjectTap(GameObject obj)
+    {
+        Debug.LogError("Clicked object name:" + obj.name);
+        if (!TutorialScript.IsActionPermitted(TutorialScript.Actions.Tapping, obj))
+        {
+            Debug.Log("Click on " + obj.name + "is not permited");
+            return;
+        }
+        Debug.LogError("Notyfiing " + subscriptionsOnObjectTaps.Count + " subs");
+        Action<GameObject>[] values = new Action<GameObject>[subscriptionsOnObjectTaps.Values.Count];
+        subscriptionsOnObjectTaps.Values.CopyTo(values, 0);
+        foreach (Action<GameObject> actionOnClick in values)
+        {
+            actionOnClick(obj);
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
-        _HandleObjectTap();
         _HandleSwipes();
+        _HandleObjectTap();
     }
 }
