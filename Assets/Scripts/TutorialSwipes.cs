@@ -72,10 +72,10 @@ public class TutorialSwipes : MonoBehaviour
     }
     public void StartNextStep()
     {
-        Action<GesturesController.Gestures> gestureNotificationHandler = (GesturesController.Gestures gesture) => {
+        Action<GesturesController.Gestures, Vector2> gestureNotificationHandler = (GesturesController.Gestures gesture, Vector2 delta) => {
                 GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
                 gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.Ending,
-                    (GesturesController.Gestures endingGesture) =>
+                    (GesturesController.Gestures endingGesture, Vector2 delta1) =>
                     {
                         GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
                         StartNextStep();

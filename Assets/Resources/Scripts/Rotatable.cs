@@ -77,72 +77,39 @@ public class Rotatable : MonoBehaviour
     {
     }
 
-    private const float rotationSpeed = 50f;
+    private const float rotationSpeed = 70f;
 
     private bool isPermited = false;
     private bool isAroundOnlyPermited = false;
 
-    private void rotationHandler(GesturesController.Gestures gesture)
+    private void rotationHandler(GesturesController.Gestures gesture, Vector2 delta)
     {
         Vector3 axis = Vector3.zero;
+        Vector2 rotatedDelta = new Vector2(delta.y, delta.x);
         switch (gesture)
         {
             case GesturesController.Gestures.SwipeRight:
-                if (!isAroundOnlyPermited)
-                    axis = Camera.main.transform.up * -1;
-                break;
             case GesturesController.Gestures.SwipeLeft:
-                if (!isAroundOnlyPermited)
-                    axis = Camera.main.transform.up;
-                break;
             case GesturesController.Gestures.SwipeUp:
-                if (!isAroundOnlyPermited)
-                    axis = Camera.main.transform.right;
-                break;
             case GesturesController.Gestures.SwipeDown:
-                if (!isAroundOnlyPermited)
-                    axis = Camera.main.transform.right * -1;
-                break;
             case GesturesController.Gestures.SwipeTopleft:
-                if (!isAroundOnlyPermited)
-                {
-                    axis += Camera.main.transform.up;
-                    axis += Camera.main.transform.right;
-                }
-                break;
             case GesturesController.Gestures.SwipeTopRight:
-                if (!isAroundOnlyPermited)
-                {
-                    axis += Camera.main.transform.right;
-                    axis += Camera.main.transform.up * -1;
-                }
-                break;
             case GesturesController.Gestures.SwipeDownLeft:
-                if (!isAroundOnlyPermited)
-                {
-                    axis += Camera.main.transform.up;
-                    axis += Camera.main.transform.right * -1;
-                }
-                break;
             case GesturesController.Gestures.SwipeDownRight:
                 if (!isAroundOnlyPermited)
                 {
-                    axis += Camera.main.transform.up * -1;
-                    axis += Camera.main.transform.right * -1;
+                    axis = Camera.main.transform.up*-1 + Camera.main.transform.right;
+                    transform.Rotate(axis * rotatedDelta.normalized * rotationSpeed * Time.deltaTime, Space.World);
                 }
                 break;
             case GesturesController.Gestures.ShuffleUp:
                 axis = Camera.main.transform.forward * -1;
+                transform.Rotate(axis * rotationSpeed * Time.deltaTime, Space.World);
                 break;
             case GesturesController.Gestures.ShuffleDown:
                 axis = Camera.main.transform.forward;
+                transform.Rotate(axis * rotationSpeed * Time.deltaTime, Space.World);
                 break;
         }
-        Rotate(axis);
-    }
-
-    void Rotate(Vector3 axis)
-    {
-        transform.Rotate(axis * rotationSpeed * Time.deltaTime, Space.World);
     }
 }

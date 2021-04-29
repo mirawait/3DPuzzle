@@ -69,77 +69,58 @@ public class CameraScript : MonoBehaviour
     {
         if (!isSubscribedToGestures)
         {
-            Action<GesturesController.Gestures> rotationHandler = (GesturesController.Gestures gesture) =>
+            Action<GesturesController.Gestures, Vector2> rotationHandler = (GesturesController.Gestures gesture, Vector2 delta) =>
             {
                 if (currentPhase == Phase.Free || currentPhase == Phase.PlanetLock)
                 {
                     transform.LookAt(target.transform);
-                    Vector3 direction = Vector3.zero;
+                    Vector3 axis = Vector3.zero;
                     switch (gesture)
                     {
                         case GesturesController.Gestures.SwipeRight:
-                            direction += Vector3.left;
-                            break;
                         case GesturesController.Gestures.SwipeLeft:
-                            direction += Vector3.right;
-                            break;
                         case GesturesController.Gestures.SwipeUp:
-                            direction += Vector3.down;
-                            break;
                         case GesturesController.Gestures.SwipeDown:
-                            direction += Vector3.up;
-                            break;
-
-                        case GesturesController.Gestures.SwipeDownLeft:
-                            direction += Vector3.up;
-                            direction += Vector3.right;
-                            break;
-                        case GesturesController.Gestures.SwipeDownRight:
-                            direction += Vector3.up;
-                            direction += Vector3.left;
-                            break;
                         case GesturesController.Gestures.SwipeTopleft:
-                            direction += Vector3.down;
-                            direction += Vector3.right;
-                            break;
                         case GesturesController.Gestures.SwipeTopRight:
-                            direction += Vector3.down;
-                            direction += Vector3.left;
+                        case GesturesController.Gestures.SwipeDownLeft:
+                        case GesturesController.Gestures.SwipeDownRight:
+                            axis = Vector3.left + Vector3.down;
                             break;
                     }
-                    if (direction.y != 0)
+                    if (delta.y != 0)
                     {
                         Vector3 lockTargetDirection = transform.position - target.transform.position;
                         float angleY = Vector3.Angle(lockTargetDirection, Vector3.up);
                         Debug.Log(CameraYLimitUp + "<" + angleY + "<" + CameraYLimitDown);
-                        if ((angleY < CameraYLimitUp && direction.y == 1) || (angleY > CameraYLimitDown && direction.y == -1))
+                        if ((angleY < CameraYLimitUp && delta.y < 0) || (angleY > CameraYLimitDown && delta.y > 0))
                         {
-                            direction.y = 0;
+                            delta.y = 0;
                         }
                     }
-                    transform.Translate(direction * Time.deltaTime * currentRotationSpeed);
+                    transform.Translate(axis * delta.normalized * Time.deltaTime * currentRotationSpeed);
                     transform.LookAt(target.transform);
                 }
             };
 
-            Action<GesturesController.Gestures> zoomHandler = (GesturesController.Gestures gesture) =>
+            Action<GesturesController.Gestures, Vector2> zoomHandler = (GesturesController.Gestures gesture, Vector2 delta) =>
             {
                 if (currentPhase == Phase.Free)
                 {
                     transform.LookAt(target.transform);
-                    int deltaMagnitudeDiff = 0;
+                    int zoomDIr = 0;
                     switch (gesture)
                     {
                         case GesturesController.Gestures.Spread:
-                            deltaMagnitudeDiff = -1;
+                            zoomDIr = -1;
                             break;
                         case GesturesController.Gestures.Pinch:
-                            deltaMagnitudeDiff = 1;
+                            zoomDIr = 1;
                             break;
                     }
                     Vector3 targetDirection = transform.position - target.transform.position;
                     targetDirection.Normalize();
-                    Vector3 newPos = transform.position + targetDirection * deltaMagnitudeDiff * zoomSpeed * Time.deltaTime;
+                    Vector3 newPos = transform.position + targetDirection * zoomDIr * zoomSpeed * Time.deltaTime;
                     Vector3 newDirection = newPos - target.transform.position;
                     newDirection.Normalize();
                     float newDistance = Vector3.Distance(target.transform.position, newPos);

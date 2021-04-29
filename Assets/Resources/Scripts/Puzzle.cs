@@ -41,14 +41,14 @@ public class Puzzle : MonoBehaviour
     void Start()
     {
         doubleTapSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.DoubleTap, 
-            (GesturesController.Gestures gesture) => {
+            (GesturesController.Gestures gesture, Vector2 delta) => {
             if (currentPiece == null)
             { 
                 hud.GetComponent<Hud>().ShufflePieces(); 
             }
         });
         freeAreaTapSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.FreeAreaTap, 
-            (GesturesController.Gestures gesture) => {
+            (GesturesController.Gestures gesture, Vector2 delta) => {
             if (currentPiece != null)
             {
                 var pieceScript = currentPiece.GetComponent<Piece>();

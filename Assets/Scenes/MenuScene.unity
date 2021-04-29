@@ -787,6 +787,7 @@ MonoBehaviour:
   selfRotationSpeed: 0.5
   solarRotationSpeed: 0.3
   distancingSpeed: 10
+  planetsDistanceMultiplier: 8.3
   planetIndex: 0
 --- !u!114 &58249785
 MonoBehaviour:
@@ -1609,6 +1610,7 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 6
   distancingSpeed: 50
+  planetsDistanceMultiplier: 8.3
   planetIndex: 4
 --- !u!1 &238341008
 GameObject:
@@ -2765,6 +2767,7 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 5
   distancingSpeed: 50
+  planetsDistanceMultiplier: 8.3
   planetIndex: 5
 --- !u!1 &385585814
 GameObject:
@@ -2961,6 +2964,7 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 7
   distancingSpeed: 50
+  planetsDistanceMultiplier: 8.3
   planetIndex: 3
 --- !u!1 &436182697
 GameObject:
@@ -13641,6 +13645,7 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 4
   distancingSpeed: 50
+  planetsDistanceMultiplier: 8.3
   planetIndex: 6
 --- !u!1 &649894873
 GameObject:
@@ -13804,6 +13809,7 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 1
   distancingSpeed: 50
+  planetsDistanceMultiplier: 8.3
   planetIndex: 9
 --- !u!1 &686449309
 GameObject:
@@ -13992,6 +13998,7 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 8
   distancingSpeed: 50
+  planetsDistanceMultiplier: 8.3
   planetIndex: 2
 --- !u!1 &767483992
 GameObject:
@@ -19806,6 +19813,7 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 2
   distancingSpeed: 50
+  planetsDistanceMultiplier: 8.3
   planetIndex: 8
 --- !u!1 &1061693435
 GameObject:
@@ -20294,6 +20302,7 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 9
   distancingSpeed: 50
+  planetsDistanceMultiplier: 8.3
   planetIndex: 1
 --- !u!1 &1155404130
 GameObject:
@@ -21081,7 +21090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31433a4c73ba8ae4082cccb7374954a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solarRotationSpeed: 50
+  solarRotationSpeed: 35
   planetRotationSpeed: 5
   zoomSpeed: 80
   minSolarZoom: 30
@@ -21265,6 +21274,7 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 3
   distancingSpeed: 50
+  planetsDistanceMultiplier: 8.3
   planetIndex: 7
 --- !u!1 &1282147224
 GameObject:
