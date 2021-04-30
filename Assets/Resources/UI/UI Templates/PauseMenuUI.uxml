@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="CloseButtonUI.uss" />
+    <Style src="ButtonsStyles.uss" />
+    <ui:VisualElement name="screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.78);">
+        <ui:VisualElement name="title" style="align-items: center; justify-content: center;">
+            <ui:Label text="ПАУЗА" display-tooltip-when-elided="True" name="title-label" style="font-size: 74px; -unity-font: resource(&apos;Fonts/Montserrat-Black&apos;); padding-top: 115px; color: rgba(217, 136, 36, 255);" />
+        </ui:VisualElement>
+        <ui:VisualElement name="buttons" style="justify-content: center; align-items: center; flex-direction: row; padding-top: 189px;">
+            <ui:Button display-tooltip-when-elided="True" name="settings-button" class="button" style="margin-right: 50px; background-image: resource(&apos;UI/Buttons/SettingsButton&apos;);" />
+            <ui:Button display-tooltip-when-elided="True" name="mainmenu-button" class="button" style="margin-left: 50px; background-image: resource(&apos;UI/Buttons/HomeButton&apos;);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:Button display-tooltip-when-elided="True" name="close-button" class="close-button" />
+</ui:UXML>

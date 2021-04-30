@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="MainMenuUI.uss" />
+    <ui:VisualElement name="screen" style="flex-grow: 1; justify-content: space-between;">
+        <ui:VisualElement name="top" style="align-items: center; justify-content: center;">
+            <ui:Label text="SPACEA&#10;" display-tooltip-when-elided="True" name="title" enable-rich-text="true" style="-unity-font: resource(&apos;Fonts/Monoton&apos;); font-size: 1px; -unity-text-align: middle-center; color: rgba(255, 166, 89, 0); -unity-font-style: normal; height: 302.8px; align-items: center; justify-content: center; background-image: resource(&apos;UI/Texts/Title&apos;); border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0); margin-top: 42px; border-left-color: rgba(0, 0, 0, 255); border-right-color: rgba(0, 0, 0, 255); border-top-color: rgba(0, 0, 0, 255); border-bottom-color: rgba(0, 0, 0, 255); width: 894.6px; padding-left: 0; padding-right: 0;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="bottom" style="align-items: center; justify-content: space-between;">
+            <ui:VisualElement name="buttons-layout" style="flex-direction: row; justify-content: space-between; width: 974px; height: auto; align-items: center; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 30px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; flex-grow: 0; flex-shrink: 1;">
+                <ui:Button display-tooltip-when-elided="True" name="how-to-play-button" enable-rich-text="false" class="button" />
+                <ui:Button display-tooltip-when-elided="True" name="play-button" class="button-play" style="width: 416px; height: 416px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-top-left-radius: 70px; border-bottom-left-radius: 70px; border-top-right-radius: 70px; border-bottom-right-radius: 70px;" />
+                <ui:Button display-tooltip-when-elided="True" name="settings-button" class="button" style="background-image: resource(&apos;UI/Buttons/SettingsButton&apos;);" />
+            </ui:VisualElement>
+            <ui:Label text="© Bruh moment 2021" display-tooltip-when-elided="True" name="copyright-label" style="-unity-font: resource(&apos;Fonts/Montserrat-Bold&apos;); font-size: 24px; padding-bottom: 20px; padding-top: 20px; color: rgba(255, 255, 255, 0.27);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
