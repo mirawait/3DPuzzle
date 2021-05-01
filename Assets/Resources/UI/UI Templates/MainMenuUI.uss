@@ -1,11 +1,11 @@
 .button-play {
-    width: 256px;
-    height: 256px;
+    width: 40%;
+    height: 80%;
     background-image: resource('UI/Buttons/PlayButton');
-    border-top-left-radius: 70px;
-    border-bottom-left-radius: 70px;
-    border-top-right-radius: 70px;
-    border-bottom-right-radius: 70px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     border-left-color: rgb(0, 0, 0);
     border-right-color: rgb(0, 0, 0);
     border-top-color: rgb(0, 0, 0);
@@ -25,8 +25,8 @@
 }
 
 .button {
-    width: 256px;
-    height: 256px;
+    width: 27%;
+    height: 54%;
     background-image: resource('UI/Buttons/HowToPlayButton');
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
