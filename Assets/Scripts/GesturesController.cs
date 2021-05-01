@@ -36,7 +36,9 @@ public class GesturesController : MonoBehaviour
     private System.DateTime lastTapStartDateTime, lastTapEndDateTime;
     private System.TimeSpan singleTapInterval = System.TimeSpan.FromMilliseconds(200),
                             doubleTapInterval = System.TimeSpan.FromMilliseconds(300);
-    private float minTouchDeltapos = 1.5f;
+    private float minTouchDeltapos = 6f;
+    private Vector2 firstTouchStartPos = new Vector2(-1, -1), 
+                    secondTouchStartPos = new Vector2(-1, -1);
     // Start is called before the first frame update
     void Start()
     {
@@ -126,7 +128,7 @@ public class GesturesController : MonoBehaviour
             isGestureGoing = false;
             currentGesture = Gestures.Ending;
         }
-        if (Input.touchCount == 1 && (currentGesture == Gestures.Undefined || currentGesture == Gestures.SwipeLeft
+        if (Input.touchCount == 1  && Input.GetTouch(0).deltaPosition.magnitude > minTouchDeltapos && (currentGesture == Gestures.Undefined || currentGesture == Gestures.SwipeLeft
                 || currentGesture == Gestures.SwipeRight || currentGesture == Gestures.SwipeUp || currentGesture == Gestures.SwipeDown
                 || currentGesture == Gestures.SwipeDownLeft || currentGesture == Gestures.SwipeDownRight
                 || currentGesture == Gestures.SwipeTopleft || currentGesture == Gestures.SwipeTopRight))
@@ -190,7 +192,29 @@ public class GesturesController : MonoBehaviour
         }
         else if (Input.touchCount == 2)
         {
-            if (Input.GetTouch(0).deltaPosition.x < 15 && Input.GetTouch(1).deltaPosition.x < 15 &&
+            if (currentGesture == Gestures.Undefined && firstTouchStartPos.Equals(new Vector2(-1,-1)) && secondTouchStartPos.Equals(new Vector2(-1, -1)))
+            {
+                firstTouchStartPos = Input.GetTouch(0).position;
+                secondTouchStartPos = Input.GetTouch(1).position;
+                return;
+            }
+            if (Vector2.Distance(Input.GetTouch(0).position, firstTouchStartPos) < minTouchDeltapos || Vector2.Distance(Input.GetTouch(1).position, secondTouchStartPos) < minTouchDeltapos)
+                return;
+                
+            Debug.LogWarning("FIRST " + Input.GetTouch(0).position + ":::" + firstTouchStartPos);
+            Debug.LogWarning("Second " + Input.GetTouch(1).position + ":::" + secondTouchStartPos);
+            Vector3 firstTouchDir = Input.GetTouch(0).position - firstTouchStartPos;
+            Vector3 secondTouchDir = Input.GetTouch(1).position - firstTouchStartPos;
+           
+            float angle = Vector3.Angle(firstTouchDir.normalized, secondTouchDir.normalized);
+            Debug.LogWarning("ANGLE BETWEEN VECTORS:" + angle);
+            if (20 < angle && angle < 160)
+            {
+                Debug.LogWarning("ITS SHUFFLE!");
+            }
+            else Debug.LogWarning("ITS ZOOM!");
+
+            if (20 < angle && angle < 160 &&
                 (currentGesture == Gestures.Undefined || currentGesture == Gestures.ShuffleDown || currentGesture == Gestures.ShuffleUp))
             {
                 Touch touch0, touch1;
@@ -212,14 +236,28 @@ public class GesturesController : MonoBehaviour
                 {
                     return;
                 }
-                else if ((deltaPos0.y < 0) && (deltaPos1.y > 0))
-                {
-                    currentGesture = Gestures.ShuffleDown;
-                }
-                else if ((deltaPos0.y > 0) && (deltaPos1.y < 0))
-                {
-                    currentGesture = Gestures.ShuffleUp;
-                }
+                //if (deltaPos0.y > deltaPos0.x && deltaPos1.y > deltaPos1.x)
+                //{
+                    if ((deltaPos0.y < 0) && (deltaPos1.y > 0))
+                    {
+                        currentGesture = Gestures.ShuffleDown;
+                    }
+                    else if ((deltaPos0.y > 0) && (deltaPos1.y < 0))
+                    {
+                        currentGesture = Gestures.ShuffleUp;
+                    }
+                //}
+                //else
+                //{
+                //    if ((deltaPos0.x < 0) && (deltaPos1.x > 0))
+                //    {
+                //        currentGesture = Gestures.ShuffleDown;
+                //    }
+                //    else if ((deltaPos0.x > 0) && (deltaPos1.x < 0))
+                //    {
+                //        currentGesture = Gestures.ShuffleUp;
+                //    }
+                //}
                 swipeDelta = deltaPos0.sqrMagnitude > deltaPos1.sqrMagnitude ? deltaPos0 : deltaPos1;
             }
             else if (currentGesture == Gestures.Undefined || currentGesture == Gestures.Pinch || currentGesture == Gestures.Spread)
@@ -252,6 +290,9 @@ public class GesturesController : MonoBehaviour
             if (currentGesture == Gestures.Ending)
             {
                 isGestureGoing = false;
+                firstTouchStartPos = new Vector2(-1, -1);
+                secondTouchStartPos = new Vector2(-1, -1);
+                Debug.LogWarning("START POS SETTED TO DEFAULT");
                 currentGesture = Gestures.Undefined;
             }
         }
