@@ -280,7 +280,7 @@ public class GesturesController : MonoBehaviour
                 {
                     currentGesture = Gestures.Spread;
                 }
-                swipeDelta = new Vector2(deltaMagnitudeDiff, 0);
+                swipeDelta = touchZero.deltaPosition;
             }
         }
         if (currentGesture != Gestures.Undefined)

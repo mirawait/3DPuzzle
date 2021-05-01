@@ -120,7 +120,7 @@ public class CameraScript : MonoBehaviour
                     }
                     Vector3 targetDirection = transform.position - target.transform.position;
                     targetDirection.Normalize();
-                    Vector3 newPos = transform.position + targetDirection * zoomDIr * zoomSpeed * Time.deltaTime;
+                    Vector3 newPos = transform.position + targetDirection * zoomDIr * delta.sqrMagnitude * zoomSpeed * Time.deltaTime;
                     Vector3 newDirection = newPos - target.transform.position;
                     newDirection.Normalize();
                     float newDistance = Vector3.Distance(target.transform.position, newPos);
@@ -318,7 +318,7 @@ public class CameraScript : MonoBehaviour
             if (!movedTo)
             {
                 
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 8 * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 800 * Time.deltaTime);
                 distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position);
                 movedTo = Mathf.RoundToInt(Mathf.Abs(targetDistance - distanceFromLockTarget)) == 0;
             }
@@ -351,7 +351,7 @@ public class CameraScript : MonoBehaviour
         while (true)
         {
             float dist = Vector3.Distance(transform.position, targetPos);
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 8 * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 800 * Time.deltaTime);
             Debug.Log("CAMERA POSITION = " + transform.position);
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 40 * (initDist - dist) / initDist * Time.deltaTime);
