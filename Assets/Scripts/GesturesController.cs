@@ -36,7 +36,7 @@ public class GesturesController : MonoBehaviour
     private System.DateTime lastTapStartDateTime, lastTapEndDateTime;
     private System.TimeSpan singleTapInterval = System.TimeSpan.FromMilliseconds(200),
                             doubleTapInterval = System.TimeSpan.FromMilliseconds(300);
-    private float minTouchDeltapos = 6f;
+    private float minTouchDeltapos = 0.2f;
     private Vector2 firstTouchStartPos = new Vector2(-1, -1), 
                     secondTouchStartPos = new Vector2(-1, -1);
     // Start is called before the first frame update
@@ -198,7 +198,7 @@ public class GesturesController : MonoBehaviour
                 secondTouchStartPos = Input.GetTouch(1).position;
                 return;
             }
-            if (Vector2.Distance(Input.GetTouch(0).position, firstTouchStartPos) < minTouchDeltapos || Vector2.Distance(Input.GetTouch(1).position, secondTouchStartPos) < minTouchDeltapos)
+            if (Input.GetTouch(0).deltaPosition.sqrMagnitude < minTouchDeltapos || Input.GetTouch(0).deltaPosition.sqrMagnitude < minTouchDeltapos)
                 return;
                 
             Debug.LogWarning("FIRST " + Input.GetTouch(0).position + ":::" + firstTouchStartPos);
@@ -208,13 +208,13 @@ public class GesturesController : MonoBehaviour
            
             float angle = Vector3.Angle(firstTouchDir.normalized, secondTouchDir.normalized);
             Debug.LogWarning("ANGLE BETWEEN VECTORS:" + angle);
-            if (20 < angle && angle < 160)
+            if (30 < angle && angle < 150)
             {
                 Debug.LogWarning("ITS SHUFFLE!");
             }
             else Debug.LogWarning("ITS ZOOM!");
 
-            if (20 < angle && angle < 160 &&
+            if (30 < angle && angle < 150 &&
                 (currentGesture == Gestures.Undefined || currentGesture == Gestures.ShuffleDown || currentGesture == Gestures.ShuffleUp))
             {
                 Touch touch0, touch1;
@@ -258,7 +258,7 @@ public class GesturesController : MonoBehaviour
                 //        currentGesture = Gestures.ShuffleUp;
                 //    }
                 //}
-                swipeDelta = deltaPos0.sqrMagnitude > deltaPos1.sqrMagnitude ? deltaPos0 : deltaPos1;
+                swipeDelta = deltaPos0;
             }
             else if (currentGesture == Gestures.Undefined || currentGesture == Gestures.Pinch || currentGesture == Gestures.Spread)
             {

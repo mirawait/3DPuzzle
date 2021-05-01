@@ -21090,8 +21090,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31433a4c73ba8ae4082cccb7374954a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solarRotationSpeed: 35
-  planetRotationSpeed: 5
+  solarRotationSpeed: 5
+  planetRotationSpeed: 0.5
   zoomSpeed: 80
   minSolarZoom: 30
   maxSolarZoom: 179.9

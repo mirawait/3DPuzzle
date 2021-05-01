@@ -98,7 +98,7 @@ public class CameraScript : MonoBehaviour
                             delta.y = 0;
                         }
                     }
-                    transform.Translate(axis * delta.normalized * Time.deltaTime * currentRotationSpeed);
+                    transform.Translate(axis * delta * Time.deltaTime * currentRotationSpeed);
                     transform.LookAt(target.transform);
                 }
             };
@@ -326,7 +326,7 @@ public class CameraScript : MonoBehaviour
             if (!rotatedTo)
             {
                 Quaternion targetRot = Quaternion.LookRotation(-targetDir);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 2 * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * Time.deltaTime);
 
                 rotatedTo = transform.rotation == targetRot;
             }
@@ -354,7 +354,7 @@ public class CameraScript : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 8 * Time.deltaTime);
             Debug.Log("CAMERA POSITION = " + transform.position);
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 5 * (initDist - dist) / initDist * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 40 * (initDist - dist) / initDist * Time.deltaTime);
 
             if (transform.position == targetPos && transform.rotation == targetRot)
             {
