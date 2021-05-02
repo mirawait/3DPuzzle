@@ -27,15 +27,26 @@ public class Manager : MonoBehaviour
     private GameObject planetPuzzle;
     private GameObject targetGameObject;
     private bool loaded = false;
+    int type;
+    int level;
 
-    //void Start() 
-    //{
-    //    Start_Puzzles(2, 0);
-    //}
+    private SaveManager saveManager;
+   
 
-    public void Start_Puzzles(int PlanetType, int PuzzleLevel)
+    void Start()
     {
-        Debug.LogError("MANAGER PUZZLE TYPE " + PlanetType);
+        saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
+    }
+
+    public void Start_Puzzles(int planetType, int puzzleLevel)
+    {
+        type = planetType;
+        level = puzzleLevel;
+
+        //saveManager.MakeDone(planetType, puzzleLevel);
+
+        Debug.LogError("MANAGER PUZZLE TYPE " + planetType);
+
 
         if (targetGameObject == null)
             targetGameObject = GameObject.FindWithTag("Text");
@@ -46,7 +57,7 @@ public class Manager : MonoBehaviour
 
         PlanetPuzzle.Config config;
 
-        switch (PlanetType)
+        switch (planetType)
         {
             case 0:
                 config.outlineMaterial = Resources.Load("Materials/SunTransparent") as Material;
@@ -75,7 +86,7 @@ public class Manager : MonoBehaviour
                 break;
         }
 
-        switch (PuzzleLevel)
+        switch (puzzleLevel)
         {
 
             default:
@@ -134,6 +145,9 @@ public class Manager : MonoBehaviour
                     if (targetGameObject != null)
                         targetGameObject.SetActive(true);
                     print("victory!");
+
+                    saveManager.MakeDone(type, level);
+
                     isEnd = true;
                     return;
                 }
