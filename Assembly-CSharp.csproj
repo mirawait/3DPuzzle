@@ -79,6 +79,8 @@
     <Compile Include="Assets\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotatable.cs" />
     <Compile Include="Assets\Scripts\TutorialZoom.cs" />
+    <Compile Include="Assets\Scripts\RotationTutorial.cs" />
+    <Compile Include="Assets\Scripts\TutorialDoubleTap.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -17,15 +17,24 @@ public class TutorialScript : MonoBehaviour
         WaitingForCameraPlanetLock = 5,
         PlanetRotation = 6,
         SolveClick = 7,
-        End = 8
+        SolveSwipes = 8,
+        SolveRotation = 9,
+        SolveDoubleTap = 10,
+        ChoosePiece = 11,
+        PieceRotation = 12,
+        PieceConfirm = 13,
+        End = 14
     }
 
     TutorialSwipes swipeTutorial;
     TapOnObjectTutorial tappingTutorial;
     TutorialZoom zoomTutorial;
+    RotationTutorial rotationTutorial;
+    TutorialDoubleTap doubleTapTutorial;
     bool isTutorialEnabled;
     public TutorialStage currentStage = TutorialStage.WaitingForStart;
     static public GameObject tappingTarget;
+    GameObject chosenPiece;
     Button sovleButton;
     private CameraScript mainCamera;
     static public List<Tuple<GesturesController.Gestures, GameObject>> pertitedAction = new List<Tuple<GesturesController.Gestures, GameObject>>();
@@ -35,10 +44,11 @@ public class TutorialScript : MonoBehaviour
         swipeTutorial = GameObject.Find("SwipesTutorial").GetComponent<TutorialSwipes>();
         tappingTutorial = GameObject.Find("TappingTutorial").GetComponent<TapOnObjectTutorial>();
         zoomTutorial = GameObject.Find("ZoomTutorial").GetComponent<TutorialZoom>();
+        rotationTutorial = GameObject.Find("RotationTutorial").GetComponent<RotationTutorial>();
+        doubleTapTutorial = GameObject.Find("DoubleTapTutorial").GetComponent<TutorialDoubleTap>();
         tappingTarget = GameObject.Find("Settings");
         sovleButton = GameObject.Find("SolveButton").GetComponent<Button>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
-
     }
 
     public void EnableTutorial()
@@ -55,6 +65,8 @@ public class TutorialScript : MonoBehaviour
         isTutorialEnabled = false;
         swipeTutorial.DisableTutorial();
         tappingTutorial.DisableTutorial();
+        doubleTapTutorial.DisableTutorial();
+        rotationTutorial.DisableTutorial();
         pertitedAction.Clear();
         currentStage = TutorialStage.WaitingForStart;
     }
@@ -100,10 +112,39 @@ public class TutorialScript : MonoBehaviour
                 StartCoroutine(_WaitForCameraPhase(CameraScript.Phase.PlanetLock));
                 break;
             case TutorialStage.PlanetRotation:
+                sovleButton.enabled = false;
                 swipeTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolveClick:
+                sovleButton.enabled = true;
                 tappingTutorial.EnableTutorial(sovleButton.gameObject, () => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                break;
+            case TutorialStage.SolveSwipes:
+                swipeTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                break;
+            case TutorialStage.SolveRotation:
+                rotationTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                break;
+            case TutorialStage.SolveDoubleTap:
+                doubleTapTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                break;
+            case TutorialStage.ChoosePiece:
+                var puzzleObjects = GameObject.FindGameObjectsWithTag("piece");
+                foreach(GameObject obj in puzzleObjects)
+                {
+                    if (obj.GetComponent<Piece>() != null && obj.GetComponent<Renderer>().enabled == true)
+                    {
+                        chosenPiece = obj;
+                        tappingTutorial.EnableTutorial(chosenPiece, () => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                        return;
+                    }
+                }
+                break;
+            case TutorialStage.PieceRotation:
+                rotationTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                break;
+            case TutorialStage.PieceConfirm:
+                tappingTutorial.EnableTutorial(chosenPiece, () => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.End:
                 isTutorialEnabled = false;

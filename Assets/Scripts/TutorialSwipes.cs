@@ -12,8 +12,8 @@ public class TutorialSwipes : MonoBehaviour
     public enum Stages
     {
         WaitingForStart = 0,
-        SwipeUp = 1,
-        SwipeDown = 2,
+        SwipeDown = 1,
+        SwipeUp = 2,
         SwipeLeft = 3,
         SwipeRight = 4,
         End = 5,
@@ -76,23 +76,23 @@ public class TutorialSwipes : MonoBehaviour
         {
             case Stages.WaitingForStart:
                 break;
+            case Stages.SwipeDown:
+                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeDown, null));
+                permitedActionSetter(newPermittedActions);
+                tutorialSwipeDown.SetActive(true);
+                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDown, gestureNotificationHandler);
+                break;
             case Stages.SwipeUp:
+                tutorialSwipeDown.SetActive(false);
                 newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeUp, null));
                 permitedActionSetter(newPermittedActions);
                 tutorialSwipeUp.SetActive(true);
                 gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeUp, gestureNotificationHandler);
                 break;
-            case Stages.SwipeDown:
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeDown, null));
-                permitedActionSetter(newPermittedActions);
-                tutorialSwipeUp.SetActive(false);
-                tutorialSwipeDown.SetActive(true);
-                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDown, gestureNotificationHandler);
-                break;
             case Stages.SwipeLeft:
                 newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeLeft, null));
                 permitedActionSetter(newPermittedActions);
-                tutorialSwipeDown.SetActive(false);
+                tutorialSwipeUp.SetActive(false);
                 tutorialSwipeLeft.SetActive(true);
                 gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeLeft, gestureNotificationHandler);
                 break;

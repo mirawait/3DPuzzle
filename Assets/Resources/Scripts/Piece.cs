@@ -52,6 +52,8 @@ public class Piece : MonoBehaviour
 
         SetCondition(Condition.RELEASED);
 
+        tag = "piece";
+
         isInited = true;
     }
 

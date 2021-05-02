@@ -12,6 +12,7 @@ TagManager:
   - Manager
   - LoadSceneTag
   - puzzle
+  - piece
   layers:
   - Default
   - TransparentFX
