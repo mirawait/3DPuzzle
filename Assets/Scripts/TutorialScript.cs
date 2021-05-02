@@ -23,7 +23,8 @@ public class TutorialScript : MonoBehaviour
         ChoosePiece = 11,
         PieceRotation = 12,
         PieceConfirm = 13,
-        End = 14
+        PiecePlacing = 14,
+        End = 15
     }
 
     TutorialSwipes swipeTutorial;
@@ -146,6 +147,10 @@ public class TutorialScript : MonoBehaviour
             case TutorialStage.PieceConfirm:
                 tappingTutorial.EnableTutorial(chosenPiece, () => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
+            case TutorialStage.PiecePlacing:
+                chosenPiece.GetComponent<Piece>().MakeTwinMarkedForTutorial();
+                StartCoroutine(_WaitForPieceToFit());
+                break;
             case TutorialStage.End:
                 isTutorialEnabled = false;
                 pertitedAction.Clear();
@@ -158,6 +163,16 @@ public class TutorialScript : MonoBehaviour
     IEnumerator _WaitForCameraPhase(CameraScript.Phase targetPhase)
     {
         while (!mainCamera.isCurrentPhase(targetPhase))
+        {
+            yield return new WaitForSeconds(0.01f);
+        }
+        StartNextStep();
+        yield break;
+    }
+
+    IEnumerator _WaitForPieceToFit()
+    {
+        while(chosenPiece.GetComponent<Piece>().GetCondition() != Piece.Condition.FIT)
         {
             yield return new WaitForSeconds(0.01f);
         }

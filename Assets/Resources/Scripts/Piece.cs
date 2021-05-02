@@ -249,6 +249,7 @@ public class Piece : MonoBehaviour
 
     private void Fit()
     {
+        twin.gameObject.GetComponent<Renderer>().enabled = false;
         SetCondition(Condition.FIT);
     }
 
@@ -295,6 +296,14 @@ public class Piece : MonoBehaviour
         this.condition = condition;
 
         Straighten();
+    }
+
+    public void MakeTwinMarkedForTutorial()
+    {
+        twin.gameObject.GetComponent<Renderer>().enabled = true;
+        var color = Color.green;
+        color.a = 0.0f;
+        twin.gameObject.GetComponent<Renderer>().material.color = color;
     }
 
     // workaround
