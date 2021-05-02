@@ -29,8 +29,8 @@ public class TutorialZoom : MonoBehaviour
     void Start()
     {
         currentStage = Stages.WaitingForStart;
-        tutorialZoomIn = GameObject.Find("ZoomIn");
-        tutorialZoomOut = GameObject.Find("ZoomOut");
+        tutorialZoomIn = GameObject.Find("SpreadGesture");
+        tutorialZoomOut = GameObject.Find("PinchGesture");
 
         tutorialZoomIn.SetActive(false);
         tutorialZoomOut.SetActive(false);

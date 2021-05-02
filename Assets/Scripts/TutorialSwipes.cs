@@ -34,10 +34,10 @@ public class TutorialSwipes : MonoBehaviour
     void Start()
     {
         currentStage = Stages.WaitingForStart;
-        tutorialSwipeDown = GameObject.Find("SwipeDown");
-        tutorialSwipeUp = GameObject.Find("SwipeUp");
-        tutorialSwipeLeft = GameObject.Find("SwipeLeft");
-        tutorialSwipeRight = GameObject.Find("SwipeRight");
+        tutorialSwipeDown = GameObject.Find("SwipeDownGesture");
+        tutorialSwipeUp = GameObject.Find("SwipeUpGesture");
+        tutorialSwipeLeft = GameObject.Find("SwipeLeftGesture");
+        tutorialSwipeRight = GameObject.Find("SwipeRightGesture");
 
         tutorialSwipeDown.SetActive(false);
         tutorialSwipeUp.SetActive(false);
