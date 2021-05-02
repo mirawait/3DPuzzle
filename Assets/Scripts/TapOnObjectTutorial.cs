@@ -14,7 +14,7 @@ public class TapOnObjectTutorial : MonoBehaviour
     GameObject arrowPointer, targetObject;
     public Stages currentStage;
     Action actionOnComplete;
-    Action<TutorialScript.Actions> permitedActionSetter;
+    Action<List<Tuple<GesturesController.Gestures, GameObject>>> permitedActionSetter;
     CameraScript mainCamera;
     uint planetClickSubscription;
     // Start is called before the first frame update
@@ -24,7 +24,7 @@ public class TapOnObjectTutorial : MonoBehaviour
         arrowPointer = GameObject.Find("TappingPointer");
         arrowPointer.SetActive(false);
     }
-    public void EnableTutorial(GameObject target, Action onComplete, Action<TutorialScript.Actions> actionRestricter)
+    public void EnableTutorial(GameObject target, Action onComplete, Action<List<Tuple<GesturesController.Gestures, GameObject>>> actionRestricter)
     {
         Debug.LogError("Tapping tutorial enabled");
         targetObject = target;
@@ -42,6 +42,7 @@ public class TapOnObjectTutorial : MonoBehaviour
     }
     public void StartNextStep()
     {
+        List<Tuple<GesturesController.Gestures, GameObject>> newPermittedActions = new List<Tuple<GesturesController.Gestures, GameObject>>();
         currentStage++;
         switch (currentStage)
         {
@@ -59,12 +60,16 @@ public class TapOnObjectTutorial : MonoBehaviour
                         else
                             Debug.LogError("something went wrong");
                     });
-                permitedActionSetter(TutorialScript.Actions.Tapping);
+                
+                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Tapping, targetObject));
+                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Pinch, null));
+                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Spread, null));
+                permitedActionSetter(newPermittedActions);
                 break;
             case Stages.End:
                 arrowPointer.SetActive(false);
                 GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
-                permitedActionSetter(TutorialScript.Actions.Any);
+                permitedActionSetter(newPermittedActions);
                 currentStage = Stages.WaitingForStart;
                 actionOnComplete();
                 break;

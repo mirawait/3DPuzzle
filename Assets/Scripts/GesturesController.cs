@@ -140,49 +140,49 @@ public class GesturesController : MonoBehaviour
             {
                 return;
             }
-            else if (Mathf.Abs(Mathf.Abs(deltaPos.x) - Mathf.Abs(deltaPos.y)) < 5)
-            {
-                if (deltaPos.x < 0)
-                {
-                    if (deltaPos.y < 0)
-                    {
-                        currentGesture = Gestures.SwipeDownLeft;
-                    }
-                    else if (deltaPos.y > 0)
-                    {
-                        currentGesture = Gestures.SwipeTopleft;
-                    }
-                }
-                else if (deltaPos.x > 0)
-                {
-                    if (deltaPos.y < 0)
-                    {
-                        currentGesture = Gestures.SwipeDownRight;
-                    }
-                    else if (deltaPos.y > 0)
-                    {
-                        currentGesture = Gestures.SwipeTopRight;
-                    }
-                }
-            }
+            //else if (Mathf.Abs(Mathf.Abs(deltaPos.x) - Mathf.Abs(deltaPos.y)) < 5)
+            //{
+            //    if (deltaPos.x < 0)
+            //    {
+            //        if (deltaPos.y < 0)
+            //        {
+            //            currentGesture = Gestures.SwipeDownLeft;
+            //        }
+            //        else if (deltaPos.y > 0)
+            //        {
+            //            currentGesture = Gestures.SwipeTopleft;
+            //        }
+            //    }
+            //    else if (deltaPos.x > 0)
+            //    {
+            //        if (deltaPos.y < 0)
+            //        {
+            //            currentGesture = Gestures.SwipeDownRight;
+            //        }
+            //        else if (deltaPos.y > 0)
+            //        {
+            //            currentGesture = Gestures.SwipeTopRight;
+            //        }
+            //    }
+            //}
             else if (Mathf.Abs(deltaPos.x) > Mathf.Abs(deltaPos.y))
             {
-                if (deltaPos.x < 0 && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationLeft))
+                if (deltaPos.x < 0 && TutorialScript.IsActionPermitted(Gestures.SwipeLeft))
                 {
                     currentGesture = Gestures.SwipeLeft;
                 }
-                else if (deltaPos.x > 0 && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationRight))
+                else if (deltaPos.x > 0 && TutorialScript.IsActionPermitted(Gestures.SwipeRight))
                 {
                     currentGesture = Gestures.SwipeRight;
                 }
             }
             else
             {
-                if (deltaPos.y < 0 && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationDown))
+                if (deltaPos.y < 0 && TutorialScript.IsActionPermitted(Gestures.SwipeDown))
                 {
                     currentGesture = Gestures.SwipeDown;
                 }
-                else if (deltaPos.y > 0 && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraRotationUp))
+                else if (deltaPos.y > 0 && TutorialScript.IsActionPermitted(Gestures.SwipeUp))
                 {
                     currentGesture = Gestures.SwipeUp;
                 }
@@ -272,11 +272,11 @@ public class GesturesController : MonoBehaviour
                       touchDeltaMag = (touchZero.position - touchOne.position).magnitude,
                       deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-                if (deltaMagnitudeDiff > minTouchDeltapos && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraZoomOut))
+                if (deltaMagnitudeDiff > minTouchDeltapos && TutorialScript.IsActionPermitted(Gestures.Pinch))
                 {
                     currentGesture = Gestures.Pinch;
                 }
-                if (deltaMagnitudeDiff < minTouchDeltapos * -1 && TutorialScript.IsActionPermitted(TutorialScript.Actions.CameraZoomIn))
+                if (deltaMagnitudeDiff < minTouchDeltapos * -1 && TutorialScript.IsActionPermitted(Gestures.Spread))
                 {
                     currentGesture = Gestures.Spread;
                 }
@@ -312,7 +312,7 @@ public class GesturesController : MonoBehaviour
     void _notifyAboutObjectTap(GameObject obj)
     {
         Debug.LogError("Clicked object name:" + obj.name);
-        if (!TutorialScript.IsActionPermitted(TutorialScript.Actions.Tapping, obj))
+        if (!TutorialScript.IsActionPermitted(Gestures.Tapping, obj))
         {
             Debug.Log("Click on " + obj.name + "is not permited");
             return;
