@@ -137,6 +137,9 @@ public class MenuScript : MonoBehaviour
                 if (currentPhase == UI_Phase.SolarSystem && target.tag == "Planet")
                 {
                     lastActiveInfoPanel = target.GetComponent<PlanetScript>().GetIndex();
+
+
+
                     StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));
                     loadGameScene.stopWaitingForPlanetClick();
                 }

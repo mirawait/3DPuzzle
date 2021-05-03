@@ -12,7 +12,6 @@ public class SaveManager : MonoBehaviour
         public bool tutorial = false;
     }
 
-
     private Save save = new Save();
 
     public bool IsTutorialDone()
@@ -48,6 +47,7 @@ public class SaveManager : MonoBehaviour
         {
             SaveData();
         }
+
     }
     private void LoadData()
     {
@@ -57,6 +57,11 @@ public class SaveManager : MonoBehaviour
     {
         PlayerPrefs.SetString("Save", JsonUtility.ToJson(save));
     }
+    private void DeleteData()
+    {
+        PlayerPrefs.DeleteKey("Save");
+    }
+
 
     public void MakeTutorialDone()
     {
@@ -65,8 +70,6 @@ public class SaveManager : MonoBehaviour
 
     public void MakeDone(int type, int level)
     {
-        //LoadData();
-
         if (level == 0)
         {
             save.light[type] = true;
@@ -86,6 +89,12 @@ public class SaveManager : MonoBehaviour
         SaveData();
     }
 
-
+    //void OnGUI()
+    //{
+    //    if (save.light[3])
+    //    {
+    //        GUI.Label(new Rect(330, 120, 100, 20), "sdfdsf");
+    //    }
+    //}
 
 }

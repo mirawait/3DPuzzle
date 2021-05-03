@@ -29,6 +29,7 @@ public class Manager : MonoBehaviour
     private bool loaded = false;
     int type;
     int level;
+    
 
     private SaveManager saveManager;
    
@@ -43,7 +44,6 @@ public class Manager : MonoBehaviour
         type = planetType;
         level = puzzleLevel;
 
-        //saveManager.MakeDone(planetType, puzzleLevel);
 
         Debug.LogError("MANAGER PUZZLE TYPE " + planetType);
 
