@@ -1,6 +1,6 @@
 .button-play {
-    width: 40%;
-    height: 80%;
+    width: 416px;
+    height: 416px;
     background-image: resource('UI/Buttons/PlayButton');
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -25,13 +25,13 @@
 }
 
 .button {
-    width: 27%;
-    height: 54%;
+    width: 256px;
+    height: 256px;
     background-image: resource('UI/Buttons/HowToPlayButton');
-    border-top-left-radius: 30px;
-    border-bottom-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     border-left-color: rgba(255, 0, 0, 0);
     border-right-color: rgba(255, 0, 0, 0);
     border-top-color: rgba(255, 0, 0, 0);
@@ -53,11 +53,9 @@
 }
 
 .button:active {
-    -unity-background-image-tint-color: rgb(166, 166, 166);
-    width: 240px;
-    height: 240px;
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 8px;
-    margin-bottom: 8px;
+    -unity-background-image-tint-color: rgb(149, 149, 149);
+}
+
+.button-play:active {
+    -unity-background-image-tint-color: rgb(135, 135, 135);
 }
