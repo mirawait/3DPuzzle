@@ -32,6 +32,7 @@ public class TutorialScript : MonoBehaviour
     TutorialZoom zoomTutorial;
     RotationTutorial rotationTutorial;
     TutorialDoubleTap doubleTapTutorial;
+    SaveManager saveManager;
     bool isTutorialEnabled;
     public TutorialStage currentStage = TutorialStage.WaitingForStart;
     static public GameObject tappingTarget;
@@ -47,6 +48,7 @@ public class TutorialScript : MonoBehaviour
         zoomTutorial = GameObject.Find("ZoomTutorial").GetComponent<TutorialZoom>();
         rotationTutorial = GameObject.Find("RotationTutorial").GetComponent<RotationTutorial>();
         doubleTapTutorial = GameObject.Find("DoubleTapTutorial").GetComponent<TutorialDoubleTap>();
+        saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
         tappingTarget = GameObject.Find("Settings");
         sovleButton = GameObject.Find("SolveButton").GetComponent<Button>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
@@ -153,6 +155,7 @@ public class TutorialScript : MonoBehaviour
                 break;
             case TutorialStage.End:
                 isTutorialEnabled = false;
+                saveManager.MakeTutorialDone();
                 pertitedAction.Clear();
                 currentStage = TutorialStage.WaitingForStart;
                 Debug.Log("Tutorial Ended");

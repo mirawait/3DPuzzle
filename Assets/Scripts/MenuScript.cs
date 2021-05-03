@@ -124,6 +124,10 @@ public class MenuScript : MonoBehaviour
     }
     void PlayTask()
     {
+        if (saveManager.IsTutorialDone() == false)
+        {
+            tutorial.EnableTutorial();
+        }
         titleText.SetActive(false);
         playButton.SetActive(false);
         settingsButton.SetActive(false);
