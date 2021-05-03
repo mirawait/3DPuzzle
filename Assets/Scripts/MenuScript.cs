@@ -15,10 +15,12 @@ public class MenuScript : MonoBehaviour
     private GameObject pauseMenuBG, pauseMenuCanvas, pauseSettingsButton, pauseMainMenuButton;
     private GameObject areYouSurePanel;
     private DificultySwitcherScript dificultySwitcherScript;
+    private SaveManager saveManager;
     //private GameObject[] difButtons;
     ConfirmSettingsScript settingsSwitcher;
     TutorialScript tutorial;
     private GameObject planetNameInGame;
+    private GameObject planetIsDoneText;
     uint lastActiveInfoPanel;
     uint planetClickSubscription;
     private static bool isOnPause = false;
@@ -47,11 +49,13 @@ public class MenuScript : MonoBehaviour
         btmButton = GameObject.Find("BackToMenuButton");
         solveButton = GameObject.Find("SolveButton");
         planetNameInGame = GameObject.Find("PlanetNameInGame");
+        planetIsDoneText = GameObject.Find("PlanetIsDoneText");
         pauseMenuBG = GameObject.Find("PauseMenuBG");
         pauseMenuCanvas = GameObject.Find("PauseMenuCanvas");
         pauseSettingsButton = GameObject.Find("PauseSettingsButton");
         pauseMainMenuButton = GameObject.Find("PauseMainMenuButton");
         dificultySwitcherScript = GameObject.Find("DificultySwitch").GetComponent<DificultySwitcherScript>();
+        saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
         //difButtons[0] = GameObject.Find("NextDifButton");
         //difButtons[1] = GameObject.Find("PrevDifButton");
         settingsSwitcher = settingsMenu.GetComponent<ConfirmSettingsScript>();
@@ -70,6 +74,7 @@ public class MenuScript : MonoBehaviour
         planetNameInGame.SetActive(false);
         pauseMenuBG.SetActive(false);
         pauseMenuCanvas.SetActive(false);
+        planetIsDoneText.SetActive(false);
         solarSystem = GameObject.FindGameObjectWithTag("Sun").GetComponent<SolarSystem>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
 
@@ -92,6 +97,7 @@ public class MenuScript : MonoBehaviour
             infoPanel.SetActive(false);
         }
         solveButton.SetActive(false);
+        planetIsDoneText.SetActive(false);
         loadGameScene.LoadScene();
         loadGameScene.stopWaitingForPlanetClick();
         
@@ -174,6 +180,7 @@ public class MenuScript : MonoBehaviour
                     infoPanel.SetActive(false);
                 }
                 solveButton.SetActive(false);
+                planetIsDoneText.SetActive(false);
                 break;
             case UI_Phase.Puzzle:
                 //settingsMenu.SetActive(true);
@@ -314,6 +321,10 @@ public class MenuScript : MonoBehaviour
             }
         }
         currentPhase = UI_Phase.PlanetInfo;
+        if (saveManager.IsPlanetDone((int)focusedPlanetInex, (int)DificultySwitcherScript.GetChosenDifficulty()))
+        {
+            planetIsDoneText.SetActive(true);
+        }
         btmButton.SetActive(true);
         solveButton.SetActive(true);
         yield break;

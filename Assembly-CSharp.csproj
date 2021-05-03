@@ -71,6 +71,7 @@
     <Compile Include="Assets\Resources\Scripts\Menu.cs" />
     <Compile Include="Assets\Scripts\TapOnObjectTutorial.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
+    <Compile Include="Assets\Resources\Scripts\SaveManager.cs" />
     <Compile Include="Assets\Scripts\TutorialSwipes.cs" />
     <Compile Include="Assets\Scripts\TutorialScript.cs" />
     <Compile Include="Assets\Scripts\PlanetInfoScript.cs" />
@@ -78,8 +79,8 @@
     <Compile Include="Assets\Resources\Scripts\Hud.cs" />
     <Compile Include="Assets\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotatable.cs" />
-    <Compile Include="Assets\Scripts\TutorialZoom.cs" />
     <Compile Include="Assets\Scripts\RotationTutorial.cs" />
+    <Compile Include="Assets\Scripts\TutorialZoom.cs" />
     <Compile Include="Assets\Scripts\TutorialDoubleTap.cs" />
   </ItemGroup>
   <ItemGroup>

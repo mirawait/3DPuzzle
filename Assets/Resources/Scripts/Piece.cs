@@ -309,77 +309,25 @@ public class Piece : MonoBehaviour
     // workaround
     private void FaceToCamera()
     {
-        var lastDistanceToFitOnPos = Vector3.Distance(fitOnPos, transform.position);
-        var rotationDir = 1;
-        var isDirChanged = false;
+        transform.position = twin.transform.position;
+        transform.rotation = twin.transform.rotation;
+        var dirFromCentertoPiece = transform.position - centerPos;
 
         while (true)
         {
-            transform.RotateAround(centerPos, Camera.main.transform.up, rotationDir * 1);
+            var firFromCenterToCamera = Camera.main.transform.position - centerPos;
+            transform.RotateAround(centerPos, Camera.main.transform.up, Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.up));
 
-            var currentDistanceToFitOnPos = Vector3.Distance(fitOnPos, transform.position);
+            dirFromCentertoPiece = transform.position - centerPos;
+            transform.RotateAround(centerPos, Camera.main.transform.right, Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right));
 
-            if (currentDistanceToFitOnPos < lastDistanceToFitOnPos)
-                lastDistanceToFitOnPos = currentDistanceToFitOnPos;
-            else
+            dirFromCentertoPiece = transform.position - centerPos;            
+            if (Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right)) < 0.3 && Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.up)) < 0.3)
             {
-                transform.RotateAround(centerPos, Camera.main.transform.up * -1, rotationDir * 1);
-
-                rotationDir *= -1;
-
-                if (isDirChanged)
-                    break;
-                else
-                    isDirChanged = true;
+                Debug.Log("ANGLE Y:" + Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right));
+                Debug.Log("ANGLE X:" + Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.up));
+                break;
             }
         }
-
-        isDirChanged = false;
-
-        while (true)
-        {
-            transform.RotateAround(centerPos, Camera.main.transform.forward, rotationDir * 1);
-
-            var currentDistanceToFitOnPos = Vector3.Distance(fitOnPos, transform.position);
-
-            if (currentDistanceToFitOnPos < lastDistanceToFitOnPos)
-                lastDistanceToFitOnPos = currentDistanceToFitOnPos;
-            else
-            {
-                transform.RotateAround(centerPos, Camera.main.transform.forward * -1, rotationDir * 1);
-
-                rotationDir *= -1;
-
-                if (isDirChanged)
-                    break;
-                else
-                    isDirChanged = true;
-            }
-        }
-
-        isDirChanged = false;
-
-        while (true)
-        {
-            transform.RotateAround(centerPos, Camera.main.transform.right * -1, rotationDir * 1);
-
-            var currentDistanceToFitOnPos = Vector3.Distance(fitOnPos, transform.position);
-
-            if (currentDistanceToFitOnPos < lastDistanceToFitOnPos)
-                lastDistanceToFitOnPos = currentDistanceToFitOnPos;
-            else
-            {
-                transform.RotateAround(centerPos, Camera.main.transform.right, rotationDir * 1);
-
-                rotationDir *= -1;
-
-                if (isDirChanged)
-                    break;
-                else
-                    isDirChanged = true;
-            }
-        }
-
-        //transform.Rotate(0, 0, Random.Range(0, 179), Space.World);
     }
 }
