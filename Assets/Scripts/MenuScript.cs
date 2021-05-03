@@ -21,6 +21,7 @@ public class MenuScript : MonoBehaviour
     TutorialScript tutorial;
     private GameObject planetNameInGame;
     private GameObject planetIsDoneText;
+    private GameObject tutorialCompleteText;
     uint lastActiveInfoPanel;
     uint planetClickSubscription;
     private static bool isOnPause = false;
@@ -56,6 +57,7 @@ public class MenuScript : MonoBehaviour
         pauseMainMenuButton = GameObject.Find("PauseMainMenuButton");
         dificultySwitcherScript = GameObject.Find("DificultySwitch").GetComponent<DificultySwitcherScript>();
         saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
+        tutorialCompleteText = GameObject.Find("TutorialCompleteText");
         //difButtons[0] = GameObject.Find("NextDifButton");
         //difButtons[1] = GameObject.Find("PrevDifButton");
         settingsSwitcher = settingsMenu.GetComponent<ConfirmSettingsScript>();
@@ -194,6 +196,7 @@ public class MenuScript : MonoBehaviour
                 currentPhase = UI_Phase.Pause;
                 Time.timeScale = 0;
                 isOnPause = true;
+                tutorialCompleteText.SetActive(false);
                 pauseMenuBG.SetActive(true);
                 break;
             case UI_Phase.Settings:

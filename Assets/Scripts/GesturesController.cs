@@ -105,11 +105,13 @@ public class GesturesController : MonoBehaviour
                     }
                     else if (lastTapStartDateTime - lastTapEndDateTime <= doubleTapInterval)
                     {
-                        _notifyAboutGesture(Gestures.DoubleTap, Vector2.zero);
+                        if (TutorialScript.IsActionPermitted(Gestures.DoubleTap))
+                            _notifyAboutGesture(Gestures.DoubleTap, Vector2.zero);
                     }
                     else
                     {
-                        _notifyAboutGesture(Gestures.FreeAreaTap, Vector2.zero);
+                        if (TutorialScript.IsActionPermitted(Gestures.FreeAreaTap))
+                            _notifyAboutGesture(Gestures.FreeAreaTap, Vector2.zero);
                     }
                 }
                 lastTapEndDateTime = System.DateTime.Now;

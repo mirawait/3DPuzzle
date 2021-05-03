@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-
+using TMPro;
 
 public class TutorialScript : MonoBehaviour
 {
@@ -39,6 +39,8 @@ public class TutorialScript : MonoBehaviour
     GameObject chosenPiece;
     Button sovleButton;
     private CameraScript mainCamera;
+    GameObject tutorialCompleteText;
+    bool textFadingOut = false, textFadingIn = false, timeSpan = false;
     static public List<Tuple<GesturesController.Gestures, GameObject>> pertitedAction = new List<Tuple<GesturesController.Gestures, GameObject>>();
 
     void Start()
@@ -49,9 +51,13 @@ public class TutorialScript : MonoBehaviour
         rotationTutorial = GameObject.Find("RotationTutorial").GetComponent<RotationTutorial>();
         doubleTapTutorial = GameObject.Find("DoubleTapTutorial").GetComponent<TutorialDoubleTap>();
         saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
+        tutorialCompleteText = GameObject.Find("TutorialCompleteText");
         tappingTarget = GameObject.Find("Settings");
         sovleButton = GameObject.Find("SolveButton").GetComponent<Button>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
+
+        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, 0);
+        tutorialCompleteText.SetActive(false);
     }
 
     public void EnableTutorial()
@@ -156,6 +162,7 @@ public class TutorialScript : MonoBehaviour
             case TutorialStage.End:
                 isTutorialEnabled = false;
                 saveManager.MakeTutorialDone();
+                notifyAboutTutorialEnding();
                 pertitedAction.Clear();
                 currentStage = TutorialStage.WaitingForStart;
                 Debug.Log("Tutorial Ended");
@@ -180,6 +187,39 @@ public class TutorialScript : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
         StartNextStep();
+        yield break;
+    }
+
+    void notifyAboutTutorialEnding()
+    {
+        textFadingOut = true;
+        textFadingIn = false; 
+        timeSpan = false;
+        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, 0);
+        tutorialCompleteText.SetActive(true);
+        StartCoroutine(_StartFadeOut());
+    }
+    IEnumerator _StartFadeOut()
+    {
+        while (tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a < 1)
+        {
+            float currentA = tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a;
+            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, currentA + 0.1f);//CrossFadeAlpha(1, 1, false);
+            yield return new WaitForSeconds(0.05f);
+        }
+        yield return new WaitForSeconds(0.9f);
+        StartCoroutine(_StartFadeIn());
+        yield break;
+    }
+    IEnumerator _StartFadeIn()
+    {
+        while (tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a > 0)
+        {
+            float currentA = tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a;
+            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, currentA - 0.1f);//CrossFadeAlpha(1, 1, false);
+            yield return new WaitForSeconds(0.05f);
+        }
+        tutorialCompleteText.SetActive(false);
         yield break;
     }
 
