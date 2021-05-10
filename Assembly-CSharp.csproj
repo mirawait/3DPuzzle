@@ -70,6 +70,7 @@
     <Compile Include="Assets\Resources\Scripts\Zoomable.cs" />
     <Compile Include="Assets\Resources\Scripts\Menu.cs" />
     <Compile Include="Assets\Scripts\TapOnObjectTutorial.cs" />
+    <Compile Include="Assets\Scripts\UIController.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\TutorialSwipes.cs" />
     <Compile Include="Assets\Scripts\TutorialScript.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="Assets\Resources\Scripts\Hud.cs" />
     <Compile Include="Assets\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotatable.cs" />
-    <Compile Include="Assets\Scripts\UIController.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -89,6 +89,7 @@
      <None Include="Assets\Resources\UI\UI Templates\PauseMenuUI.uxml" />
      <None Include="Assets\Resources\UI\UI Templates\SettingsMenuUI.uxml" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
+     <None Include="Assets\Resources\UI\UI Templates\UIManager.uxml" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\Resources\UI\UI Templates\ButtonsStyles.uss" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
@@ -722,6 +723,9 @@
     <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.UI.Builder.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.UI.Builder.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UIElementsGameObjectsModule">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UIElementsGameObjectsModule.dll</HintPath>
     </Reference>
@@ -730,9 +734,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.UI.Builder.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.UI.Builder.Editor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

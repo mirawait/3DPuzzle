@@ -116,7 +116,7 @@ public class MenuScript : MonoBehaviour
         }
         return "ПЛАНЕТА";
     }
-    void PlayTask()
+    public void PlayTask()
     {
         titleText.SetActive(false);
         playButton.SetActive(false);
