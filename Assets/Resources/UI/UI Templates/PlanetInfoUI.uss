@@ -1,0 +1,8 @@
+.solve-button {
+    width: 628px;
+    height: 162px;
+}
+
+.solve-button:active {
+    -unity-background-image-tint-color: rgba(128, 128, 128, 255);
+}

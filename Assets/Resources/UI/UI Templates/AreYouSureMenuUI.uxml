@@ -7,7 +7,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="buttons" style="flex-direction: row; justify-content: center; flex-grow: 1; margin-top: 0;">
             <ui:Button display-tooltip-when-elided="True" name="agree-button" class="button" style="background-image: resource(&apos;UI/Buttons/AgreeButton&apos;); margin-right: 150px;" />
-            <ui:Button display-tooltip-when-elided="True" name="discard-button" class="button" style="background-image: resource(&apos;UI/Buttons/DiscardButton&apos;); margin-left: 150px;" />
+            <ui:Button display-tooltip-when-elided="True" name="disagree-button" class="button" style="background-image: resource(&apos;UI/Buttons/DiscardButton&apos;); margin-left: 150px;" />
         </ui:VisualElement>
         <ui:Button display-tooltip-when-elided="True" name="close-button" class="close-button" />
     </ui:VisualElement>

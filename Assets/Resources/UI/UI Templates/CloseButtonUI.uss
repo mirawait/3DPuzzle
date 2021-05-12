@@ -1,6 +1,6 @@
 .close-button {
     position: absolute;
-    right: 3%;
+    right: 2%;
     background-image: resource('UI/Buttons/CloseButton');
     width: 128px;
     height: 128px;
@@ -14,7 +14,7 @@
     border-bottom-left-radius: 50px;
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
-    top: 5%;
+    top: 2%;
 }
 
 .close-button:active {

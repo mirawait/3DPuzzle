@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     public VisualElement pauseScreen;
     public VisualElement areYouSureScreen;
     public VisualElement backButtonScreen;
+    public VisualElement planetInfoScreen;
     //----------------------UI REGION END---------------------
 
 
@@ -53,11 +54,13 @@ public class UIManager : MonoBehaviour
         pauseScreen = GameObject.Find("PauseMenuUI").GetComponent<UIDocument>().rootVisualElement;
         areYouSureScreen = GameObject.Find("AreYouSureMenuUI").GetComponent<UIDocument>().rootVisualElement;
         backButtonScreen = GameObject.Find("BackUI").GetComponent<UIDocument>().rootVisualElement;
+        planetInfoScreen = GameObject.Find("PlanetInfoUI").GetComponent<UIDocument>().rootVisualElement;
 
         settingScreen.style.display = DisplayStyle.None;
         pauseScreen.style.display = DisplayStyle.None;
         areYouSureScreen.style.display = DisplayStyle.None;
         backButtonScreen.style.display = DisplayStyle.None;
+        planetInfoScreen.style.display = DisplayStyle.None;
 
         mainMenuScreen?.Q("settings-button")?.RegisterCallback<ClickEvent>(ev => SettingsScreen());
         mainMenuScreen?.Q("play-button")?.RegisterCallback<ClickEvent>(ev => PlayTask());
@@ -67,7 +70,16 @@ public class UIManager : MonoBehaviour
         settingScreen?.Q("sound-button")?.RegisterCallback<ClickEvent>(ev => SettingsSound());
         settingScreen?.Q("difficulty-button")?.RegisterCallback<ClickEvent>(ev => SettingsDifficulty());
 
+        pauseScreen?.Q("settings-button")?.RegisterCallback<ClickEvent>(ev => SettingsScreen());
+        pauseScreen?.Q("close-button")?.RegisterCallback<ClickEvent>(ev => BackTask());
+        pauseScreen?.Q("mainmenu-button")?.RegisterCallback<ClickEvent>(ev => MainMenuTask());
+
+        areYouSureScreen?.Q("agree-button")?.RegisterCallback<ClickEvent>(ev => AgreeTask());
+        areYouSureScreen?.Q("disagree-button")?.RegisterCallback<ClickEvent>(ev => DisagreeTask());
+
         backButtonScreen?.Q("back-button")?.RegisterCallback<ClickEvent>(ev => BackTask());
+
+        planetInfoScreen?.Q("solve-button")?.RegisterCallback<ClickEvent>(ev => SolveTask());
         //------------------UI REGION END--------------------------------------
 
 
@@ -128,11 +140,50 @@ public class UIManager : MonoBehaviour
 
     }
 
+    void MainMenuTask()
+    {
+        areYouSureScreen.style.display = DisplayStyle.Flex;
+    }
+
+    void AgreeTask()
+    {
+        //planetNameInGame.SetActive(false);
+        Time.timeScale = 1;
+        isOnPause = false;
+        mainCamera.EnablePuzzleLock(false);
+        currentPhase = UI_Phase.PlanetInfo;
+        StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));
+        areYouSureScreen.style.display = DisplayStyle.None;
+        pauseScreen.style.display = DisplayStyle.None;
+        //solveButton.SetActive(true);
+        //dificultySwitcherScript.nextButton.GetComponent<Button>().interactable = true;
+        //dificultySwitcherScript.prevButton.GetComponent<Button>().interactable = true;
+        //pauseMenuBG.SetActive(false);
+        //settingsMenu.SetActive(false);
+        //pauseMenuCanvas.SetActive(false);
+        loadGameScene.UnloadScene();
+        BackTask();
+        BackTask();
+    }
+    void DisagreeTask()
+    {
+        areYouSureScreen.style.display = DisplayStyle.None;
+    }
     void HowToPlay()
     {
 
     }
 
+    void SolveTask()
+    {
+        currentPhase = UI_Phase.Puzzle;
+        mainCamera.EnablePuzzleLock(true);
+        planetInfoScreen.style.display = DisplayStyle.None;
+        //planetNameInGame.SetActive(true);
+        // planetNameInGame.GetComponent<TextMeshProUGUI>().text = IndexToName(loadGameScene.planetType);
+        loadGameScene.LoadScene();
+        loadGameScene.stopWaitingForPlanetClick();
+    }
     void PlayTask()
     {
         mainMenuScreen.style.display = DisplayStyle.None;
@@ -171,6 +222,7 @@ public class UIManager : MonoBehaviour
                 mainCamera.GoFree();
                 loadGameScene.startWaitingForPlanetClick();
                 currentPhase = UI_Phase.SolarSystem;
+                planetInfoScreen.style.display = DisplayStyle.None;
                 //foreach (GameObject infoPanel in planetInfoPanels)
                 //{
                 //    infoPanel.SetActive(false);
@@ -181,6 +233,8 @@ public class UIManager : MonoBehaviour
                 //pauseMenuCanvas.SetActive(true);
                 //dificultySwitcherScript.nextButton.GetComponent<Button>().interactable = false;
                 //dificultySwitcherScript.prevButton.GetComponent<Button>().interactable = false;
+                pauseScreen.style.display = DisplayStyle.Flex;
+                backButtonScreen.style.display = DisplayStyle.None;
                 currentPhase = UI_Phase.Pause;
                 Time.timeScale = 0;
                 isOnPause = true;
@@ -196,6 +250,8 @@ public class UIManager : MonoBehaviour
             case UI_Phase.Pause:
                 Time.timeScale = 1;
                 currentPhase = UI_Phase.Puzzle;
+                pauseScreen.style.display = DisplayStyle.None;
+                backButtonScreen.style.display = DisplayStyle.Flex;
                 //dificultySwitcherScript.nextButton.GetComponent<Button>().interactable = true;
                 //dificultySwitcherScript.prevButton.GetComponent<Button>().interactable = true;
                 //pauseMenuBG.SetActive(false);
@@ -204,6 +260,7 @@ public class UIManager : MonoBehaviour
                 break;
             case UI_Phase.PauseSettings:
                 currentPhase = UI_Phase.Pause;
+
                 //settingsMenu.SetActive(false);
                 //pauseMenuCanvas.SetActive(true);
                 break;
@@ -240,6 +297,8 @@ public class UIManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.01f);
         }
+
+        planetInfoScreen.style.display = DisplayStyle.Flex;
         //foreach (GameObject infoPanel in planetInfoPanels)
         //{
         //    if (infoPanel.transform.GetComponent<PlanetInfoScript>().GetIndex() == focusedPlanetInex)
