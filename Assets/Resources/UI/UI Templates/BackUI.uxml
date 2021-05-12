@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="CloseButtonUI.uss" />
+    <ui:Label text="111111" display-tooltip-when-elided="True" name="name-label" style="-unity-font: resource(&apos;Fonts/Montserrat-Bold&apos;); font-size: 80px; display: none; color: rgba(241, 241, 241, 255); justify-content: center; align-items: center; -unity-text-align: middle-center;" />
     <ui:Button display-tooltip-when-elided="True" name="back-button" class="close-button" style="background-image: resource(&apos;UI/Buttons/BackButton&apos;);" />
 </ui:UXML>

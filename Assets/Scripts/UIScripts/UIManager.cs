@@ -11,6 +11,8 @@ public class UIManager : MonoBehaviour
     public VisualElement areYouSureScreen;
     public VisualElement backButtonScreen;
     public VisualElement planetInfoScreen;
+
+    public string currentPlanetName = "";
     //----------------------UI REGION END---------------------
 
 
@@ -90,6 +92,8 @@ public class UIManager : MonoBehaviour
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
         loadGameScene = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<LoadGameScene>();
         //------------------GAME REGION END-----------------------------------------------
+
+        
     }
 
     void SettingsScreen()
@@ -155,6 +159,8 @@ public class UIManager : MonoBehaviour
         StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));
         areYouSureScreen.style.display = DisplayStyle.None;
         pauseScreen.style.display = DisplayStyle.None;
+        var planetName = backButtonScreen.Q<Label>("name-label");
+        planetName.style.display = DisplayStyle.None;
         //solveButton.SetActive(true);
         //dificultySwitcherScript.nextButton.GetComponent<Button>().interactable = true;
         //dificultySwitcherScript.prevButton.GetComponent<Button>().interactable = true;
@@ -179,6 +185,9 @@ public class UIManager : MonoBehaviour
         currentPhase = UI_Phase.Puzzle;
         mainCamera.EnablePuzzleLock(true);
         planetInfoScreen.style.display = DisplayStyle.None;
+        var planetName = backButtonScreen.Q<Label>("name-label");
+        planetName.style.display = DisplayStyle.Flex;
+        planetName.text = currentPlanetName;
         //planetNameInGame.SetActive(true);
         // planetNameInGame.GetComponent<TextMeshProUGUI>().text = IndexToName(loadGameScene.planetType);
         loadGameScene.LoadScene();
@@ -299,6 +308,13 @@ public class UIManager : MonoBehaviour
         }
 
         planetInfoScreen.style.display = DisplayStyle.Flex;
+        var planetInfoText = planetInfoScreen.Q<Label>("info-label");
+        var planetInfoName = planetInfoScreen.Q<Label>("name-label");
+        var planetInfo = TextTable.GetLines(IndexToName(focusedPlanetInex));
+        planetInfoName.text = planetInfo[0];
+        planetInfoText.text = planetInfo[1];
+        currentPlanetName = planetInfo[0];
+        
         //foreach (GameObject infoPanel in planetInfoPanels)
         //{
         //    if (infoPanel.transform.GetComponent<PlanetInfoScript>().GetIndex() == focusedPlanetInex)
@@ -330,5 +346,24 @@ public class UIManager : MonoBehaviour
                 }
             });
         currentPhase = UI_Phase.SolarSystem;
+    }
+    string IndexToName(uint index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "Солнце";
+            case 1:
+                return "Меркурий";
+            case 2:
+                return "Венера";
+            case 3:
+                return "Земля";
+            case 4:
+                return "Марс";
+            case 5:
+                return "ДИЧЬ";
+        }
+        return "ПЛАНЕТА";
     }
 }

@@ -79,6 +79,7 @@
     <Compile Include="Assets\Resources\Scripts\Hud.cs" />
     <Compile Include="Assets\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotatable.cs" />
+    <Compile Include="Assets\Scripts\UIScripts\TextTable.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -89,6 +90,7 @@
      <None Include="Assets\Resources\UI\UI Templates\CloseButtonUI.uss" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
      <None Include="Assets\Resources\UI\UI Templates\PauseMenuUI.uxml" />
+     <None Include="Assets\Resources\UI\PlanetInfo\PlanetInfo.txt" />
      <None Include="Assets\Resources\UI\UI Templates\SettingsMenuUI.uxml" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
      <None Include="Assets\Resources\UI\UI Templates\UIManager.uxml" />
