@@ -70,7 +70,6 @@
     <Compile Include="Assets\Resources\Scripts\Zoomable.cs" />
     <Compile Include="Assets\Resources\Scripts\Menu.cs" />
     <Compile Include="Assets\Scripts\TapOnObjectTutorial.cs" />
-    <Compile Include="Assets\Scripts\UIController.cs" />
     <Compile Include="Assets\Scripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\TutorialSwipes.cs" />
     <Compile Include="Assets\Scripts\TutorialScript.cs" />
@@ -79,11 +78,13 @@
     <Compile Include="Assets\Resources\Scripts\Hud.cs" />
     <Compile Include="Assets\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Resources\Scripts\Rotatable.cs" />
+    <Compile Include="Assets\Scripts\UIScripts\UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
+     <None Include="Assets\Resources\UI\UI Templates\BackUI.uxml" />
      <None Include="Assets\Resources\UI\UI Templates\CloseButtonUI.uss" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
      <None Include="Assets\Resources\UI\UI Templates\PauseMenuUI.uxml" />

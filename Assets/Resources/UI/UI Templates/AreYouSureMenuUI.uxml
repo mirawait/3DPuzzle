@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="ButtonsStyles.uss" />
     <Style src="CloseButtonUI.uss" />
-    <ui:VisualElement name="screen" style="background-color: rgba(0, 0, 0, 0.78); flex-grow: 1;">
+    <ui:VisualElement name="screen" style="background-color: rgba(0, 0, 0, 0.78); flex-grow: 1; display: flex;">
         <ui:VisualElement name="title" style="justify-content: center; align-items: center; flex-grow: 1;">
             <ui:Label text="Label" display-tooltip-when-elided="True" name="title-label" style="background-image: resource(&apos;UI/Texts/AreYouSure&apos;); background-color: rgba(0, 0, 0, 0); font-size: 319px; -unity-font: resource(&apos;Fonts/Montserrat-Bold&apos;); color: rgba(196, 196, 196, 0); -unity-background-scale-mode: stretch-to-fill; -unity-text-align: middle-center; height: 340px; width: 1020px;" />
         </ui:VisualElement>

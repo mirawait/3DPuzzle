@@ -1,8 +1,6 @@
 .close-button {
     position: absolute;
-    top: 65.2px;
-    left: 1708px;
-    right: 78px;
+    right: 3%;
     background-image: resource('UI/Buttons/CloseButton');
     width: 128px;
     height: 128px;
@@ -16,8 +14,9 @@
     border-bottom-left-radius: 50px;
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
+    top: 5%;
 }
 
 .close-button:active {
-    -unity-background-image-tint-color: rgba(132, 132, 132, 255);
+    -unity-background-image-tint-color: rgb(132, 132, 132);
 }

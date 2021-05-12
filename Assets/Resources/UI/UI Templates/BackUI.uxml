@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="CloseButtonUI.uss" />
+    <ui:VisualElement name="screen" style="flex-grow: 1;">
+        <ui:Button display-tooltip-when-elided="True" name="back-button" class="close-button" style="background-image: resource(&apos;UI/Buttons/BackButton&apos;);" />
+    </ui:VisualElement>
+</ui:UXML>

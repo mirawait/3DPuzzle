@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="SettingsMenuUI.uss" />
     <Style src="CloseButtonUI.uss" />
-    <ui:VisualElement name="screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.78);">
+    <ui:VisualElement name="screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.78); display: flex; visibility: visible;">
         <ui:VisualElement name="title" style="flex-grow: 0; justify-content: flex-end; align-items: center; margin-top: 7%;">
             <ui:Label text="НАСТРОЙКИ" display-tooltip-when-elided="True" name="settings-title-label" style="-unity-font: resource(&apos;Fonts/Montserrat-Black&apos;); font-size: 72px; color: rgb(229, 141, 46); -unity-font-style: normal;" />
         </ui:VisualElement>
