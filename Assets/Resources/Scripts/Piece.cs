@@ -164,6 +164,7 @@ public class Piece : MonoBehaviour
             if (transform.position == travelTargetPos)
             {
                 isTravelling = false;
+                
             }
         }
 

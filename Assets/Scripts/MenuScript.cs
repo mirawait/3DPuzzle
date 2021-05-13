@@ -61,14 +61,14 @@ public class MenuScript : MonoBehaviour
         //difButtons[0] = GameObject.Find("NextDifButton");
         //difButtons[1] = GameObject.Find("PrevDifButton");
         settingsSwitcher = settingsMenu.GetComponent<ConfirmSettingsScript>();
-        playButton.GetComponent<Button>().onClick.AddListener(PlayTask);
+        //playButton.GetComponent<Button>().onClick.AddListener(PlayTask);
         settingsButton.GetComponent<Button>().onClick.AddListener(SettingsTask);
-        btmButton.GetComponent<Button>().onClick.AddListener(BackTask);
-        exitButton.GetComponent<Button>().onClick.AddListener(ExitTask);
-        htpButton.GetComponent<Button>().onClick.AddListener(HowToPlayTask);
-        solveButton.GetComponent<Button>().onClick.AddListener(SolveTask);
-        pauseSettingsButton.GetComponent<Button>().onClick.AddListener(SettingFromPauseTask);
-        pauseMainMenuButton.GetComponent<Button>().onClick.AddListener(MainMenuButtonTask);
+        //btmButton.GetComponent<Button>().onClick.AddListener(BackTask);
+        //exitButton.GetComponent<Button>().onClick.AddListener(ExitTask);
+        //htpButton.GetComponent<Button>().onClick.AddListener(HowToPlayTask);
+        //solveButton.GetComponent<Button>().onClick.AddListener(SolveTask);
+        //pauseSettingsButton.GetComponent<Button>().onClick.AddListener(SettingFromPauseTask);
+        //pauseMainMenuButton.GetComponent<Button>().onClick.AddListener(MainMenuButtonTask);
 
         btmButton.SetActive(false);
         solveButton.SetActive(false);

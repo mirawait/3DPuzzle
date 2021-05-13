@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using TMPro;
 
 public class TutorialScript : MonoBehaviour
@@ -37,14 +38,16 @@ public class TutorialScript : MonoBehaviour
     public TutorialStage currentStage = TutorialStage.WaitingForStart;
     static public GameObject tappingTarget;
     GameObject chosenPiece;
-    Button sovleButton;
+    GameObject sovleButton;
     private CameraScript mainCamera;
     GameObject tutorialCompleteText;
+    VisualElement planetInfoScreen;
     bool textFadingOut = false, textFadingIn = false, timeSpan = false;
     static public List<Tuple<GesturesController.Gestures, GameObject>> pertitedAction = new List<Tuple<GesturesController.Gestures, GameObject>>();
 
     void Start()
     {
+        planetInfoScreen = GameObject.Find("PlanetInfoUI").GetComponent<UIDocument>().rootVisualElement;
         swipeTutorial = GameObject.Find("SwipesTutorial").GetComponent<TutorialSwipes>();
         tappingTutorial = GameObject.Find("TappingTutorial").GetComponent<TapOnObjectTutorial>();
         zoomTutorial = GameObject.Find("ZoomTutorial").GetComponent<TutorialZoom>();
@@ -53,7 +56,9 @@ public class TutorialScript : MonoBehaviour
         saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
         tutorialCompleteText = GameObject.Find("TutorialCompleteText");
         tappingTarget = GameObject.Find("Settings");
-        sovleButton = GameObject.Find("SolveButton").GetComponent<Button>();
+        sovleButton = GameObject.Find("SolveButton");
+        sovleButton.SetActive(false);
+
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
 
         tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, 0);
@@ -62,8 +67,11 @@ public class TutorialScript : MonoBehaviour
 
     public void EnableTutorial()
     {
-        isTutorialEnabled = true;
-        StartNextStep();
+        if (!isTutorialEnabled)
+        {
+            isTutorialEnabled = true;
+            StartNextStep();
+        }
     }
     public bool IsTutorialEnabled()
     {
@@ -121,14 +129,22 @@ public class TutorialScript : MonoBehaviour
                 StartCoroutine(_WaitForCameraPhase(CameraScript.Phase.PlanetLock));
                 break;
             case TutorialStage.PlanetRotation:
-                sovleButton.enabled = false;
+                planetInfoScreen?.Q("solve-button")?.SetEnabled(false);
+                sovleButton.GetComponent<UnityEngine.UI.Button>().enabled = false;
                 swipeTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolveClick:
-                sovleButton.enabled = true;
+                
+                planetInfoScreen?.Q("solve-button")?.SetEnabled(true);
+                //sovleButton.transform.position = planetInfoScreen.Q<UnityEngine.UIElements.Button>("solve-button").style.position.ToString;
+                Debug.Log("POS:" + planetInfoScreen.Q<UnityEngine.UIElements.Button>("solve-button").style.position.ToString());
+                sovleButton.SetActive(true);
+                sovleButton.GetComponent<UnityEngine.UI.Button>().enabled = true;
                 tappingTutorial.EnableTutorial(sovleButton.gameObject, () => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolveSwipes:
+                sovleButton.SetActive(false);
+                sovleButton.GetComponent<UnityEngine.UI.Button>().enabled = false;
                 swipeTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolveRotation:

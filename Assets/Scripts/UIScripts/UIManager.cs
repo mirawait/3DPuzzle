@@ -22,13 +22,15 @@ public class UIManager : MonoBehaviour
     private SolarSystem solarSystem;
     private CameraScript mainCamera;
     private LoadGameScene loadGameScene;
+    private SaveManager saveManager;
+    private AudioSource audioSource;
     uint lastActiveInfoPanel;
     uint planetClickSubscription;
     private static bool isOnPause = false;
 
     private bool isSound = true;
-    private Difficulty difficulty = Difficulty.Medium;
-    enum Difficulty
+    static private Difficulty difficulty = Difficulty.Medium;
+    public enum Difficulty
     {
         Easy,
         Medium,
@@ -87,13 +89,15 @@ public class UIManager : MonoBehaviour
 
 
         //------------------GAME REGION START-----------------------------------------------
+        audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
         tutorial = GameObject.Find("Tutorial").GetComponent<TutorialScript>();
         solarSystem = GameObject.FindGameObjectWithTag("Sun").GetComponent<SolarSystem>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
         loadGameScene = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<LoadGameScene>();
+        saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
         //------------------GAME REGION END-----------------------------------------------
 
-        
+
     }
 
     void SettingsScreen()
@@ -135,11 +139,13 @@ public class UIManager : MonoBehaviour
         {
             but.style.backgroundImage = Resources.Load("UI/Buttons/DisabledButton") as Texture2D;
             isSound = false;
+            audioSource.Stop();
         }
         else
         {
             but.style.backgroundImage = Resources.Load("UI/Buttons/EnabledButton") as Texture2D;
             isSound = true;
+            audioSource.Play();
         }
 
     }
@@ -177,7 +183,8 @@ public class UIManager : MonoBehaviour
     }
     void HowToPlay()
     {
-
+        tutorial.EnableTutorial();
+        PlayTask();
     }
 
     void SolveTask()
@@ -195,6 +202,10 @@ public class UIManager : MonoBehaviour
     }
     void PlayTask()
     {
+        if (saveManager.IsTutorialDone() == false)
+        {
+            tutorial.EnableTutorial();
+        }
         mainMenuScreen.style.display = DisplayStyle.None;
         backButtonScreen.style.display = DisplayStyle.Flex;
         loadGameScene.startWaitingForPlanetClick();
@@ -366,4 +377,10 @@ public class UIManager : MonoBehaviour
         }
         return "ПЛАНЕТА";
     }
+
+    static public Difficulty GetDifficulty()
+    {
+        return difficulty;
+    }
 }
+

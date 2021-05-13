@@ -14,7 +14,6 @@ public class LoadGameScene : MonoBehaviour
     public void LoadScene()
     {
         GameObject Sun = GameObject.Find("Sun");
-        DificultySwitcherScript.GetChosenDifficulty();
         if (!isLoaded)
         {
             //Sun.GetComponent<SolarSystem>().EnableSolarSystemMoving(false);
@@ -34,7 +33,7 @@ public class LoadGameScene : MonoBehaviour
         }
         manager = GameObject.FindGameObjectWithTag("Manager");
         Debug.LogError("LOAD SCENE ASYNC PUZZLE TYPE " + planetType);
-        manager.GetComponent<Manager>().Start_Puzzles((int)planetType, (int)DificultySwitcherScript.GetChosenDifficulty());
+        manager.GetComponent<Manager>().Start_Puzzles((int)planetType, (int)UIManager.GetDifficulty());
     }
 
     public void UnloadScene()
