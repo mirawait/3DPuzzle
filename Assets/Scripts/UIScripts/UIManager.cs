@@ -235,7 +235,7 @@ public class UIManager : MonoBehaviour
                 mainMenuScreen.style.display = DisplayStyle.Flex;
                 StartCoroutine(_WaitForCameraMenuPhase());
                 ////btmButton.SetActive(false);
-                solarSystem.EnableSolarSystemPhase(false);
+                //solarSystem.EnableSolarSystemPhase(false);
                 mainCamera.GoMenu();
                 tutorial.DisableTutorial();
                 loadGameScene.stopWaitingForPlanetClick();
