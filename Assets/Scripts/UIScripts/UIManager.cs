@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
     private LoadGameScene loadGameScene;
     private SaveManager saveManager;
     private AudioSource audioSource;
+    private GameObject planetIsDoneText;
     uint lastActiveInfoPanel;
     uint planetClickSubscription;
     private static bool isOnPause = false;
@@ -89,6 +90,8 @@ public class UIManager : MonoBehaviour
 
 
         //------------------GAME REGION START-----------------------------------------------
+        planetIsDoneText = GameObject.Find("PlanetIsDoneText");
+        planetIsDoneText.SetActive(false);
         audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
         tutorial = GameObject.Find("Tutorial").GetComponent<TutorialScript>();
         solarSystem = GameObject.FindGameObjectWithTag("Sun").GetComponent<SolarSystem>();
@@ -243,6 +246,7 @@ public class UIManager : MonoBehaviour
                 loadGameScene.startWaitingForPlanetClick();
                 currentPhase = UI_Phase.SolarSystem;
                 planetInfoScreen.style.display = DisplayStyle.None;
+                planetIsDoneText.SetActive(false);
                 //foreach (GameObject infoPanel in planetInfoPanels)
                 //{
                 //    infoPanel.SetActive(false);
@@ -325,7 +329,10 @@ public class UIManager : MonoBehaviour
         planetInfoName.text = planetInfo[0];
         planetInfoText.text = planetInfo[1];
         currentPlanetName = planetInfo[0];
-        
+        if (saveManager.IsPlanetDone((int)focusedPlanetInex, (int)UIManager.GetDifficulty()))
+        {
+            planetIsDoneText.SetActive(true);
+        }
         //foreach (GameObject infoPanel in planetInfoPanels)
         //{
         //    if (infoPanel.transform.GetComponent<PlanetInfoScript>().GetIndex() == focusedPlanetInex)
