@@ -354,7 +354,7 @@ public class CameraScript : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 800 * Time.deltaTime);
             Debug.Log("CAMERA POSITION = " + transform.position);
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 40 * (initDist - dist) / initDist * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, currentRotationSpeed * 50 * (initDist - dist) / initDist * Time.deltaTime);
 
             if (transform.position == targetPos && transform.rotation == targetRot)
             {

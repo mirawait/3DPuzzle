@@ -42,6 +42,7 @@ public class TutorialScript : MonoBehaviour
     private CameraScript mainCamera;
     GameObject tutorialCompleteText;
     VisualElement planetInfoScreen;
+    EventCallback<ClickEvent> eventOnClick;
     bool textFadingOut = false, textFadingIn = false, timeSpan = false;
     static public List<Tuple<GesturesController.Gestures, GameObject>> pertitedAction = new List<Tuple<GesturesController.Gestures, GameObject>>();
 
@@ -63,6 +64,8 @@ public class TutorialScript : MonoBehaviour
 
         tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, 0);
         tutorialCompleteText.SetActive(false);
+
+        eventOnClick = ev => { StartNextStep(); };
     }
 
     public void EnableTutorial()
@@ -81,10 +84,13 @@ public class TutorialScript : MonoBehaviour
     {
         isTutorialEnabled = false;
         swipeTutorial.DisableTutorial();
+        zoomTutorial.DisableTutorial();
         tappingTutorial.DisableTutorial();
         doubleTapTutorial.DisableTutorial();
         rotationTutorial.DisableTutorial();
         pertitedAction.Clear();
+        var but = planetInfoScreen?.Q("solve-button");
+        but.style.backgroundImage = Resources.Load("UI/Buttons/SolveButton") as Texture2D;
         currentStage = TutorialStage.WaitingForStart;
     }
 
@@ -109,6 +115,7 @@ public class TutorialScript : MonoBehaviour
     public void StartNextStep()
     {
         currentStage++;
+        var but = planetInfoScreen?.Q("solve-button");
         switch (currentStage)
         {
             case TutorialStage.WaitingForStart:
@@ -129,22 +136,17 @@ public class TutorialScript : MonoBehaviour
                 StartCoroutine(_WaitForCameraPhase(CameraScript.Phase.PlanetLock));
                 break;
             case TutorialStage.PlanetRotation:
-                planetInfoScreen?.Q("solve-button")?.SetEnabled(false);
-                sovleButton.GetComponent<UnityEngine.UI.Button>().enabled = false;
+                but.SetEnabled(false);
                 swipeTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolveClick:
-                
-                planetInfoScreen?.Q("solve-button")?.SetEnabled(true);
-                //sovleButton.transform.position = planetInfoScreen.Q<UnityEngine.UIElements.Button>("solve-button").style.position.ToString;
-                Debug.Log("POS:" + planetInfoScreen.Q<UnityEngine.UIElements.Button>("solve-button").style.position.ToString());
-                sovleButton.SetActive(true);
-                sovleButton.GetComponent<UnityEngine.UI.Button>().enabled = true;
-                tappingTutorial.EnableTutorial(sovleButton.gameObject, () => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                but.SetEnabled(true);
+                but.style.backgroundImage = Resources.Load("UI/Buttons/SolveButtonTutorial") as Texture2D;
+                but.RegisterCallback<ClickEvent>(eventOnClick);
                 break;
             case TutorialStage.SolveSwipes:
-                sovleButton.SetActive(false);
-                sovleButton.GetComponent<UnityEngine.UI.Button>().enabled = false;
+                but.UnregisterCallback<ClickEvent>(eventOnClick);
+                but.style.backgroundImage = Resources.Load("UI/Buttons/SolveButton") as Texture2D;
                 swipeTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolveRotation:

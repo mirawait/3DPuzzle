@@ -783,7 +783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b80494f54a3f9854b9a78666194f1d8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selfRotationSpeed: 0.5
+  selfRotationSpeed: 5
   solarRotationSpeed: 0.3
   distancingSpeed: 10
   planetsDistanceMultiplier: 8.3

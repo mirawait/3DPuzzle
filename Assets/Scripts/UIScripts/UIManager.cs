@@ -221,7 +221,11 @@ public class UIManager : MonoBehaviour
         Debug.Log("Back clicked");
         if (tutorial.IsTutorialEnabled())
         {
-            //currentPhase = UI_Phase.SolarSystem;
+            currentPhase = UI_Phase.SolarSystem;
+            planetInfoScreen.style.display = DisplayStyle.None;
+            var planetName = backButtonScreen.Q<Label>("name-label");
+            planetName.style.display = DisplayStyle.None;
+            loadGameScene.UnloadScene();
             //foreach (GameObject infoPanel in planetInfoPanels)
             //{
             //    infoPanel.SetActive(false);
