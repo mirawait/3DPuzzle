@@ -198,6 +198,7 @@ public class UIManager : MonoBehaviour
         var planetName = backButtonScreen.Q<Label>("name-label");
         planetName.style.display = DisplayStyle.Flex;
         planetName.text = currentPlanetName;
+        planetIsDoneText.SetActive(false);
         //planetNameInGame.SetActive(true);
         // planetNameInGame.GetComponent<TextMeshProUGUI>().text = IndexToName(loadGameScene.planetType);
         loadGameScene.LoadScene();
