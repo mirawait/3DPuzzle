@@ -28,6 +28,7 @@ public class UIManager : MonoBehaviour
     uint lastActiveInfoPanel;
     uint planetClickSubscription;
     private static bool isOnPause = false;
+    private bool isInGame = false;
 
     private bool isSound = true;
     static private Difficulty difficulty = Difficulty.Medium;
@@ -47,7 +48,7 @@ public class UIManager : MonoBehaviour
         Pause,
         PauseSettings
     }
-    private UI_Phase currentPhase = UI_Phase.SolarSystem;
+    private UI_Phase currentPhase = UI_Phase.MainMenu;
 
     //----------------------GAME REGION END---------------------
 
@@ -105,11 +106,18 @@ public class UIManager : MonoBehaviour
 
     void SettingsScreen()
     {
+        if (currentPhase != UI_Phase.MainMenu)
+        {
+            var but = settingScreen?.Q("difficulty-button");
+            but.SetEnabled(false);
+        }
         settingScreen.style.display = DisplayStyle.Flex;
     }
 
     void SettingsBack()
     {
+        var but = settingScreen?.Q("difficulty-button");
+        but.SetEnabled(true);
         settingScreen.style.display = DisplayStyle.None;
     }
 
@@ -210,6 +218,7 @@ public class UIManager : MonoBehaviour
         {
             tutorial.EnableTutorial();
         }
+        currentPhase = UI_Phase.SolarSystem;
         mainMenuScreen.style.display = DisplayStyle.None;
         backButtonScreen.style.display = DisplayStyle.Flex;
         loadGameScene.startWaitingForPlanetClick();
@@ -227,6 +236,7 @@ public class UIManager : MonoBehaviour
             var planetName = backButtonScreen.Q<Label>("name-label");
             planetName.style.display = DisplayStyle.None;
             loadGameScene.UnloadScene();
+            planetIsDoneText.SetActive(false);
             //foreach (GameObject infoPanel in planetInfoPanels)
             //{
             //    infoPanel.SetActive(false);
@@ -238,6 +248,7 @@ public class UIManager : MonoBehaviour
             case UI_Phase.SolarSystem:
                 backButtonScreen.style.display = DisplayStyle.None;
                 mainMenuScreen.style.display = DisplayStyle.Flex;
+                currentPhase = UI_Phase.MainMenu;
                 StartCoroutine(_WaitForCameraMenuPhase());
                 ////btmButton.SetActive(false);
                 //solarSystem.EnableSolarSystemPhase(false);
