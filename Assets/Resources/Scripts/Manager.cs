@@ -13,8 +13,7 @@ public class Manager : MonoBehaviour
     //6 - JUPITER,
     //7 - SATURN,
     //8 - URANUS,
-    //9 - NEPTUNE,
-    //10 - PLUTO
+    //9 - NEPTUNE
 
     //Parts
     //0 - 6_PARTS,
@@ -81,8 +80,20 @@ public class Manager : MonoBehaviour
                 config.puzzleMaterial = Resources.Load("Materials/MarsOpaque") as Material;
                 break;
             case 5:
-                config.outlineMaterial = Resources.Load("Materials/MoonTransparent") as Material;
-                config.puzzleMaterial = Resources.Load("Materials/MoonOpaque") as Material;
+                config.outlineMaterial = Resources.Load("Materials/JupiterTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/JupiterOpaque") as Material;
+                break;
+            case 6:
+                config.outlineMaterial = Resources.Load("Materials/SaturnTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/SaturnOpaque") as Material;
+                break;
+            case 7:
+                config.outlineMaterial = Resources.Load("Materials/UranusTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/UranusOpaque") as Material;
+                break;
+            case 8:
+                config.outlineMaterial = Resources.Load("Materials/NeptuneTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/NeptuneOpaque") as Material;
                 break;
         }
 
