@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 using Quaternion = UnityEngine.Quaternion;
 
 public class Manager : MonoBehaviour
@@ -48,9 +49,9 @@ public class Manager : MonoBehaviour
 
 
         if (targetGameObject == null)
-            targetGameObject = GameObject.FindWithTag("Text");
-        if (targetGameObject != null)
-            targetGameObject.SetActive(false);
+            targetGameObject = GameObject.Find("--------USER INTERFACE--------");
+       // if (targetGameObject != null)
+            //targetGameObject.SetActive(false);
 
         //Debug.Log("Screen logger started");
 
@@ -154,8 +155,8 @@ public class Manager : MonoBehaviour
                 if (planetPuzzle.GetComponent<PlanetPuzzle>().IsPuzzleAssembled())
                 {
                     if (targetGameObject != null)
-                        targetGameObject.SetActive(true);
-                    print("victory!");
+                        targetGameObject.GetComponent<UIManager>().PuzzleSolvedShow();
+                    //print("victory!");
 
                     saveManager.MakeDone(type, level);
 

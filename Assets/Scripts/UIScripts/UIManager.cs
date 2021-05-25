@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UIElements.Experimental;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class UIManager : MonoBehaviour
     public VisualElement areYouSureScreen;
     public VisualElement backButtonScreen;
     public VisualElement planetInfoScreen;
+    public VisualElement endScreen;
 
     public string currentPlanetName = "";
     //----------------------UI REGION END---------------------
@@ -61,12 +64,14 @@ public class UIManager : MonoBehaviour
         areYouSureScreen = GameObject.Find("AreYouSureMenuUI").GetComponent<UIDocument>().rootVisualElement;
         backButtonScreen = GameObject.Find("BackUI").GetComponent<UIDocument>().rootVisualElement;
         planetInfoScreen = GameObject.Find("PlanetInfoUI").GetComponent<UIDocument>().rootVisualElement;
+        endScreen = GameObject.Find("EndUI").GetComponent<UIDocument>().rootVisualElement;
 
         settingScreen.style.display = DisplayStyle.None;
         pauseScreen.style.display = DisplayStyle.None;
         areYouSureScreen.style.display = DisplayStyle.None;
         backButtonScreen.style.display = DisplayStyle.None;
         planetInfoScreen.style.display = DisplayStyle.None;
+        endScreen.style.display = DisplayStyle.None;
 
         mainMenuScreen?.Q("settings-button")?.RegisterCallback<ClickEvent>(ev => SettingsScreen());
         mainMenuScreen?.Q("play-button")?.RegisterCallback<ClickEvent>(ev => PlayTask());
@@ -86,6 +91,9 @@ public class UIManager : MonoBehaviour
         backButtonScreen?.Q("back-button")?.RegisterCallback<ClickEvent>(ev => BackTask());
 
         planetInfoScreen?.Q("solve-button")?.RegisterCallback<ClickEvent>(ev => SolveTask());
+
+
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         //------------------UI REGION END--------------------------------------
 
 
@@ -226,6 +234,45 @@ public class UIManager : MonoBehaviour
         _CheckoutToSolarSystemPhase();
     }
 
+    public void PuzzleSolvedShow()
+    {
+        endScreen.Q<Label>("complete-label").style.opacity = 0;
+
+        endScreen.style.display = DisplayStyle.Flex;
+
+        endScreen.Q<Label>("complete-label").experimental.animation
+            .Start(new StyleValues { width = 1095, height = 532, opacity = 0 },
+                new StyleValues { width = 1095, height = 532, opacity = 1 }, 3000).Ease(Easing.OutQuad)
+            .OnCompleted(() => {
+                endScreen.Q<Label>("complete-label").experimental.animation
+                    .Start(new StyleValues { opacity = 1 }, new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad)
+                    .OnCompleted(() => {
+                        endScreen.Q<Label>("complete-label").experimental.animation
+                            .Start(new StyleValues { width = 1095, height = 532, marginTop = 256 }, new StyleValues { width = 714, height = 365, marginTop = 0 }, 2000).Ease(Easing.OutQuad);
+                    });
+            });
+        endScreen.Q<Button>("exit-button").experimental.animation
+            .Start(new StyleValues { opacity = 0 },
+                new StyleValues { opacity = 0 }, 5000).Ease(Easing.OutQuad).OnCompleted(() =>
+            {
+                endScreen.Q<Button>("exit-button").experimental.animation
+                    .Start(new StyleValues { opacity = 0 },
+                        new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad);
+            });
+        endScreen.Q<Button>("next-button").experimental.animation
+            .Start(new StyleValues { opacity = 0 },
+                new StyleValues { opacity = 0 }, 5000).Ease(Easing.OutQuad).OnCompleted(() =>
+            {
+                endScreen.Q<Button>("next-button").experimental.animation
+                    .Start(new StyleValues { opacity = 0 },
+                        new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad);
+            });
+    }
+
+    public void PuzzleSolvedHide()
+    {
+        endScreen.style.display = DisplayStyle.None;
+    }
     void BackTask()
     {
         Debug.Log("Back clicked");
