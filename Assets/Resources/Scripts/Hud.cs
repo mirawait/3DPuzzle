@@ -101,18 +101,52 @@ public class Hud : MonoBehaviour
     private void InitPiecesStandPos()
     {
         var pieceDistanceToCamera = CountPieceDistanceToCamera();
+        switch (UIManager.GetDifficulty())
+        {
+            case UIManager.Difficulty.Easy:
+                piecesStandPos = new List<Vector3>(new Vector3[]{
+                    Camera.main.ScreenToWorldPoint(new Vector3(1 * Screen.width / 6, 3.1f * (Screen.height / 4), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(5 * Screen.width / 6, 3.1f * (Screen.height / 4), pieceDistanceToCamera)),
 
-        // 6 'cells' for currently selectable pieces
-        piecesStandPos = new List<Vector3>(new Vector3[]{
-            Camera.main.ScreenToWorldPoint(new Vector3(2 * Screen.width / 6, 6 * (Screen.height / 7), pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(4 * Screen.width / 6, 6 * (Screen.height / 7), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(1 * (Screen.width / 6), 0.9f * Screen.height / 4, pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(5 * (Screen.width / 6), 0.9f * Screen.height / 4, pieceDistanceToCamera)),
+                });
+                break;
+            case UIManager.Difficulty.Medium:
+                piecesStandPos = new List<Vector3>(new Vector3[]{
+                    Camera.main.ScreenToWorldPoint(new Vector3(1.5f * Screen.width / 6, 2.5f * (Screen.height / 3), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(4.5f * Screen.width / 6, 2.5f * (Screen.height / 3), pieceDistanceToCamera)),
 
-            Camera.main.ScreenToWorldPoint(new Vector3(0.6f * (Screen.width / 6), (Screen.height / 2), pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(5.4f * (Screen.width / 6), (Screen.height / 2), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(0.7f * (Screen.width / 6), 1.5f * (Screen.height / 3), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(5.3f * (Screen.width / 6), 1.5f * (Screen.height / 3), pieceDistanceToCamera)),
 
-            Camera.main.ScreenToWorldPoint(new Vector3(2 * (Screen.width / 6), Screen.height / 7, pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(4 * (Screen.width / 6), Screen.height / 7, pieceDistanceToCamera)),
-        });
+                    Camera.main.ScreenToWorldPoint(new Vector3(1.5f * (Screen.width / 6), 0.5f * (Screen.height / 3), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(4.5f * (Screen.width / 6), 0.5f * (Screen.height / 3), pieceDistanceToCamera)),
+                });
+                break;
+            case UIManager.Difficulty.Hard:
+                piecesStandPos = new List<Vector3>(new Vector3[]{
+                    Camera.main.ScreenToWorldPoint(new Vector3(1.5f * Screen.width / 6, 6.5f * (Screen.height / 7), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(4.5f * Screen.width / 6, 6.5f * (Screen.height / 7), pieceDistanceToCamera)),
+
+                    Camera.main.ScreenToWorldPoint(new Vector3(1f * (Screen.width / 6), 5.4f * (Screen.height / 7), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(5f * (Screen.width / 6), 5.4f * (Screen.height / 7), pieceDistanceToCamera)),
+
+                    Camera.main.ScreenToWorldPoint(new Vector3(0.5f * (Screen.width / 6), 3.95f * (Screen.height / 7), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(5.5f * (Screen.width / 6), 3.95f * (Screen.height / 7), pieceDistanceToCamera)),
+
+                    Camera.main.ScreenToWorldPoint(new Vector3(0.5f * (Screen.width / 6), 2.75f * (Screen.height / 7), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(5.5f * (Screen.width / 6), 2.75f * (Screen.height / 7), pieceDistanceToCamera)),
+
+                    Camera.main.ScreenToWorldPoint(new Vector3(1f * (Screen.width / 6), 1.7f * (Screen.height / 7), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(5f * (Screen.width / 6), 1.7f * (Screen.height / 7), pieceDistanceToCamera)),
+
+                    Camera.main.ScreenToWorldPoint(new Vector3(1.5f * (Screen.width / 6), 0.6f * (Screen.height / 7), pieceDistanceToCamera)),
+                    Camera.main.ScreenToWorldPoint(new Vector3(4.5f * (Screen.width / 6), 0.6f * (Screen.height / 7), pieceDistanceToCamera)),
+                });
+                break;
+        }
+        
     }
 
     // workaround
