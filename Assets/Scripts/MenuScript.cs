@@ -158,7 +158,7 @@ public class MenuScript : MonoBehaviour
     void BackTask()
     {
         Debug.Log("Back clicked");
-        if (tutorial.IsTutorialEnabled())
+        if (TutorialScript.IsTutorialEnabled())
         {
             currentPhase = UI_Phase.SolarSystem;
             foreach (GameObject infoPanel in planetInfoPanels)

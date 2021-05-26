@@ -97,7 +97,6 @@ public class UIManager : MonoBehaviour
         //------------------UI REGION END--------------------------------------
 
 
-
         //------------------GAME REGION START-----------------------------------------------
         planetIsDoneText = GameObject.Find("PlanetIsDoneText");
         planetIsDoneText.SetActive(false);
@@ -108,8 +107,6 @@ public class UIManager : MonoBehaviour
         loadGameScene = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<LoadGameScene>();
         saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
         //------------------GAME REGION END-----------------------------------------------
-
-
     }
 
     void SettingsScreen()
@@ -147,8 +144,6 @@ public class UIManager : MonoBehaviour
                 difficulty = Difficulty.Easy;
                 break;
         }
-
-
     }
 
     void SettingsSound()
@@ -166,7 +161,6 @@ public class UIManager : MonoBehaviour
             isSound = true;
             audioSource.Play();
         }
-
     }
 
     void MainMenuTask()
@@ -217,6 +211,7 @@ public class UIManager : MonoBehaviour
         planetIsDoneText.SetActive(false);
         //planetNameInGame.SetActive(true);
         // planetNameInGame.GetComponent<TextMeshProUGUI>().text = IndexToName(loadGameScene.planetType);
+        GesturesController.RecogniseDoubleTouchGesturesAs_Shuffle();
         loadGameScene.LoadScene();
         loadGameScene.stopWaitingForPlanetClick();
     }
@@ -231,6 +226,7 @@ public class UIManager : MonoBehaviour
         backButtonScreen.style.display = DisplayStyle.Flex;
         loadGameScene.startWaitingForPlanetClick();
         solarSystem.EnableSolarSystemPhase(true);
+        GesturesController.RecogniseDoubleTouchGesturesAs_PinchSpread();
         _CheckoutToSolarSystemPhase();
     }
 
@@ -276,7 +272,7 @@ public class UIManager : MonoBehaviour
     void BackTask()
     {
         Debug.Log("Back clicked");
-        if (tutorial.IsTutorialEnabled())
+        if (TutorialScript.IsTutorialEnabled())
         {
             currentPhase = UI_Phase.SolarSystem;
             planetInfoScreen.style.display = DisplayStyle.None;

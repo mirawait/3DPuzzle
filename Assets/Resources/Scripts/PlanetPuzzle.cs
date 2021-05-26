@@ -129,7 +129,6 @@ public class PlanetPuzzle : MonoBehaviour
         planetOutline.transform.localScale = new Vector3(0.96f, 0.96f, 0.96f);
 
         SetRotatable(planetOutline);
-
         return Error.OK;
     }
 
