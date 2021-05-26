@@ -104,14 +104,14 @@ public class Hud : MonoBehaviour
 
         // 6 'cells' for currently selectable pieces
         piecesStandPos = new List<Vector3>(new Vector3[]{
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 6, 1 * (Screen.height / 3), pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 6, 2 * (Screen.height / 3), pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(2 * Screen.width / 6, 6 * (Screen.height / 7), pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(4 * Screen.width / 6, 6 * (Screen.height / 7), pieceDistanceToCamera)),
 
-            Camera.main.ScreenToWorldPoint(new Vector3(5 * (Screen.width / 6), 1 * (Screen.height / 3), pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(5 * (Screen.width / 6), 2 * (Screen.height / 3), pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(0.6f * (Screen.width / 6), (Screen.height / 2), pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(5.4f * (Screen.width / 6), (Screen.height / 2), pieceDistanceToCamera)),
 
-            Camera.main.ScreenToWorldPoint(new Vector3(3 * (Screen.width / 8), Screen.height / 7, pieceDistanceToCamera)),
-            Camera.main.ScreenToWorldPoint(new Vector3(5 * (Screen.width / 8), Screen.height / 7, pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(2 * (Screen.width / 6), Screen.height / 7, pieceDistanceToCamera)),
+            Camera.main.ScreenToWorldPoint(new Vector3(4 * (Screen.width / 6), Screen.height / 7, pieceDistanceToCamera)),
         });
     }
 
