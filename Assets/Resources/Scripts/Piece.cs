@@ -324,7 +324,7 @@ public class Piece : MonoBehaviour
             transform.RotateAround(centerPos, Camera.main.transform.right, Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right));
 
             dirFromCentertoPiece = transform.position - centerPos;            
-            if (Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right)) < 0.0000001 && Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.up)) < 0.0000001)
+            if (Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right)) < 0.1 && Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.up)) < 0.1)
             {
                 Debug.Log("ANGLE Y:" + Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right));
                 Debug.Log("ANGLE X:" + Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.up));
