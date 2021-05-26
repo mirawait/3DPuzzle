@@ -264,8 +264,6 @@ public class GesturesController : MonoBehaviour
                 {
                     return;
                 }
-                //if (deltaPos0.y > deltaPos0.x && deltaPos1.y > deltaPos1.x)
-                //{
                     if ((deltaPos0.y < 0) && (deltaPos1.y > 0))
                     {
                         currentGesture = Gestures.ShuffleDown;
@@ -274,18 +272,6 @@ public class GesturesController : MonoBehaviour
                     {
                         currentGesture = Gestures.ShuffleUp;
                     }
-                //}
-                //else
-                //{
-                //    if ((deltaPos0.x < 0) && (deltaPos1.x > 0))
-                //    {
-                //        currentGesture = Gestures.ShuffleDown;
-                //    }
-                //    else if ((deltaPos0.x > 0) && (deltaPos1.x < 0))
-                //    {
-                //        currentGesture = Gestures.ShuffleUp;
-                //    }
-                //}
                 swipeDelta = deltaPos0;
             }
             else if (recogniseDoubleTouchGesturesAs_PinchSpread && currentGesture == Gestures.Undefined || currentGesture == Gestures.Pinch || currentGesture == Gestures.Spread)

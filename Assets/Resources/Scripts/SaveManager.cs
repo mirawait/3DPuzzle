@@ -61,6 +61,7 @@ public class SaveManager : MonoBehaviour
     public void MakeTutorialDone()
     {
         save.tutorial = true;
+        SaveData();
     }
 
     public void MakeDone(int type, int level)
