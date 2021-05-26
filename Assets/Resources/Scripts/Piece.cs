@@ -81,7 +81,7 @@ public class Piece : MonoBehaviour
     {
         Hide(gameObject);
 
-        TravelToPos(new Vector3(centerPos.x, centerPos.y + 10, centerPos.z));
+        TravelToPos(new Vector3(centerPos.x, centerPos.y, centerPos.z));
     }
 
     public void Show()
