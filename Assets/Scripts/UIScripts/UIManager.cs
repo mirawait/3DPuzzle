@@ -439,7 +439,13 @@ public class UIManager : MonoBehaviour
             case 4:
                 return "Марс";
             case 5:
-                return "ДИЧЬ";
+                return "Юпитер";
+            case 6:
+                return "Сатурн";
+            case 7:
+                return "Уран";
+            case 8:
+                return "Нептун";
         }
         return "ПЛАНЕТА";
     }

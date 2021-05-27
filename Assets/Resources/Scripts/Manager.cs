@@ -72,7 +72,6 @@ public class Manager : MonoBehaviour
                 config.puzzleMaterial = Resources.Load("Materials/VenusOpaque") as Material;
                 break;
             case 3:
-            default:
                 config.outlineMaterial = Resources.Load("Materials/EarthTransparent") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/EarthOpaque") as Material;
                 break;
@@ -95,6 +94,10 @@ public class Manager : MonoBehaviour
             case 8:
                 config.outlineMaterial = Resources.Load("Materials/NeptuneTransparent") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/NeptuneOpaque") as Material;
+                break;
+            default:
+                config.outlineMaterial = Resources.Load("Materials/SunTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/SunOpaque") as Material;
                 break;
         }
 
