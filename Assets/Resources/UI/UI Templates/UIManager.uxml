@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="MainMenuUI" src="MainMenuUI.uxml" />
+    <ui:Template name="SettingsMenuUI" src="SettingsMenuUI.uxml" />
+    <ui:Template name="PauseMenuUI" src="PauseMenuUI.uxml" />
+    <ui:Template name="AreYouSureMenuUI" src="AreYouSureMenuUI.uxml" />
+    <ui:Instance template="MainMenuUI" name="MainMenuUI" style="position: absolute; width: 1920px; height: 1080px; flex-grow: 1;" />
+    <ui:Instance template="SettingsMenuUI" name="SettingsMenuUI" style="flex-grow: 1; width: 1920px; height: 1080px; position: absolute; display: none;" />
+    <ui:Instance template="PauseMenuUI" name="PauseMenuUI" style="position: absolute; flex-grow: 1; width: 1920px; display: none;" />
+    <ui:Instance template="AreYouSureMenuUI" name="AreYouSureMenuUI" style="position: absolute; flex-grow: 1; width: 1920px; height: 1080px; display: none;" />
+</ui:UXML>

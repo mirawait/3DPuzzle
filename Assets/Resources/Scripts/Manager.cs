@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 using Quaternion = UnityEngine.Quaternion;
 
 public class Manager : MonoBehaviour
@@ -13,8 +14,7 @@ public class Manager : MonoBehaviour
     //6 - JUPITER,
     //7 - SATURN,
     //8 - URANUS,
-    //9 - NEPTUNE,
-    //10 - PLUTO
+    //9 - NEPTUNE
 
     //Parts
     //0 - 6_PARTS,
@@ -27,26 +27,37 @@ public class Manager : MonoBehaviour
     private GameObject planetPuzzle;
     private GameObject targetGameObject;
     private bool loaded = false;
+    int type;
+    int level;
 
-    //void Start() 
-    //{
-    //    Start_Puzzles(2, 0);
-    //}
+    private SaveManager saveManager;
+   
 
-    public void Start_Puzzles(int PlanetType, int PuzzleLevel)
+    void Start()
     {
-        Debug.LogError("MANAGER PUZZLE TYPE " + PlanetType);
+        saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
+    }
+
+    public void Start_Puzzles(int planetType, int puzzleLevel)
+    {
+        type = planetType;
+        level = puzzleLevel;
+
+        //saveManager.MakeDone(planetType, puzzleLevel);
+
+        Debug.LogError("MANAGER PUZZLE TYPE " + planetType);
+
 
         if (targetGameObject == null)
-            targetGameObject = GameObject.FindWithTag("Text");
-        if (targetGameObject != null)
-            targetGameObject.SetActive(false);
+            targetGameObject = GameObject.Find("--------USER INTERFACE--------");
+       // if (targetGameObject != null)
+            //targetGameObject.SetActive(false);
 
         //Debug.Log("Screen logger started");
 
         PlanetPuzzle.Config config;
 
-        switch (PlanetType)
+        switch (planetType)
         {
             case 0:
                 config.outlineMaterial = Resources.Load("Materials/SunTransparent") as Material;
@@ -61,7 +72,6 @@ public class Manager : MonoBehaviour
                 config.puzzleMaterial = Resources.Load("Materials/VenusOpaque") as Material;
                 break;
             case 3:
-            default:
                 config.outlineMaterial = Resources.Load("Materials/EarthTransparent") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/EarthOpaque") as Material;
                 break;
@@ -70,12 +80,28 @@ public class Manager : MonoBehaviour
                 config.puzzleMaterial = Resources.Load("Materials/MarsOpaque") as Material;
                 break;
             case 5:
-                config.outlineMaterial = Resources.Load("Materials/MoonTransparent") as Material;
-                config.puzzleMaterial = Resources.Load("Materials/MoonOpaque") as Material;
+                config.outlineMaterial = Resources.Load("Materials/SaturnTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/SaturnOpaque") as Material;
+                break;
+            case 6:
+                config.outlineMaterial = Resources.Load("Materials/JupiterTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/JupiterOpaque") as Material;
+                break;
+            case 7:
+                config.outlineMaterial = Resources.Load("Materials/UranusTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/UranusOpaque") as Material;
+                break;
+            case 8:
+                config.outlineMaterial = Resources.Load("Materials/NeptuneTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/NeptuneOpaque") as Material;
+                break;
+            default:
+                config.outlineMaterial = Resources.Load("Materials/SunTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/SunOpaque") as Material;
                 break;
         }
 
-        switch (PuzzleLevel)
+        switch (puzzleLevel)
         {
 
             default:
@@ -132,8 +158,11 @@ public class Manager : MonoBehaviour
                 if (planetPuzzle.GetComponent<PlanetPuzzle>().IsPuzzleAssembled())
                 {
                     if (targetGameObject != null)
-                        targetGameObject.SetActive(true);
-                    print("victory!");
+                        targetGameObject.GetComponent<UIManager>().PuzzleSolvedShow();
+                    //print("victory!");
+
+                    saveManager.MakeDone(type, level);
+
                     isEnd = true;
                     return;
                 }

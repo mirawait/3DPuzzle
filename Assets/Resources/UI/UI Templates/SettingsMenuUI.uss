@@ -1,0 +1,22 @@
+.difficulty-button {
+    width: 550px;
+    height: 145px;
+    background-image: resource('UI/Buttons/MediumButton');
+    background-color: rgba(255, 255, 255, 0);
+    border-left-color: rgba(255, 255, 255, 0);
+    border-right-color: rgba(255, 255, 255, 0);
+    border-top-color: rgba(255, 255, 255, 0);
+    border-bottom-color: rgba(255, 255, 255, 0);
+    border-top-left-radius: 18px;
+    border-bottom-left-radius: 18px;
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 18px;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
+.difficulty-button:active {
+    -unity-background-image-tint-color: rgb(164, 164, 164);
+}

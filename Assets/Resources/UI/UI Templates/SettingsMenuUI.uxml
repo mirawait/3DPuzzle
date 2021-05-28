@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="SettingsMenuUI.uss" />
+    <Style src="CloseButtonUI.uss" />
+    <ui:VisualElement name="screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.78); display: flex; visibility: visible;">
+        <ui:VisualElement name="title" style="flex-grow: 0; justify-content: flex-end; align-items: center; margin-top: 7%;">
+            <ui:Label text="НАСТРОЙКИ" display-tooltip-when-elided="True" name="settings-title-label" style="-unity-font: resource(&apos;Fonts/Montserrat-Black&apos;); font-size: 72px; color: rgb(229, 141, 46); -unity-font-style: normal;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="menu" style="justify-content: space-between; align-items: center; flex-grow: 1;">
+            <ui:VisualElement name="difficulty" style="align-items: center; justify-content: center; flex-grow: 1;">
+                <ui:Label text="Уровень сложности" display-tooltip-when-elided="True" name="difficulty-label" style="font-size: 54px; -unity-font: resource(&apos;Fonts/Montserrat-Bold&apos;); margin-top: 8%; color: rgb(255, 253, 247);" />
+                <ui:Button display-tooltip-when-elided="True" name="difficulty-button" class="difficulty-button" style="margin-top: 8%;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="sound" style="align-items: center; justify-content: flex-start; flex-grow: 1;">
+                <ui:Label text="Звук" display-tooltip-when-elided="True" name="sound-label" style="font-size: 52px; -unity-font: resource(&apos;Fonts/Montserrat-Bold&apos;); padding-top: 2%; padding-bottom: 3%; justify-content: center; align-items: center; -unity-text-align: middle-center; color: rgb(255, 253, 247);" />
+                <ui:Button display-tooltip-when-elided="True" name="sound-button" class="difficulty-button" style="background-image: resource(&apos;UI/Buttons/EnabledButton&apos;);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Button display-tooltip-when-elided="True" name="close-button" class="close-button" />
+    </ui:VisualElement>
+</ui:UXML>

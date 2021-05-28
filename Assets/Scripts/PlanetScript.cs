@@ -7,6 +7,7 @@ public class PlanetScript : MonoBehaviour
     public float planetsDistanceMultiplier = 8.3f;
     [SerializeField]
     private uint planetIndex;
+    public float distance = 0.0f;
     private bool solarRotationEnabled = false;
     private GameObject sun;
     private CameraScript mainCamera;
@@ -41,14 +42,14 @@ public class PlanetScript : MonoBehaviour
         {
             if (solarRotationEnabled)
             {
+                distance = Vector3.Distance(transform.position, sun.transform.position);
                 if (Vector3.Distance(transform.position, sun.transform.position) < planetIndex * planetsDistanceMultiplier)
                 {
                     transform.RotateAround(sun.transform.position, new Vector3(0, 1, 0), solarRotationSpeed * 0.5f);
                     Vector3 direction = transform.position - sun.transform.position;
                     direction.Normalize();
                     Vector3 newPos = direction * planetIndex * planetsDistanceMultiplier;
-                    transform.position =
-                        Vector3.MoveTowards(transform.position, newPos, distancingSpeed * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, newPos, distancingSpeed * Time.deltaTime);
                 }
                 else
                 {

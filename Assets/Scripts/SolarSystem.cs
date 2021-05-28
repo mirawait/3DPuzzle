@@ -13,6 +13,7 @@ public class SolarSystem : MonoBehaviour
     void Start()
     {
         planets = GameObject.FindGameObjectsWithTag("Planet");
+        EnableSolarSystemPhase(true);
     }
 
     public void EnableSolarSystemPhase(bool enable)

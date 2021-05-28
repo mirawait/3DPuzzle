@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="PlanetInfoUI.uss" />
+    <ui:VisualElement name="screen" style="flex-grow: 1; align-items: flex-end; justify-content: center; -unity-font: resource(&apos;FlatSkin/Font/Roboto-Bold&apos;);">
+        <ui:VisualElement name="block-panel" style="flex-grow: 1; justify-content: center; align-items: center; width: 55%;">
+            <ui:VisualElement name="name-panel">
+                <ui:Label text="Меркурий" display-tooltip-when-elided="True" name="name-label" style="-unity-font: resource(&apos;Fonts/Montserrat-Black&apos;); font-size: 70%; color: rgb(238, 238, 238);" />
+            </ui:VisualElement>
+            <ui:VisualElement name="info-panel" style="width: 70%; height: 60%;">
+                <ui:Label text="Меркурий – самая медлительная планета: всего один ее день растягивается почти на полгода земных. Но медленное вращение планета компенсирует достаточно быстрым движением вокруг Солнца, облетая его всего за 88 дней.&#10;" display-tooltip-when-elided="True" name="info-label" style="flex-shrink: 1; flex-grow: 1; font-size: 40%; white-space: normal; -unity-text-align: middle-center; color: rgb(255, 255, 255); -unity-font-style: normal; -unity-font: resource(&apos;Fonts/Montserrat-Bold&apos;);" />
+            </ui:VisualElement>
+            <ui:VisualElement name="button-panel">
+                <ui:Button display-tooltip-when-elided="True" name="solve-button" class="solve-button" style="background-image: resource(&apos;UI/Buttons/SolveButton&apos;); background-color: rgba(255, 255, 255, 0); border-left-color: rgba(255, 255, 255, 0); border-right-color: rgba(255, 255, 255, 0); border-top-color: rgba(255, 255, 255, 0); border-bottom-color: rgba(255, 255, 255, 0); border-top-left-radius: 18px; border-bottom-left-radius: 18px; border-top-right-radius: 18px; border-bottom-right-radius: 18px; width: 500px; height: 128px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

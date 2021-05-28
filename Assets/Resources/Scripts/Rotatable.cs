@@ -77,7 +77,7 @@ public class Rotatable : MonoBehaviour
     {
     }
 
-    private const float rotationSpeed = 70f;
+    private const float rotationSpeed = 5f;
 
     private bool isPermited = false;
     private bool isAroundOnlyPermited = false;
@@ -98,17 +98,17 @@ public class Rotatable : MonoBehaviour
             case GesturesController.Gestures.SwipeDownRight:
                 if (!isAroundOnlyPermited)
                 {
-                    axis = Camera.main.transform.up*-1 + Camera.main.transform.right;
-                    transform.Rotate(axis * rotatedDelta.normalized * rotationSpeed * Time.deltaTime, Space.World);
+                    transform.Rotate(Camera.main.transform.right * delta.y * rotationSpeed * Time.deltaTime, Space.World);
+                    transform.Rotate(Camera.main.transform.up * -1 * delta.x * rotationSpeed * Time.deltaTime, Space.World);
                 }
                 break;
             case GesturesController.Gestures.ShuffleUp:
                 axis = Camera.main.transform.forward * -1;
-                transform.Rotate(axis * rotationSpeed * Time.deltaTime, Space.World);
+                transform.Rotate(axis  * (rotatedDelta.sqrMagnitude / 8) * Time.deltaTime, Space.World);
                 break;
             case GesturesController.Gestures.ShuffleDown:
                 axis = Camera.main.transform.forward;
-                transform.Rotate(axis * rotationSpeed * Time.deltaTime, Space.World);
+                transform.Rotate(axis * (rotatedDelta.sqrMagnitude / 8) * Time.deltaTime, Space.World);
                 break;
         }
     }
