@@ -388,10 +388,10 @@ public class UIManager : MonoBehaviour
         planetInfoName.text = planetInfo[0];
         planetInfoText.text = planetInfo[1];
         currentPlanetName = planetInfo[0];
-        //if (saveManager.IsPlanetDone((int)focusedPlanetInex, (int)UIManager.GetDifficulty()))
-        //{
-        //    planetIsDoneText.SetActive(true);
-        //}
+        if (saveManager.IsPlanetDone((int)focusedPlanetInex, (int)UIManager.GetDifficulty()))
+        {
+            planetIsDoneText.SetActive(true);
+        }
         //foreach (GameObject infoPanel in planetInfoPanels)
         //{
         //    if (infoPanel.transform.GetComponent<PlanetInfoScript>().GetIndex() == focusedPlanetInex)
