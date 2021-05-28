@@ -230,10 +230,20 @@ public class UIManager : MonoBehaviour
         _CheckoutToSolarSystemPhase();
     }
 
+
+    void SetFactText()
+    {
+        var factLabel = endScreen.Q<Label>("fact-label");
+        var factText = TextTable.GetLines(IndexToName(lastActiveInfoPanel), "WinInfo");
+        factLabel.text = factText[1];
+    }
+
     public void PuzzleSolvedShow()
     {
-        endScreen.Q<Label>("complete-label").style.opacity = 0;
+        SetFactText();
 
+        endScreen.Q<Label>("complete-label").style.opacity = 0;
+        
         endScreen.style.display = DisplayStyle.Flex;
 
         endScreen.Q<Label>("complete-label").experimental.animation
@@ -244,9 +254,19 @@ public class UIManager : MonoBehaviour
                     .Start(new StyleValues { opacity = 1 }, new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad)
                     .OnCompleted(() => {
                         endScreen.Q<Label>("complete-label").experimental.animation
-                            .Start(new StyleValues { width = 1095, height = 532, marginTop = 256 }, new StyleValues { width = 714, height = 365, marginTop = 0 }, 2000).Ease(Easing.OutQuad);
+                            .Start(new StyleValues { width = 1095, height = 532, marginTop = 256 }, new StyleValues { width = 714, height = 365, marginTop = -100 }, 2000).Ease(Easing.OutQuad);
                     });
             });
+
+        endScreen.Q<Label>("fact-label").experimental.animation
+            .Start(new StyleValues { opacity = 0 },
+                new StyleValues { opacity = 0 }, 5000).Ease(Easing.OutQuad).OnCompleted(() =>
+            {
+                endScreen.Q<Label>("fact-label").experimental.animation
+                    .Start(new StyleValues { opacity = 0 },
+                        new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad);
+            });
+
         endScreen.Q<Button>("exit-button").experimental.animation
             .Start(new StyleValues { opacity = 0 },
                 new StyleValues { opacity = 0 }, 5000).Ease(Easing.OutQuad).OnCompleted(() =>
@@ -255,6 +275,8 @@ public class UIManager : MonoBehaviour
                     .Start(new StyleValues { opacity = 0 },
                         new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad);
             });
+
+
         endScreen.Q<Button>("next-button").experimental.animation
             .Start(new StyleValues { opacity = 0 },
                 new StyleValues { opacity = 0 }, 5000).Ease(Easing.OutQuad).OnCompleted(() =>
@@ -384,7 +406,7 @@ public class UIManager : MonoBehaviour
         planetInfoScreen.style.display = DisplayStyle.Flex;
         var planetInfoText = planetInfoScreen.Q<Label>("info-label");
         var planetInfoName = planetInfoScreen.Q<Label>("name-label");
-        var planetInfo = TextTable.GetLines(IndexToName(focusedPlanetInex));
+        var planetInfo = TextTable.GetLines(IndexToName(focusedPlanetInex), "PlanetInfo");
         planetInfoName.text = planetInfo[0];
         planetInfoText.text = planetInfo[1];
         currentPlanetName = planetInfo[0];

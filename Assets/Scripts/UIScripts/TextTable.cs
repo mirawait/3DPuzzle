@@ -4,11 +4,11 @@ using System.Collections;
 public class TextTable
 {
 
-    public static string[] GetLines(string id)
+    public static string[] GetLines(string id, string filename)
     {
         ArrayList lines = new ArrayList();
         string line;
-        TextAsset textFile = Resources.Load("UI/PlanetInfo/PlanetInfo") as TextAsset;
+        TextAsset textFile = Resources.Load("UI/PlanetInfo/" + filename) as TextAsset;
         System.IO.StringReader textStream = new System.IO.StringReader(textFile.text);
         string lineID = "[" + id + "]";
         bool match = false;
