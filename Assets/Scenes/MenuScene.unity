@@ -788,6 +788,7 @@ MonoBehaviour:
   distancingSpeed: 10
   planetsDistanceMultiplier: 8.3
   planetIndex: 0
+  distance: 0
 --- !u!114 &58249785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1731,7 +1732,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 232702546}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.2, y: 0, z: 31.6}
+  m_LocalPosition: {x: -20.4, y: 0, z: -40.7}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1752,8 +1753,9 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 6
   distancingSpeed: 50
-  planetsDistanceMultiplier: 8.3
+  planetsDistanceMultiplier: 11
   planetIndex: 4
+  distance: 0
 --- !u!1 &238341008
 GameObject:
   m_ObjectHideFlags: 0
@@ -2620,7 +2622,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 372095109}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -46.1, y: 0, z: 11.51}
+  m_LocalPosition: {x: -51.3, y: 0, z: 26.7}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 1471278087}
@@ -2642,8 +2644,9 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 5
   distancingSpeed: 50
-  planetsDistanceMultiplier: 8.3
+  planetsDistanceMultiplier: 11
   planetIndex: 5
+  distance: 0
 --- !u!1 &385585814
 GameObject:
   m_ObjectHideFlags: 0
@@ -2868,7 +2871,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 425670914}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.2, y: 0, z: -15.32}
+  m_LocalPosition: {x: 5, y: 0, z: -32.1}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2889,8 +2892,9 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 7
   distancingSpeed: 50
-  planetsDistanceMultiplier: 8.3
+  planetsDistanceMultiplier: 11
   planetIndex: 3
+  distance: 0
 --- !u!1 &436182697
 GameObject:
   m_ObjectHideFlags: 0
@@ -8094,6 +8098,72 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &541631668
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 541631669}
+  - component: {fileID: 541631671}
+  - component: {fileID: 541631670}
+  m_Layer: 0
+  m_Name: EndUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &541631669
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541631668}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 810487938}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &541631670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541631668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afe6c4600f907e64ca01409d01326a60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+--- !u!114 &541631671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 541631668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f21c074d86024caca2a0034ce4f53f73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 3a5be7bb208392c439711ed36ebaf204, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 3c06a1e5ebdf52d4d93e240ee880a620, type: 3}
+  m_SortingOrder: 11
 --- !u!1 &553795897
 GameObject:
   m_ObjectHideFlags: 0
@@ -13719,7 +13789,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 632132454}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 38.13, y: 0, z: 6.46}
+  m_LocalPosition: {x: 63.6, y: 0, z: 4.1}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 1389293012}
@@ -13741,8 +13811,9 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 4
   distancingSpeed: 50
-  planetsDistanceMultiplier: 8.3
+  planetsDistanceMultiplier: 11
   planetIndex: 6
+  distance: 0
 --- !u!1 &649894873
 GameObject:
   m_ObjectHideFlags: 0
@@ -13960,7 +14031,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 746565636}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.4, y: 0, z: 7.87}
+  m_LocalPosition: {x: -19.2, y: 0, z: 13}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
@@ -13981,8 +14052,9 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 8
   distancingSpeed: 50
-  planetsDistanceMultiplier: 8.3
+  planetsDistanceMultiplier: 11
   planetIndex: 2
+  distance: 0
 --- !u!1 &767483992
 GameObject:
   m_ObjectHideFlags: 0
@@ -14259,6 +14331,7 @@ Transform:
   - {fileID: 181308092}
   - {fileID: 1913755985}
   - {fileID: 1240387882}
+  - {fileID: 541631669}
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -20050,7 +20123,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1059651465}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.3, y: 0, z: 66.4}
+  m_LocalPosition: {x: -21.7, y: 0, z: 89.8}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 1892872929}
@@ -20072,8 +20145,9 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 2
   distancingSpeed: 50
-  planetsDistanceMultiplier: 8.3
+  planetsDistanceMultiplier: 11
   planetIndex: 8
+  distance: 0
 --- !u!1 &1061693435
 GameObject:
   m_ObjectHideFlags: 0
@@ -20665,7 +20739,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1143938137}
   m_LocalRotation: {x: 0, y: 0.68110436, z: 0, w: 0.7321864}
-  m_LocalPosition: {x: 0.86, y: 0, z: 10.14}
+  m_LocalPosition: {x: 0.8, y: 0, z: 10.2}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
@@ -20686,8 +20760,9 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 9
   distancingSpeed: 50
-  planetsDistanceMultiplier: 8.3
+  planetsDistanceMultiplier: 11
   planetIndex: 1
+  distance: 0
 --- !u!1 &1155404130
 GameObject:
   m_ObjectHideFlags: 0
@@ -21520,7 +21595,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1270876173}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 31.2, y: 0, z: 39.1}
+  m_LocalPosition: {x: 46.4, y: 0, z: 60.3}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 1426565342}
@@ -21542,8 +21617,9 @@ MonoBehaviour:
   selfRotationSpeed: 5
   solarRotationSpeed: 3
   distancingSpeed: 50
-  planetsDistanceMultiplier: 8.3
+  planetsDistanceMultiplier: 11
   planetIndex: 7
+  distance: 0
 --- !u!1 &1282147224
 GameObject:
   m_ObjectHideFlags: 0

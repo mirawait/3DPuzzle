@@ -39,10 +39,21 @@ public class GesturesController : MonoBehaviour
     private float minTouchDeltapos = 0.2f;
     private Vector2 firstTouchStartPos = new Vector2(-1, -1), 
                     secondTouchStartPos = new Vector2(-1, -1);
+    private static bool recogniseDoubleTouchGesturesAs_PinchSpread = true;
     // Start is called before the first frame update
     void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
+    }
+
+    static public void RecogniseDoubleTouchGesturesAs_PinchSpread()
+    {
+        recogniseDoubleTouchGesturesAs_PinchSpread = true;
+    }
+
+    static public void RecogniseDoubleTouchGesturesAs_Shuffle()
+    {
+        recogniseDoubleTouchGesturesAs_PinchSpread = false;
     }
 
     static public uint subscribeToPlanetClick(Action<GameObject> doOnClick)
@@ -142,51 +153,74 @@ public class GesturesController : MonoBehaviour
             {
                 return;
             }
-            //else if (Mathf.Abs(Mathf.Abs(deltaPos.x) - Mathf.Abs(deltaPos.y)) < 5)
-            //{
-            //    if (deltaPos.x < 0)
-            //    {
-            //        if (deltaPos.y < 0)
-            //        {
-            //            currentGesture = Gestures.SwipeDownLeft;
-            //        }
-            //        else if (deltaPos.y > 0)
-            //        {
-            //            currentGesture = Gestures.SwipeTopleft;
-            //        }
-            //    }
-            //    else if (deltaPos.x > 0)
-            //    {
-            //        if (deltaPos.y < 0)
-            //        {
-            //            currentGesture = Gestures.SwipeDownRight;
-            //        }
-            //        else if (deltaPos.y > 0)
-            //        {
-            //            currentGesture = Gestures.SwipeTopRight;
-            //        }
-            //    }
-            //}
             else if (Mathf.Abs(deltaPos.x) > Mathf.Abs(deltaPos.y))
             {
-                if (deltaPos.x < 0 && TutorialScript.IsActionPermitted(Gestures.SwipeLeft))
+                if (deltaPos.x < 0)
                 {
-                    currentGesture = Gestures.SwipeLeft;
+                    if (TutorialScript.IsActionPermitted(Gestures.SwipeLeft))
+                    {
+                        currentGesture = Gestures.SwipeLeft;
+
+                        if (TutorialScript.IsTutorialEnabled())
+                        {
+                            deltaPos.y = 0;
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                else if (deltaPos.x > 0 && TutorialScript.IsActionPermitted(Gestures.SwipeRight))
+                else if (deltaPos.x > 0)
                 {
-                    currentGesture = Gestures.SwipeRight;
+                    if (TutorialScript.IsActionPermitted(Gestures.SwipeRight))
+                    {
+                        currentGesture = Gestures.SwipeRight;
+
+                        if (TutorialScript.IsTutorialEnabled())
+                        {
+                            deltaPos.y = 0;
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
             }
             else
             {
-                if (deltaPos.y < 0 && TutorialScript.IsActionPermitted(Gestures.SwipeDown))
+                if (deltaPos.y < 0)
                 {
-                    currentGesture = Gestures.SwipeDown;
+                    if (TutorialScript.IsActionPermitted(Gestures.SwipeDown))
+                    {
+                        currentGesture = Gestures.SwipeDown;
+
+                        if (TutorialScript.IsTutorialEnabled())
+                        {
+                            deltaPos.x = 0;
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                else if (deltaPos.y > 0 && TutorialScript.IsActionPermitted(Gestures.SwipeUp))
+                else if (deltaPos.y > 0)
                 {
-                    currentGesture = Gestures.SwipeUp;
+                    if (TutorialScript.IsActionPermitted(Gestures.SwipeUp))
+                    {
+                        currentGesture = Gestures.SwipeUp;
+
+                        if (TutorialScript.IsTutorialEnabled())
+                        {
+                            deltaPos.x = 0;
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -203,20 +237,12 @@ public class GesturesController : MonoBehaviour
             if (Input.GetTouch(0).deltaPosition.sqrMagnitude < minTouchDeltapos || Input.GetTouch(0).deltaPosition.sqrMagnitude < minTouchDeltapos)
                 return;
                 
-            Debug.LogWarning("FIRST " + Input.GetTouch(0).position + ":::" + firstTouchStartPos);
-            Debug.LogWarning("Second " + Input.GetTouch(1).position + ":::" + secondTouchStartPos);
             Vector3 firstTouchDir = Input.GetTouch(0).position - firstTouchStartPos;
             Vector3 secondTouchDir = Input.GetTouch(1).position - firstTouchStartPos;
            
             float angle = Vector3.Angle(firstTouchDir.normalized, secondTouchDir.normalized);
-            Debug.LogWarning("ANGLE BETWEEN VECTORS:" + angle);
-            if (30 < angle && angle < 150)
-            {
-                Debug.LogWarning("ITS SHUFFLE!");
-            }
-            else Debug.LogWarning("ITS ZOOM!");
 
-            if (30 < angle && angle < 150 &&
+            if (recogniseDoubleTouchGesturesAs_PinchSpread == false &&
                 (currentGesture == Gestures.Undefined || currentGesture == Gestures.ShuffleDown || currentGesture == Gestures.ShuffleUp))
             {
                 Touch touch0, touch1;
@@ -238,8 +264,6 @@ public class GesturesController : MonoBehaviour
                 {
                     return;
                 }
-                //if (deltaPos0.y > deltaPos0.x && deltaPos1.y > deltaPos1.x)
-                //{
                     if ((deltaPos0.y < 0) && (deltaPos1.y > 0))
                     {
                         currentGesture = Gestures.ShuffleDown;
@@ -248,21 +272,9 @@ public class GesturesController : MonoBehaviour
                     {
                         currentGesture = Gestures.ShuffleUp;
                     }
-                //}
-                //else
-                //{
-                //    if ((deltaPos0.x < 0) && (deltaPos1.x > 0))
-                //    {
-                //        currentGesture = Gestures.ShuffleDown;
-                //    }
-                //    else if ((deltaPos0.x > 0) && (deltaPos1.x < 0))
-                //    {
-                //        currentGesture = Gestures.ShuffleUp;
-                //    }
-                //}
                 swipeDelta = deltaPos0;
             }
-            else if (currentGesture == Gestures.Undefined || currentGesture == Gestures.Pinch || currentGesture == Gestures.Spread)
+            else if (recogniseDoubleTouchGesturesAs_PinchSpread && currentGesture == Gestures.Undefined || currentGesture == Gestures.Pinch || currentGesture == Gestures.Spread)
             {
                 Touch touchZero = Input.GetTouch(0);
                 Touch touchOne = Input.GetTouch(1);
@@ -274,13 +286,27 @@ public class GesturesController : MonoBehaviour
                       touchDeltaMag = (touchZero.position - touchOne.position).magnitude,
                       deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-                if (deltaMagnitudeDiff > minTouchDeltapos && TutorialScript.IsActionPermitted(Gestures.Pinch))
+                if (deltaMagnitudeDiff > minTouchDeltapos)
                 {
-                    currentGesture = Gestures.Pinch;
+                    if (TutorialScript.IsActionPermitted(Gestures.Pinch))
+                    {
+                        currentGesture = Gestures.Pinch;
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                if (deltaMagnitudeDiff < minTouchDeltapos * -1 && TutorialScript.IsActionPermitted(Gestures.Spread))
+                if (deltaMagnitudeDiff < minTouchDeltapos * -1)
                 {
-                    currentGesture = Gestures.Spread;
+                    if (TutorialScript.IsActionPermitted(Gestures.Spread))
+                    {
+                        currentGesture = Gestures.Spread;
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 swipeDelta = touchZero.deltaPosition;
             }

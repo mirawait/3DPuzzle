@@ -6,9 +6,9 @@ public class SaveManager : MonoBehaviour
 {
     private class Save
     {
-        public bool[] light = new bool[8];
-        public bool[] medium = new bool[8];
-        public bool[] hard = new bool[8];
+        public bool[] light = new bool[9];
+        public bool[] medium = new bool[9];
+        public bool[] hard = new bool[9];
         public bool tutorial = false;
     }
 
@@ -61,6 +61,7 @@ public class SaveManager : MonoBehaviour
     public void MakeTutorialDone()
     {
         save.tutorial = true;
+        SaveData();
     }
 
     public void MakeDone(int type, int level)

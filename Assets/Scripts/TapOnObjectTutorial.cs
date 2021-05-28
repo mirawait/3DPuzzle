@@ -84,6 +84,10 @@ public class TapOnObjectTutorial : MonoBehaviour
                         });
                     newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Pinch, null));
                     newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Spread, null));
+                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeDown, null));
+                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeLeft, null));
+                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeRight, null));
+                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeUp, null));
                 }
                 newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Tapping, targetObject));
                 permitedActionSetter(newPermittedActions);

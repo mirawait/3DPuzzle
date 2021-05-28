@@ -34,7 +34,7 @@ public class TutorialScript : MonoBehaviour
     RotationTutorial rotationTutorial;
     TutorialDoubleTap doubleTapTutorial;
     SaveManager saveManager;
-    bool isTutorialEnabled;
+    static bool isTutorialEnabled;
     public TutorialStage currentStage = TutorialStage.WaitingForStart;
     static public GameObject tappingTarget;
     GameObject chosenPiece;
@@ -76,7 +76,7 @@ public class TutorialScript : MonoBehaviour
             StartNextStep();
         }
     }
-    public bool IsTutorialEnabled()
+    public static bool IsTutorialEnabled()
     {
         return isTutorialEnabled;
     }

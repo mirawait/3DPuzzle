@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UIElements.Experimental;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class UIManager : MonoBehaviour
     public VisualElement areYouSureScreen;
     public VisualElement backButtonScreen;
     public VisualElement planetInfoScreen;
+    public VisualElement endScreen;
 
     public string currentPlanetName = "";
     //----------------------UI REGION END---------------------
@@ -61,12 +64,14 @@ public class UIManager : MonoBehaviour
         areYouSureScreen = GameObject.Find("AreYouSureMenuUI").GetComponent<UIDocument>().rootVisualElement;
         backButtonScreen = GameObject.Find("BackUI").GetComponent<UIDocument>().rootVisualElement;
         planetInfoScreen = GameObject.Find("PlanetInfoUI").GetComponent<UIDocument>().rootVisualElement;
+        endScreen = GameObject.Find("EndUI").GetComponent<UIDocument>().rootVisualElement;
 
         settingScreen.style.display = DisplayStyle.None;
         pauseScreen.style.display = DisplayStyle.None;
         areYouSureScreen.style.display = DisplayStyle.None;
         backButtonScreen.style.display = DisplayStyle.None;
         planetInfoScreen.style.display = DisplayStyle.None;
+        endScreen.style.display = DisplayStyle.None;
 
         mainMenuScreen?.Q("settings-button")?.RegisterCallback<ClickEvent>(ev => SettingsScreen());
         mainMenuScreen?.Q("play-button")?.RegisterCallback<ClickEvent>(ev => PlayTask());
@@ -86,8 +91,16 @@ public class UIManager : MonoBehaviour
         backButtonScreen?.Q("back-button")?.RegisterCallback<ClickEvent>(ev => BackTask());
 
         planetInfoScreen?.Q("solve-button")?.RegisterCallback<ClickEvent>(ev => SolveTask());
-        //------------------UI REGION END--------------------------------------
 
+        endScreen?.Q("exit-button")?.RegisterCallback<ClickEvent>(ev => { PuzzleSolvedHide(); AgreeTask();  });
+        endScreen?.Q("next-button")?.RegisterCallback<ClickEvent>(ev =>
+        {
+            lastActiveInfoPanel = (lastActiveInfoPanel < 8) ? lastActiveInfoPanel + 1 : 1; 
+            SolveTask();
+        });
+
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        //------------------UI REGION END--------------------------------------
 
 
         //------------------GAME REGION START-----------------------------------------------
@@ -100,8 +113,6 @@ public class UIManager : MonoBehaviour
         loadGameScene = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<LoadGameScene>();
         saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
         //------------------GAME REGION END-----------------------------------------------
-
-
     }
 
     void SettingsScreen()
@@ -139,8 +150,6 @@ public class UIManager : MonoBehaviour
                 difficulty = Difficulty.Easy;
                 break;
         }
-
-
     }
 
     void SettingsSound()
@@ -158,7 +167,6 @@ public class UIManager : MonoBehaviour
             isSound = true;
             audioSource.Play();
         }
-
     }
 
     void MainMenuTask()
@@ -209,6 +217,7 @@ public class UIManager : MonoBehaviour
         planetIsDoneText.SetActive(false);
         //planetNameInGame.SetActive(true);
         // planetNameInGame.GetComponent<TextMeshProUGUI>().text = IndexToName(loadGameScene.planetType);
+        GesturesController.RecogniseDoubleTouchGesturesAs_Shuffle();
         loadGameScene.LoadScene();
         loadGameScene.stopWaitingForPlanetClick();
     }
@@ -223,13 +232,75 @@ public class UIManager : MonoBehaviour
         backButtonScreen.style.display = DisplayStyle.Flex;
         loadGameScene.startWaitingForPlanetClick();
         solarSystem.EnableSolarSystemPhase(true);
+        GesturesController.RecogniseDoubleTouchGesturesAs_PinchSpread();
         _CheckoutToSolarSystemPhase();
     }
 
+
+    void SetFactText()
+    {
+        var factLabel = endScreen.Q<Label>("fact-label");
+        var factText = TextTable.GetLines(IndexToName(lastActiveInfoPanel), "WinInfo");
+        factLabel.text = factText[1];
+    }
+
+    public void PuzzleSolvedShow()
+    {
+        SetFactText();
+
+        endScreen.Q<Label>("complete-label").style.opacity = 0;
+        
+        endScreen.style.display = DisplayStyle.Flex;
+
+        endScreen.Q<Label>("complete-label").experimental.animation
+            .Start(new StyleValues { width = 1095, height = 532, opacity = 0 },
+                new StyleValues { width = 1095, height = 532, opacity = 1 }, 3000).Ease(Easing.OutQuad)
+            .OnCompleted(() => {
+                endScreen.Q<Label>("complete-label").experimental.animation
+                    .Start(new StyleValues { opacity = 1 }, new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad)
+                    .OnCompleted(() => {
+                        endScreen.Q<Label>("complete-label").experimental.animation
+                            .Start(new StyleValues { width = 1095, height = 532, marginTop = 256 }, new StyleValues { width = 714, height = 365, marginTop = -100 }, 2000).Ease(Easing.OutQuad);
+                    });
+            });
+
+        endScreen.Q<Label>("fact-label").experimental.animation
+            .Start(new StyleValues { opacity = 0 },
+                new StyleValues { opacity = 0 }, 5000).Ease(Easing.OutQuad).OnCompleted(() =>
+            {
+                endScreen.Q<Label>("fact-label").experimental.animation
+                    .Start(new StyleValues { opacity = 0 },
+                        new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad);
+            });
+
+        endScreen.Q<Button>("exit-button").experimental.animation
+            .Start(new StyleValues { opacity = 0 },
+                new StyleValues { opacity = 0 }, 5000).Ease(Easing.OutQuad).OnCompleted(() =>
+            {
+                endScreen.Q<Button>("exit-button").experimental.animation
+                    .Start(new StyleValues { opacity = 0 },
+                        new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad);
+            });
+
+
+        endScreen.Q<Button>("next-button").experimental.animation
+            .Start(new StyleValues { opacity = 0 },
+                new StyleValues { opacity = 0 }, 5000).Ease(Easing.OutQuad).OnCompleted(() =>
+            {
+                endScreen.Q<Button>("next-button").experimental.animation
+                    .Start(new StyleValues { opacity = 0 },
+                        new StyleValues { opacity = 1 }, 2000).Ease(Easing.OutQuad);
+            });
+    }
+
+    public void PuzzleSolvedHide()
+    {
+        endScreen.style.display = DisplayStyle.None;
+    }
     void BackTask()
     {
         Debug.Log("Back clicked");
-        if (tutorial.IsTutorialEnabled())
+        if (TutorialScript.IsTutorialEnabled())
         {
             currentPhase = UI_Phase.SolarSystem;
             planetInfoScreen.style.display = DisplayStyle.None;
@@ -341,7 +412,7 @@ public class UIManager : MonoBehaviour
         planetInfoScreen.style.display = DisplayStyle.Flex;
         var planetInfoText = planetInfoScreen.Q<Label>("info-label");
         var planetInfoName = planetInfoScreen.Q<Label>("name-label");
-        var planetInfo = TextTable.GetLines(IndexToName(focusedPlanetInex));
+        var planetInfo = TextTable.GetLines(IndexToName(focusedPlanetInex), "PlanetInfo");
         planetInfoName.text = planetInfo[0];
         planetInfoText.text = planetInfo[1];
         currentPlanetName = planetInfo[0];
@@ -396,7 +467,13 @@ public class UIManager : MonoBehaviour
             case 4:
                 return "Марс";
             case 5:
-                return "ДИЧЬ";
+                return "Сатурн";
+            case 6:
+                return "Юпитер";
+            case 7:
+                return "Уран";
+            case 8:
+                return "Нептун";
         }
         return "ПЛАНЕТА";
     }

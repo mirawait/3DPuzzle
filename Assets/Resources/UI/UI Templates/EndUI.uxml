@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="SettingsMenuUI.uss" />
+    <ui:VisualElement name="screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.51); justify-content: center; align-items: center;">
+        <ui:VisualElement name="top">
+            <ui:Label name="complete-label" style="background-image: resource(&apos;UI/Texts/Complete&apos;); width: 1095px; height: 532px; margin-top: 265px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="middle" style="width: 60%; margin-bottom: 5%; margin-top: 5%;">
+            <ui:Label text="Возраст Земли — 4,54 млрд лет. Ученые установили возраст нашей планеты путем датировки самых старых скальных пород и метеоритов, упавших на Землю ещё тогда, когда Солнечная система только формировалась." display-tooltip-when-elided="True" name="fact-label" style="-unity-font: resource(&apos;Fonts/Montserrat-Bold&apos;); flex-wrap: wrap; white-space: normal; -unity-text-align: middle-center; font-size: 45px; color: rgb(255, 255, 255); -unity-font-style: normal;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="bottom" style="flex-direction: row; justify-content: space-around; width: 70%;">
+            <ui:Button display-tooltip-when-elided="True" name="exit-button" class="difficulty-button" style="background-image: resource(&apos;UI/Buttons/ExitButton&apos;);" />
+            <ui:Button display-tooltip-when-elided="True" name="next-button" class="difficulty-button" style="background-image: resource(&apos;UI/Buttons/NextButton&apos;);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -41,9 +41,10 @@ public class Piece : MonoBehaviour
 
         SetMaterial();
         SetCollider();
+        FaceToCamera();
         SetZoomable();
         SetRotatable();
-        FaceToCamera();
+        
         Hide();
         Hide(twin);
 
@@ -80,7 +81,7 @@ public class Piece : MonoBehaviour
     {
         Hide(gameObject);
 
-        TravelToPos(new Vector3(centerPos.x, centerPos.y + 10, centerPos.z));
+        TravelToPos(new Vector3(centerPos.x, centerPos.y, centerPos.z));
     }
 
     public void Show()
@@ -110,7 +111,6 @@ public class Piece : MonoBehaviour
 
         SetCondition(Condition.FOCUSED);
 
-        //GetComponent<Zoomable>().Permit();
         GetComponent<Rotatable>().Permit(true);
 
         TravelToPos(zoomablePos);
@@ -200,6 +200,7 @@ public class Piece : MonoBehaviour
     private Vector3 zoomablePos;
     private Vector3 fitOnPos;
     private Vector3 travelTargetPos;
+    private Vector3 cameraDir;
 
     private float travelSpeed;
 
@@ -323,7 +324,7 @@ public class Piece : MonoBehaviour
             transform.RotateAround(centerPos, Camera.main.transform.right, Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right));
 
             dirFromCentertoPiece = transform.position - centerPos;            
-            if (Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right)) < 0.3 && Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.up)) < 0.3)
+            if (Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right)) < 0.1 && Mathf.Abs(Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.up)) < 0.1)
             {
                 Debug.Log("ANGLE Y:" + Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.right));
                 Debug.Log("ANGLE X:" + Vector3.SignedAngle(dirFromCentertoPiece, firFromCenterToCamera, Camera.main.transform.up));
