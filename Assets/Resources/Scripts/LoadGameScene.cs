@@ -14,13 +14,16 @@ public class LoadGameScene : MonoBehaviour
     public void LoadScene()
     {
         GameObject Sun = GameObject.Find("Sun");
-        if (!isLoaded)
+        if (isLoaded)
         {
-            //Sun.GetComponent<SolarSystem>().EnableSolarSystemMoving(false);
-            StartCoroutine(LoadSceneAsync());
-            clickedPlanet.SetActive(false);
-            isLoaded = true;
+            UnloadScene();
         }
+
+        //Sun.GetComponent<SolarSystem>().EnableSolarSystemMoving(false);
+        StartCoroutine(LoadSceneAsync());
+        clickedPlanet.SetActive(false);
+        isLoaded = true;
+        
     }
 
     IEnumerator LoadSceneAsync()

@@ -95,8 +95,9 @@ public class UIManager : MonoBehaviour
         endScreen?.Q("exit-button")?.RegisterCallback<ClickEvent>(ev => { PuzzleSolvedHide(); AgreeTask();  });
         endScreen?.Q("next-button")?.RegisterCallback<ClickEvent>(ev =>
         {
-            lastActiveInfoPanel = (lastActiveInfoPanel < 8) ? lastActiveInfoPanel + 1 : 1; 
+            difficulty = (difficulty == Difficulty.Hard) ? Difficulty.Easy : difficulty+1;
             SolveTask();
+            endScreen.style.display = DisplayStyle.None;
         });
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
