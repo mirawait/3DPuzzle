@@ -80,12 +80,12 @@ public class Manager : MonoBehaviour
                 config.puzzleMaterial = Resources.Load("Materials/MarsOpaque") as Material;
                 break;
             case 5:
-                config.outlineMaterial = Resources.Load("Materials/JupiterTransparent") as Material;
-                config.puzzleMaterial = Resources.Load("Materials/JupiterOpaque") as Material;
-                break;
-            case 6:
                 config.outlineMaterial = Resources.Load("Materials/SaturnTransparent") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/SaturnOpaque") as Material;
+                break;
+            case 6:
+                config.outlineMaterial = Resources.Load("Materials/JupiterTransparent") as Material;
+                config.puzzleMaterial = Resources.Load("Materials/JupiterOpaque") as Material;
                 break;
             case 7:
                 config.outlineMaterial = Resources.Load("Materials/UranusTransparent") as Material;
