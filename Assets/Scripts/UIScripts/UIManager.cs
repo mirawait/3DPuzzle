@@ -92,6 +92,12 @@ public class UIManager : MonoBehaviour
 
         planetInfoScreen?.Q("solve-button")?.RegisterCallback<ClickEvent>(ev => SolveTask());
 
+        endScreen?.Q("exit-button")?.RegisterCallback<ClickEvent>(ev => { PuzzleSolvedHide(); AgreeTask();  });
+        endScreen?.Q("next-button")?.RegisterCallback<ClickEvent>(ev =>
+        {
+            lastActiveInfoPanel = (lastActiveInfoPanel < 8) ? lastActiveInfoPanel + 1 : 1; 
+            SolveTask();
+        });
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         //------------------UI REGION END--------------------------------------
