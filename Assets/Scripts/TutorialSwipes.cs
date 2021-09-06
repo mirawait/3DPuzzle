@@ -27,7 +27,7 @@ public class TutorialSwipes : MonoBehaviour
     public Stages currentStage;
     Action actionOnComplete;
     Action<List<Tuple<TutorialScript.Actions, GameObject>>> permitedActionSetter;
-    bool isZoomTutorialEnabled;
+    static bool isTutorialEnabled = false;
     public ActionStatus actionStatus = ActionStatus.NothingHappened;
     int gestureSubscriptionID;
     SwipesController swipesController;
@@ -62,6 +62,12 @@ public class TutorialSwipes : MonoBehaviour
         tutorialSwipeRight.SetActive(false);
         currentStage = currentStage = Stages.WaitingForStart;
     }
+
+    static public bool IsTutorialEnabled()
+    {
+        return isTutorialEnabled;
+    }
+
     public void StartNextStep()
     {
         Action<Vector2> gestureNotificationHandler = (Vector2 delta) =>

@@ -75,7 +75,7 @@ public class SwipesController : MonoBehaviour
                     resultGesture = resultDelta.y < 0 ? Swipe.Down : Swipe.Up;
                 }
             }
-            if (TutorialScript.IsTutorialEnabled())
+            if (TutorialSwipes.IsTutorialEnabled())
             {
                 resultDelta.x = (resultGesture == Swipe.Up || resultGesture == Swipe.Down) ? 0 : resultDelta.x;
                 resultDelta.y = (resultGesture == Swipe.Left || resultGesture == Swipe.Right) ? 0 : resultDelta.y;

@@ -8,7 +8,8 @@ public class CameraScript : MonoBehaviour
 {
     public float solarRotationSpeed = 0.8f,
                  planetRotationSpeed = 0.4f,
-                 zoomSpeed = 0.2f,
+                 zoomSpeed = 5f,
+                 focusSpeed = 150f,
                  minSolarZoom = 0.1f,
                  maxSolarZoom = 179.9f,
                  minPlanetZoom = 0.1f,
@@ -288,7 +289,7 @@ public class CameraScript : MonoBehaviour
             if (!movedTo)
             {
 
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, zoomSpeed * 800 * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, focusSpeed * Time.deltaTime);
                 distanceFromLockTarget = Vector3.Distance(transform.position, target.transform.position);
                 movedTo = Mathf.RoundToInt(Mathf.Abs(targetDistance - distanceFromLockTarget)) == 0;
             }
