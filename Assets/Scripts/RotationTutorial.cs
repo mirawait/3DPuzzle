@@ -16,55 +16,58 @@ public class RotationTutorial : MonoBehaviour
     }
     public Stages currentStage;
     Action actionOnComplete;
-    Action<List<Tuple<GesturesController.Gestures, GameObject>>> permitedActionSetter;
+    TwistController twistController;
+    Action<List<Tuple<TutorialScript.Actions, GameObject>>> permitedActionSetter;
+    
     bool isZoomTutorialEnabled;
-    uint shufleUpSubscriptionID, shufleDownSubscriptionID, endingSubscriptionID;
+    int twistSubscriptionID;
+
     // Start is called before the first frame update
     void Start()
     {
         currentStage = Stages.WaitingForStart;
         rotationGesture = GameObject.Find("RotationGesture");
-
+        twistController = GameObject.Find("Controller").GetComponent<TwistController>();
         rotationGesture.SetActive(false);
     }
-    public void EnableTutorial(Action onComplete, Action<List<Tuple<GesturesController.Gestures, GameObject>>> actionRestricter)
+
+    public void EnableTutorial(Action onComplete, Action<List<Tuple<TutorialScript.Actions, GameObject>>> actionRestricter)
     {
         actionOnComplete = onComplete;
         permitedActionSetter = actionRestricter;
+        
         StartNextStep();
     }
+    
     public void DisableTutorial()
     {
-        GesturesController.unsubscribeFromGesture(shufleUpSubscriptionID);
-        GesturesController.unsubscribeFromGesture(shufleDownSubscriptionID);
+        twistController.UnsubscribeFromTwist(twistSubscriptionID);
         rotationGesture.SetActive(false);
-        currentStage = currentStage = Stages.WaitingForStart;
+        currentStage = Stages.WaitingForStart;
     }
+
     public void StartNextStep()
     {
-        Action<GesturesController.Gestures, Vector2> gestureNotificationHandler = (GesturesController.Gestures gesture, Vector2 delta) => {
-            GesturesController.unsubscribeFromGesture(shufleUpSubscriptionID);
-            GesturesController.unsubscribeFromGesture(shufleDownSubscriptionID);
-            endingSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.Ending,
-                (GesturesController.Gestures endingGesture, Vector2 delta1) =>
+        Action<float> gestureNotificationHandler = (float angle) => {
+            twistController.UnsubscribeFromTwist(twistSubscriptionID);
+            twistSubscriptionID = twistController.SubscribeToTwist(TwistController.Twist.Ending,
+                (float _) =>
                 {
-                    GesturesController.unsubscribeFromGesture(endingSubscriptionID);
+                    twistController.UnsubscribeFromTwist(twistSubscriptionID);
                     StartNextStep();
                 });
         };
         currentStage++;
-        List<Tuple<GesturesController.Gestures, GameObject>> newPermittedActions = new List<Tuple<GesturesController.Gestures, GameObject>>();
+        List<Tuple<TutorialScript.Actions, GameObject>> newPermittedActions = new List<Tuple<TutorialScript.Actions, GameObject>>();
         switch (currentStage)
         {
             case Stages.WaitingForStart:
                 break;
             case Stages.Rotation:
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.ShuffleDown, null));
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.ShuffleUp, null));
+                newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.Twist, null));
                 permitedActionSetter(newPermittedActions);
                 rotationGesture.SetActive(true);
-                shufleUpSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.ShuffleUp, gestureNotificationHandler);
-                shufleDownSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.ShuffleDown, gestureNotificationHandler);
+                twistSubscriptionID = twistController.SubscribeToTwist(TwistController.Twist.Twist, gestureNotificationHandler);
                 break;
             case Stages.End:
                 rotationGesture.SetActive(false);
@@ -73,10 +76,5 @@ public class RotationTutorial : MonoBehaviour
                 currentStage = Stages.WaitingForStart;
                 break;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }

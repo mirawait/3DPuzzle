@@ -9,8 +9,15 @@ public class LoadGameScene : MonoBehaviour
     private GameObject manager;
     private SolarSystem solarSystemManager;
     private GameObject clickedPlanet;
-    uint subsctiptionID;
+    private TapController tapController;
+    int subsctiptionID;
     bool isWaitingForPlanetClick = false;
+
+    private void Start()
+    {
+        tapController = GameObject.Find("Controller").GetComponent<TapController>();
+    }
+
     public void LoadScene()
     {
         GameObject Sun = GameObject.Find("Sun");
@@ -18,8 +25,6 @@ public class LoadGameScene : MonoBehaviour
         {
             UnloadScene();
         }
-
-        //Sun.GetComponent<SolarSystem>().EnableSolarSystemMoving(false);
         StartCoroutine(LoadSceneAsync());
         clickedPlanet.SetActive(false);
         isLoaded = true;
@@ -57,14 +62,13 @@ public class LoadGameScene : MonoBehaviour
         }
     }
 
-    public void startWaitingForPlanetClick()
+    public void StartWaitingForPlanetClick()
     {
         if (!isWaitingForPlanetClick)
         {
-            subsctiptionID = GesturesController.subscribeToPlanetClick(
+            subsctiptionID = tapController.SubscribeToTap(TapController.Tap.Tap,
                 (GameObject target) =>
                 {
-                    Debug.LogError("Im inside load scene handler");
                     if (target.tag == "Planet")
                     {
                         planetType = target.GetComponent<PlanetScript>().GetIndex();
@@ -75,11 +79,12 @@ public class LoadGameScene : MonoBehaviour
             isWaitingForPlanetClick = true;
         }
     }
-    public void stopWaitingForPlanetClick()
+    
+    public void StopWaitingForPlanetClick()
     {
         if (isWaitingForPlanetClick)
         {
-            GesturesController.unsubscribeToPlanetClick(subsctiptionID);
+            tapController.UnsubscribeFromTap(subsctiptionID);
             isWaitingForPlanetClick = false;
         }
     }

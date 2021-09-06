@@ -28,6 +28,19 @@ public class TutorialScript : MonoBehaviour
         End = 15
     }
 
+    public enum Actions
+    {
+        SwipeUp,
+        SwipeDown,
+        SwipeLeft,
+        SwipeRight,
+        PinchClose,
+        PinchOpen,
+        Twist,
+        Tap,
+        DoubleTap
+    }
+
     TutorialSwipes swipeTutorial;
     TapOnObjectTutorial tappingTutorial;
     TutorialZoom zoomTutorial;
@@ -44,7 +57,7 @@ public class TutorialScript : MonoBehaviour
     VisualElement planetInfoScreen;
     EventCallback<ClickEvent> eventOnClick;
     bool textFadingOut = false, textFadingIn = false, timeSpan = false;
-    static public List<Tuple<GesturesController.Gestures, GameObject>> pertitedAction = new List<Tuple<GesturesController.Gestures, GameObject>>();
+    static public List<Tuple<Actions, GameObject>> pertitedAction = new List<Tuple<Actions, GameObject>>();
 
     void Start()
     {
@@ -73,6 +86,7 @@ public class TutorialScript : MonoBehaviour
         if (!isTutorialEnabled)
         {
             isTutorialEnabled = true;
+            currentStage = TutorialStage.WaitingForStart;
             StartNextStep();
         }
     }
@@ -94,12 +108,12 @@ public class TutorialScript : MonoBehaviour
         currentStage = TutorialStage.WaitingForStart;
     }
 
-    static public bool IsActionPermitted(GesturesController.Gestures action, GameObject target = null)
+    static public bool IsActionPermitted(Actions action, GameObject target = null)
     {
         if (pertitedAction.Count == 0)
             return true;
         bool isPermitted = false;
-        foreach (Tuple<GesturesController.Gestures, GameObject> gesture in pertitedAction)
+        foreach (Tuple<Actions, GameObject> gesture in pertitedAction)
         {
             if (gesture.Item1 == action && gesture.Item2 == target)
                 isPermitted = true;
@@ -107,7 +121,7 @@ public class TutorialScript : MonoBehaviour
         return isPermitted;
     }
 
-    void SetPermittedActions(List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction)
+    void SetPermittedActions(List<Tuple<Actions, GameObject>> newPermitedAction)
     {
         pertitedAction = newPermitedAction;
     }
@@ -124,20 +138,20 @@ public class TutorialScript : MonoBehaviour
                 StartCoroutine(_WaitForCameraPhase(CameraScript.Phase.Free));
                 break;
             case TutorialStage.SolarSystemRotation:
-                swipeTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                swipeTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolarSystemZoom:
-                zoomTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                zoomTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolarSystemTap:
-                tappingTutorial.EnableTutorial(tappingTarget, () => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                tappingTutorial.EnableTutorial(tappingTarget, () => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.WaitingForCameraPlanetLock:
                 StartCoroutine(_WaitForCameraPhase(CameraScript.Phase.PlanetLock));
                 break;
             case TutorialStage.PlanetRotation:
                 but.SetEnabled(false);
-                swipeTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                swipeTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolveClick:
                 but.SetEnabled(true);
@@ -147,13 +161,13 @@ public class TutorialScript : MonoBehaviour
             case TutorialStage.SolveSwipes:
                 but.UnregisterCallback<ClickEvent>(eventOnClick);
                 but.style.backgroundImage = Resources.Load("UI/Buttons/SolveButton") as Texture2D;
-                swipeTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                swipeTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolveRotation:
-                rotationTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                rotationTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.SolveDoubleTap:
-                doubleTapTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                doubleTapTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.ChoosePiece:
                 var puzzleObjects = GameObject.FindGameObjectsWithTag("piece");
@@ -162,16 +176,16 @@ public class TutorialScript : MonoBehaviour
                     if (obj.GetComponent<Piece>() != null && obj.GetComponent<Renderer>().enabled == true)
                     {
                         chosenPiece = obj;
-                        tappingTutorial.EnableTutorial(chosenPiece, () => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                        tappingTutorial.EnableTutorial(chosenPiece, () => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                         return;
                     }
                 }
                 break;
             case TutorialStage.PieceRotation:
-                rotationTutorial.EnableTutorial(() => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                rotationTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.PieceConfirm:
-                tappingTutorial.EnableTutorial(chosenPiece, () => { StartNextStep(); }, (List<Tuple<GesturesController.Gestures, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                tappingTutorial.EnableTutorial(chosenPiece, () => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
                 break;
             case TutorialStage.PiecePlacing:
                 chosenPiece.GetComponent<Piece>().MakeTwinMarkedForTutorial();
@@ -190,7 +204,7 @@ public class TutorialScript : MonoBehaviour
 
     IEnumerator _WaitForCameraPhase(CameraScript.Phase targetPhase)
     {
-        while (!mainCamera.isCurrentPhase(targetPhase))
+        while (!mainCamera.IsCurrentPhase(targetPhase))
         {
             yield return new WaitForSeconds(0.01f);
         }

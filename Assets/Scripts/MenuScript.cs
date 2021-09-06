@@ -22,8 +22,9 @@ public class MenuScript : MonoBehaviour
     private GameObject planetNameInGame;
     private GameObject planetIsDoneText;
     private GameObject tutorialCompleteText;
+    private TapController tapController;
     uint lastActiveInfoPanel;
-    uint planetClickSubscription;
+    int planetClickSubscription;
     private static bool isOnPause = false;
     enum UI_Phase
     {
@@ -69,6 +70,7 @@ public class MenuScript : MonoBehaviour
         //solveButton.GetComponent<Button>().onClick.AddListener(SolveTask);
         //pauseSettingsButton.GetComponent<Button>().onClick.AddListener(SettingFromPauseTask);
         //pauseMainMenuButton.GetComponent<Button>().onClick.AddListener(MainMenuButtonTask);
+        tapController = GameObject.Find("Controller").GetComponent<TapController>();
 
         btmButton.SetActive(false);
         solveButton.SetActive(false);
@@ -101,7 +103,7 @@ public class MenuScript : MonoBehaviour
         solveButton.SetActive(false);
         planetIsDoneText.SetActive(false);
         loadGameScene.LoadScene();
-        loadGameScene.stopWaitingForPlanetClick();
+        loadGameScene.StopWaitingForPlanetClick();
         
     }
 
@@ -136,21 +138,21 @@ public class MenuScript : MonoBehaviour
         htpButton.SetActive(false);
         exitButton.SetActive(false);
         btmButton.SetActive(true);
-        loadGameScene.startWaitingForPlanetClick();
+        loadGameScene.StartWaitingForPlanetClick();
         solarSystem.EnableSolarSystemPhase(true);
         _CheckoutToSolarSystemPhase();
     }
     void _CheckoutToSolarSystemPhase()
     {
         mainCamera.GoFree();
-        planetClickSubscription = GesturesController.subscribeToPlanetClick(
+        planetClickSubscription = tapController.SubscribeToTap(TapController.Tap.Tap,
             (GameObject target) => 
             {
                 if (currentPhase == UI_Phase.SolarSystem && target.tag == "Planet")
                 {
                     lastActiveInfoPanel = target.GetComponent<PlanetScript>().GetIndex();
                     StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));
-                    loadGameScene.stopWaitingForPlanetClick();
+                    loadGameScene.StopWaitingForPlanetClick();
                 }
             });
         currentPhase = UI_Phase.SolarSystem;
@@ -175,11 +177,11 @@ public class MenuScript : MonoBehaviour
                 solarSystem.EnableSolarSystemPhase(false);
                 mainCamera.GoMenu();
                 tutorial.DisableTutorial();
-                loadGameScene.stopWaitingForPlanetClick();
+                loadGameScene.StopWaitingForPlanetClick();
                 break;
             case UI_Phase.PlanetInfo:
                 mainCamera.GoFree();
-                loadGameScene.startWaitingForPlanetClick();
+                loadGameScene.StartWaitingForPlanetClick();
                 currentPhase = UI_Phase.SolarSystem;
                 foreach (GameObject infoPanel in planetInfoPanels)
                 {
@@ -288,7 +290,7 @@ public class MenuScript : MonoBehaviour
     }
     IEnumerator _WaitForCameraMenuPhase()
     {
-        while (!mainCamera.isCurrentPhase(CameraScript.Phase.Menu))// IsCurrentPhaseMenu())
+        while (!mainCamera.IsCurrentPhase(CameraScript.Phase.Menu))// IsCurrentPhaseMenu())
         {
             yield return new WaitForSeconds(0.01f);
         }
@@ -302,7 +304,7 @@ public class MenuScript : MonoBehaviour
     }
     IEnumerator _WaitForCameraSettingsPhase()
     {
-        while (!mainCamera.isCurrentPhase(CameraScript.Phase.Settings))// IsCurrentPhaseMenu())
+        while (!mainCamera.IsCurrentPhase(CameraScript.Phase.Settings))// IsCurrentPhaseMenu())
         {
             yield return new WaitForSeconds(0.01f);
         }
@@ -312,7 +314,7 @@ public class MenuScript : MonoBehaviour
     }
     IEnumerator _WaitForCameraLock(uint focusedPlanetInex)
     {
-        while(!mainCamera.isCurrentPhase(CameraScript.Phase.PlanetLock))// IsCurrentPhasePlanetLock())
+        while(!mainCamera.IsCurrentPhase(CameraScript.Phase.PlanetLock))// IsCurrentPhasePlanetLock())
         {
             yield return new WaitForSeconds(0.01f);
         }
@@ -335,12 +337,5 @@ public class MenuScript : MonoBehaviour
         btmButton.SetActive(true);
         solveButton.SetActive(true);
         yield break;
-    }
-   
-   
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }

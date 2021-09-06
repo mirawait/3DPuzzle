@@ -22,20 +22,21 @@ public class TutorialZoom : MonoBehaviour
     }
     public Stages currentStage;
     Action actionOnComplete;
-    Action<List<Tuple<GesturesController.Gestures, GameObject>>> permitedActionSetter;
+    Action<List<Tuple<TutorialScript.Actions, GameObject>>> permitedActionSetter;
+    PinchController pinchController;
     public ActionStatus actionStatus = ActionStatus.NothingHappened;
-    uint gestureSubscriptionID, endingSubscriptionID;
+    int gestureSubscriptionID;
     // Start is called before the first frame update
     void Start()
     {
         currentStage = Stages.WaitingForStart;
         tutorialZoomIn = GameObject.Find("SpreadGesture");
         tutorialZoomOut = GameObject.Find("PinchGesture");
-
+        pinchController = GameObject.Find("Controller").GetComponent<PinchController>();
         tutorialZoomIn.SetActive(false);
         tutorialZoomOut.SetActive(false);
     }
-    public void EnableTutorial(Action onComplete, Action<List<Tuple<GesturesController.Gestures, GameObject>>> actionRestricter)
+    public void EnableTutorial(Action onComplete, Action<List<Tuple<TutorialScript.Actions, GameObject>>> actionRestricter)
     {
         actionOnComplete = onComplete;
         permitedActionSetter = actionRestricter;
@@ -43,40 +44,40 @@ public class TutorialZoom : MonoBehaviour
     }
     public void DisableTutorial()
     {
-        GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
+        pinchController.UnsubscribeFromPinch(gestureSubscriptionID);
         tutorialZoomIn.SetActive(false);
         tutorialZoomOut.SetActive(false);
         currentStage = currentStage = Stages.WaitingForStart;
     }
     public void StartNextStep()
     {
-        Action<GesturesController.Gestures, Vector2> gestureNotificationHandler = (GesturesController.Gestures gesture, Vector2 delta) => {
-            GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
-            gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.Ending,
-                (GesturesController.Gestures endingGesture, Vector2 delta1) =>
+        Action<float> gestureNotificationHandler = (float delta) => {
+            pinchController.UnsubscribeFromPinch(gestureSubscriptionID);
+            gestureSubscriptionID = pinchController.SubscribeToPinch(PinchController.Pinch.Ending,
+                (float delta1) =>
                 {
-                    GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
+                    pinchController.UnsubscribeFromPinch(gestureSubscriptionID);
                     StartNextStep();
                 });
         };
         currentStage++;
-        List<Tuple<GesturesController.Gestures, GameObject>> newPermittedActions = new List<Tuple<GesturesController.Gestures, GameObject>>();
+        List<Tuple<TutorialScript.Actions, GameObject>> newPermittedActions = new List<Tuple<TutorialScript.Actions, GameObject>>();
         switch (currentStage)
         {
             case Stages.WaitingForStart:
                 break;
             case Stages.ZoomIn:
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Spread, null));
+                newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.PinchOpen, null));
                 permitedActionSetter(newPermittedActions);
                 tutorialZoomIn.SetActive(true);
-                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.Spread, gestureNotificationHandler);
+                gestureSubscriptionID = pinchController.SubscribeToPinch(PinchController.Pinch.PinchOpen, gestureNotificationHandler);
                 break;
             case Stages.ZoomOut:
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Pinch, null));
+                newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.PinchClose, null));
                 permitedActionSetter(newPermittedActions);
                 tutorialZoomIn.SetActive(false);
                 tutorialZoomOut.SetActive(true);
-                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.Pinch, gestureNotificationHandler);
+                gestureSubscriptionID = pinchController.SubscribeToPinch(PinchController.Pinch.PinchClose, gestureNotificationHandler);
                 break;
             case Stages.End:
                 tutorialZoomOut.SetActive(false);

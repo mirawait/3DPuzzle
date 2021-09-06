@@ -13,6 +13,39 @@ public class Puzzle : MonoBehaviour
         public Vector3 pieceFitOnPos;
     }
 
+    private int doubleTapSubscription, tapSubscription;
+    private bool isInited = false;
+    private Material material;
+    private GameObject hud;
+    private List<GameObject> pieces;
+    private List<GameObject> fitPieces;
+    private List<GameObject> puzzleFramePieces;
+    private GameObject currentPiece;
+    private GameObject puzzleFrame;
+    private GameObject planetOutline;
+    private Vector3 pieceFitOnPos;
+    private TapController tapController;
+
+    void Start()
+    {
+        tapController = GameObject.Find("Controller").GetComponent<TapController>();
+        doubleTapSubscription = tapController.SubscribeToTap(TapController.Tap.DoubleTap, _DoubleTapHandler);
+        tapSubscription = tapController.SubscribeToTap(TapController.Tap.Tap, _TapHandler);
+    }
+
+    private void OnDestroy()
+    {
+        tapController.UnsubscribeFromTap(doubleTapSubscription);
+        tapController.UnsubscribeFromTap(tapSubscription);
+    }
+
+    void Update()
+    {
+        if (!isInited)
+            return;
+
+        _HandleCurrentPiece();
+    }
     public void Init(Config config)
     {
         material = config.material;
@@ -20,12 +53,12 @@ public class Puzzle : MonoBehaviour
         planetOutline = config.planetOutline;
         pieceFitOnPos = config.pieceFitOnPos;
 
-        pieces = ExtractPieces(gameObject);
-        puzzleFramePieces = ExtractPieces(puzzleFrame);
+        pieces = _ExtractPieces(gameObject);
+        puzzleFramePieces = _ExtractPieces(puzzleFrame);
         fitPieces = new List<GameObject>();
 
-        InitPieces();
-        InitHud();
+        _InitPieces();
+        _InitHud();
 
         puzzleFrame.GetComponent<Rotatable>().Permit();
         planetOutline.GetComponent<Rotatable>().Permit();
@@ -38,96 +71,54 @@ public class Puzzle : MonoBehaviour
         return (pieces.Count == 0);
     }
 
-    void Start()
+    private void _TapHandler(GameObject target)
     {
-        doubleTapSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.DoubleTap, 
-            (GesturesController.Gestures gesture, Vector2 delta) => {
-            if (currentPiece == null)
-            { 
-                hud.GetComponent<Hud>().ShufflePieces(); 
-            }
-        });
-        freeAreaTapSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.FreeAreaTap, 
-            (GesturesController.Gestures gesture, Vector2 delta) => {
-            if (currentPiece != null)
+        if (isInited && _IsOneOfPieces(target))
+        {
+            _HandlePieceClicked(target);
+        }
+
+        if (target == null && currentPiece != null)
+        {
+            var pieceScript = currentPiece.GetComponent<Piece>();
+
+            switch (pieceScript.GetCondition())
             {
-                var pieceScript = currentPiece.GetComponent<Piece>();
+                case Piece.Condition.FOCUSED:
+                    if (!pieceScript.Release())
+                        return;
 
-                switch (pieceScript.GetCondition())
-                {
-                    case Piece.Condition.FOCUSED:
-                        if (!pieceScript.Release())
-                            return;
+                    currentPiece = null;
 
-                        currentPiece = null;
+                    puzzleFrame.GetComponent<Rotatable>().Permit();
+                    planetOutline.GetComponent<Rotatable>().Permit();
 
-                        puzzleFrame.GetComponent<Rotatable>().Permit();
-                        planetOutline.GetComponent<Rotatable>().Permit();
+                    break;
 
-                        break;
+                case Piece.Condition.SELECTED:
+                    if (!pieceScript.Focus())
+                        return;
 
-                    case Piece.Condition.SELECTED:
-                        if (!pieceScript.Focus())
-                            return;
+                    puzzleFrame.GetComponent<Rotatable>().Forbid();
+                    planetOutline.GetComponent<Rotatable>().Forbid();
 
-                        puzzleFrame.GetComponent<Rotatable>().Forbid();
-                        planetOutline.GetComponent<Rotatable>().Forbid();
+                    break;
 
-                        break;
-
-                    default:
-                        break;
-                }
+                default:
+                    break;
             }
-        });
-        pieceTapSubscription = GesturesController.subscribeToPlanetClick(
-            (GameObject obj) => {
-                if (!isInited)
-                    return;
-
-                bool isPiece = isOneOfPieces(obj);
-                if (isPiece)
-                {
-                    HandlePieceClicked(obj);
-                }
-            });
+        }
     }
 
-    private void OnDestroy()
+    private void _DoubleTapHandler(GameObject target)
     {
-        GesturesController.unsubscribeFromGesture(doubleTapSubscription);
-        GesturesController.unsubscribeFromGesture(freeAreaTapSubscription);
-        GesturesController.unsubscribeFromGesture(pieceTapSubscription);
+        if (target == null && currentPiece == null)
+        {
+            hud.GetComponent<Hud>().ShufflePieces();
+        }
     }
 
-    void Update()
-    {
-        if (!isInited)
-            return;
-
-        HandleCurrentPiece();
-    }
-
-    private uint doubleTapSubscription, freeAreaTapSubscription, pieceTapSubscription;
-    
-    private bool isInited = false;
-
-    private Material material;
-
-    private GameObject hud;
-
-    private List<GameObject> pieces;
-    private List<GameObject> fitPieces;
-    private List<GameObject> puzzleFramePieces;
-
-    private GameObject currentPiece;
-
-    private GameObject puzzleFrame;
-    private GameObject planetOutline;
-
-    private Vector3 pieceFitOnPos;
-
-    private static List<GameObject> ExtractPieces(GameObject puzzle)
+    private static List<GameObject> _ExtractPieces(GameObject puzzle)
     {
         var pieces = new List<GameObject>();
 
@@ -139,11 +130,11 @@ public class Puzzle : MonoBehaviour
         return pieces;
     }
 
-    private void InitPieces()
+    private void _InitPieces()
     {
-        var pieceZoomablePos = CountPieceZoomablePos();
-        var pieceTravelSpeed = CountPieceTravelSpeed();
-        var pieceMaxZoomIn = CountPieceMaxZoomIn();
+        var pieceZoomablePos = _CountPieceZoomablePos();
+        var pieceTravelSpeed = _CountPieceTravelSpeed();
+        var pieceMaxZoomIn = _CountPieceMaxZoomIn();
 
         for (int i = 0; i < pieces.Count; i++)
         {
@@ -165,7 +156,7 @@ public class Puzzle : MonoBehaviour
         }
     }
 
-    private void InitHud()
+    private void _InitHud()
     {
         hud = new GameObject("PuzzleHud", typeof(Hud));
         hud.tag = "puzzle";
@@ -178,7 +169,7 @@ public class Puzzle : MonoBehaviour
         hudScript.Init(config);
     }
 
-    private void RegisterCurrentPieceAsFit()
+    private void _RegisterCurrentPieceAsFit()
     {
         pieces.Remove(currentPiece);
 
@@ -189,7 +180,7 @@ public class Puzzle : MonoBehaviour
         currentPiece = null;
     }
 
-    private bool isOneOfPieces(GameObject obj)
+    private bool _IsOneOfPieces(GameObject obj)
     {
         foreach (var piece in pieces)
         {
@@ -201,7 +192,7 @@ public class Puzzle : MonoBehaviour
         return false;
     }
 
-    private void HandlePieceClicked(GameObject clickedPiece)
+    private void _HandlePieceClicked(GameObject clickedPiece)
     {
         if (!clickedPiece.GetComponent<Renderer>().enabled
             || (clickedPiece.GetComponent<Piece>().GetCondition() == Piece.Condition.SELECTED)
@@ -243,7 +234,7 @@ public class Puzzle : MonoBehaviour
         }
     }
 
-    private void HandleCurrentPiece()
+    private void _HandleCurrentPiece()
     {
         if (currentPiece == null)
             return;
@@ -254,13 +245,13 @@ public class Puzzle : MonoBehaviour
         {
             if (pieceScript.GetComponent<Piece>().TryFit())
             {
-                RegisterCurrentPieceAsFit();
+                _RegisterCurrentPieceAsFit();
             }
         }
     }
 
     // workaround
-    private Vector3 CountPieceZoomablePos()
+    private Vector3 _CountPieceZoomablePos()
     {
         var distance = Vector3.Distance(pieceFitOnPos, Camera.main.transform.position);
         Vector3 pieceZoomablePos;
@@ -286,7 +277,7 @@ public class Puzzle : MonoBehaviour
     }
 
     // workaround
-    private float CountPieceTravelSpeed()
+    private float _CountPieceTravelSpeed()
     {
         switch (pieces.Count)
         {
@@ -302,7 +293,7 @@ public class Puzzle : MonoBehaviour
     }
 
     // workaround
-    private float CountPieceMaxZoomIn()
+    private float _CountPieceMaxZoomIn()
     {
         switch (pieces.Count)
         {

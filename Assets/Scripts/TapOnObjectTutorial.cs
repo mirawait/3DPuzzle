@@ -15,10 +15,11 @@ public class TapOnObjectTutorial : MonoBehaviour
     GameObject targetObject;
     public Stages currentStage;
     Action actionOnComplete;
-    Action<List<Tuple<GesturesController.Gestures, GameObject>>> permitedActionSetter;
+    Action<List<Tuple<TutorialScript.Actions, GameObject>>> permitedActionSetter;
+    TapController tapController;
     CameraScript mainCamera;
     GameObject tapImage;
-    uint planetClickSubscription;
+    int tapSubscription;
     UnityAction onClick;
     // Start is called before the first frame update
     void Start()
@@ -26,15 +27,14 @@ public class TapOnObjectTutorial : MonoBehaviour
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
         tapImage = GameObject.Find("TapImage");
         tapImage.SetActive(false);
-
+        tapController = GameObject.Find("Controller").GetComponent<TapController>();
         onClick = () =>
         {
             StartNextStep();
         };
     }
-    public void EnableTutorial(GameObject target, Action onComplete, Action<List<Tuple<GesturesController.Gestures, GameObject>>> actionRestricter)
+    public void EnableTutorial(GameObject target, Action onComplete, Action<List<Tuple<TutorialScript.Actions, GameObject>>> actionRestricter)
     {
-        Debug.LogError("Tapping tutorial enabled");
         targetObject = target;
         actionOnComplete = onComplete;
         permitedActionSetter = actionRestricter;
@@ -46,20 +46,18 @@ public class TapOnObjectTutorial : MonoBehaviour
     {
         //arrowPointer.SetActive(false);
         tapImage.SetActive(false);
-        GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
+        tapController.UnsubscribeFromTap(tapSubscription);
         currentStage = Stages.WaitingForStart;
     }
     public void StartNextStep()
     {
-        List<Tuple<GesturesController.Gestures, GameObject>> newPermittedActions = new List<Tuple<GesturesController.Gestures, GameObject>>();
+        List<Tuple<TutorialScript.Actions, GameObject>> newPermittedActions = new List<Tuple<TutorialScript.Actions, GameObject>>();
         currentStage++;
         switch (currentStage)
         {
             case Stages.WaitingForStart:
                 break;
             case Stages.Tapping:
-                Debug.LogError("Tappong stage setted");
-                //arrowPointer.SetActive(true);
                 tapImage.SetActive(true);
                 StartCoroutine(_updateTapImageCords());
                 if (targetObject.GetComponent<Button>() != null)
@@ -68,28 +66,26 @@ public class TapOnObjectTutorial : MonoBehaviour
                 }
                 else
                 {
-                    planetClickSubscription = GesturesController.subscribeToPlanetClick(
+                    tapSubscription = tapController.SubscribeToTap(TapController.Tap.Tap,
                         (GameObject target) =>
                         {
-                            Debug.LogError("Handling tutorial tap object");
                             if (target == targetObject)
                             {
                                 StopCoroutine(_updateTapImageCords());
-                                
-                                GesturesController.unsubscribeToPlanetClick(planetClickSubscription);
+
+                                tapController.UnsubscribeFromTap(tapSubscription);
                                 StartNextStep();
                             }
-                            else
-                                Debug.LogError("something went wrong");
                         });
-                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Pinch, null));
-                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Spread, null));
-                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeDown, null));
-                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeLeft, null));
-                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeRight, null));
-                    newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeUp, null));
+                    newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.Twist, null));
+                    newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.PinchClose, null));
+                    newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.PinchOpen, null));
+                    newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.SwipeDown, null));
+                    newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.SwipeLeft, null));
+                    newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.SwipeRight, null));
+                    newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.SwipeUp, null));
                 }
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.Tapping, targetObject));
+                newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.Tap, targetObject));
                 permitedActionSetter(newPermittedActions);
                 break;
             case Stages.End:
@@ -120,10 +116,5 @@ public class TapOnObjectTutorial : MonoBehaviour
             yield return new WaitForSeconds(0.001f);
         }
         yield break;
-    }
-
-    // Update is called once per frame
-    void LateUpdate()
-    {
     }
 }

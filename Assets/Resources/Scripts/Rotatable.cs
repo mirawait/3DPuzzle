@@ -5,32 +5,36 @@ using System;
 
 public class Rotatable : MonoBehaviour
 {
-    private uint swipeUpSubscription,
-                 swipeDownSubscription,
-                 swipeLeftSubscription,
-                 swipeRightSubscription,
-                 swipeUpRightSubscription,
-                 swipeDownRightSubscription,
-                 swipeUpLeftSubscription,
-                 swipeDownLeftSubscription,
-                 shuffleUpSubscription,
-                 shuffleDownSubscription;
+    private int swipeUpSubscription;
+    private int swipeDownSubscription;
+    private int swipeLeftSubscription;
+    private int swipeRightSubscription;
+    private int twistSubscription;
+    private const float rotationSpeed = 5f;
+    private const float twistSpeed = 15f;
+    private bool isPermited = false;
+    private bool isAroundOnlyPermited = false;
+    private SwipesController swipeController;
+    private TwistController twistController;
+
+    private void Start()
+    {
+        
+    }
+
     public void Permit(bool aroundOnly = false)
     {
         isAroundOnlyPermited = aroundOnly;
         if (!isPermited)
         {
+            swipeController = GameObject.Find("Controller").GetComponent<SwipesController>();
+            twistController = GameObject.Find("Controller").GetComponent<TwistController>();
             isPermited = true;
-            swipeDownSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDown, rotationHandler);
-            swipeLeftSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeLeft, rotationHandler);
-            swipeRightSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeRight, rotationHandler);
-            swipeUpSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeUp, rotationHandler);
-            swipeUpRightSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeTopRight, rotationHandler);
-            swipeDownRightSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDownRight, rotationHandler);
-            swipeUpLeftSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeTopleft, rotationHandler);
-            swipeDownLeftSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDownLeft, rotationHandler);
-            shuffleUpSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.ShuffleUp, rotationHandler);
-            shuffleDownSubscription = GesturesController.subscribeToGesture(GesturesController.Gestures.ShuffleDown, rotationHandler);
+            swipeDownSubscription = swipeController.SubscribeToSwipe(SwipesController.Swipe.Down, _SwipeHandler);
+            swipeLeftSubscription = swipeController.SubscribeToSwipe(SwipesController.Swipe.Left, _SwipeHandler);
+            swipeRightSubscription = swipeController.SubscribeToSwipe(SwipesController.Swipe.Right, _SwipeHandler);
+            swipeUpSubscription = swipeController.SubscribeToSwipe(SwipesController.Swipe.Up, _SwipeHandler);
+            twistSubscription = twistController.SubscribeToTwist(TwistController.Twist.Twist, _TwistHandler);
         }
     }
 
@@ -38,16 +42,11 @@ public class Rotatable : MonoBehaviour
     {
         if (isPermited)
         {
-            GesturesController.unsubscribeFromGesture(swipeDownSubscription);
-            GesturesController.unsubscribeFromGesture(swipeLeftSubscription);
-            GesturesController.unsubscribeFromGesture(swipeRightSubscription);
-            GesturesController.unsubscribeFromGesture(swipeUpSubscription);
-            GesturesController.unsubscribeFromGesture(swipeUpRightSubscription);
-            GesturesController.unsubscribeFromGesture(swipeDownRightSubscription);
-            GesturesController.unsubscribeFromGesture(swipeUpLeftSubscription);
-            GesturesController.unsubscribeFromGesture(swipeDownLeftSubscription);
-            GesturesController.unsubscribeFromGesture(shuffleUpSubscription);
-            GesturesController.unsubscribeFromGesture(shuffleDownSubscription);
+            swipeController.UnsubscribeFromSwipe(swipeDownSubscription);
+            swipeController.UnsubscribeFromSwipe(swipeLeftSubscription);
+            swipeController.UnsubscribeFromSwipe(swipeRightSubscription);
+            swipeController.UnsubscribeFromSwipe(swipeUpSubscription);
+            twistController.UnsubscribeFromTwist(twistSubscription);
             isPermited = false;
         }
     }
@@ -56,60 +55,28 @@ public class Rotatable : MonoBehaviour
     {
         if (isPermited)
         {
-            GesturesController.unsubscribeFromGesture(swipeDownSubscription);
-            GesturesController.unsubscribeFromGesture(swipeLeftSubscription);
-            GesturesController.unsubscribeFromGesture(swipeRightSubscription);
-            GesturesController.unsubscribeFromGesture(swipeUpSubscription);
-            GesturesController.unsubscribeFromGesture(swipeUpRightSubscription);
-            GesturesController.unsubscribeFromGesture(swipeDownRightSubscription);
-            GesturesController.unsubscribeFromGesture(swipeUpLeftSubscription);
-            GesturesController.unsubscribeFromGesture(swipeDownLeftSubscription);
-            GesturesController.unsubscribeFromGesture(shuffleUpSubscription);
-            GesturesController.unsubscribeFromGesture(shuffleDownSubscription);
+            swipeController.UnsubscribeFromSwipe(swipeDownSubscription);
+            swipeController.UnsubscribeFromSwipe(swipeLeftSubscription);
+            swipeController.UnsubscribeFromSwipe(swipeRightSubscription);
+            swipeController.UnsubscribeFromSwipe(swipeUpSubscription);
+            twistController.UnsubscribeFromTwist(twistSubscription);
         }
     }
 
-    void Start()
+    private void _SwipeHandler(Vector2 delta)
     {
-    }
-
-    void Update()
-    {
-    }
-
-    private const float rotationSpeed = 5f;
-
-    private bool isPermited = false;
-    private bool isAroundOnlyPermited = false;
-
-    private void rotationHandler(GesturesController.Gestures gesture, Vector2 delta)
-    {
-        Vector3 axis = Vector3.zero;
-        Vector2 rotatedDelta = new Vector2(delta.y, delta.x);
-        switch (gesture)
+        if (!isAroundOnlyPermited)
         {
-            case GesturesController.Gestures.SwipeRight:
-            case GesturesController.Gestures.SwipeLeft:
-            case GesturesController.Gestures.SwipeUp:
-            case GesturesController.Gestures.SwipeDown:
-            case GesturesController.Gestures.SwipeTopleft:
-            case GesturesController.Gestures.SwipeTopRight:
-            case GesturesController.Gestures.SwipeDownLeft:
-            case GesturesController.Gestures.SwipeDownRight:
-                if (!isAroundOnlyPermited)
-                {
-                    transform.Rotate(Camera.main.transform.right * delta.y * rotationSpeed * Time.deltaTime, Space.World);
-                    transform.Rotate(Camera.main.transform.up * -1 * delta.x * rotationSpeed * Time.deltaTime, Space.World);
-                }
-                break;
-            case GesturesController.Gestures.ShuffleUp:
-                axis = Camera.main.transform.forward * -1;
-                transform.Rotate(axis  * (rotatedDelta.sqrMagnitude / 8) * Time.deltaTime, Space.World);
-                break;
-            case GesturesController.Gestures.ShuffleDown:
-                axis = Camera.main.transform.forward;
-                transform.Rotate(axis * (rotatedDelta.sqrMagnitude / 8) * Time.deltaTime, Space.World);
-                break;
+            transform.Rotate(Camera.main.transform.right * delta.y * rotationSpeed * Time.deltaTime, Space.World);
+            transform.Rotate(Camera.main.transform.up * -1 * delta.x * rotationSpeed * Time.deltaTime, Space.World);
         }
+    }
+    
+    private void _TwistHandler(float angle)
+    {
+        Vector3 axis = Camera.main.transform.position - transform.position;
+        axis.Normalize();
+        transform.RotateAround(transform.position, axis, angle * twistSpeed * Time.deltaTime);
+
     }
 }

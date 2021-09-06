@@ -28,8 +28,9 @@ public class UIManager : MonoBehaviour
     private SaveManager saveManager;
     private AudioSource audioSource;
     private GameObject planetIsDoneText;
+    private TapController tapController;
     uint lastActiveInfoPanel;
-    uint planetClickSubscription;
+    int planetClickSubscription;
     private static bool isOnPause = false;
     private bool isInGame = false;
 
@@ -113,6 +114,7 @@ public class UIManager : MonoBehaviour
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
         loadGameScene = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<LoadGameScene>();
         saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
+        tapController = GameObject.Find("Controller").GetComponent<TapController>();
         //------------------GAME REGION END-----------------------------------------------
     }
 
@@ -218,9 +220,11 @@ public class UIManager : MonoBehaviour
         planetIsDoneText.SetActive(false);
         //planetNameInGame.SetActive(true);
         // planetNameInGame.GetComponent<TextMeshProUGUI>().text = IndexToName(loadGameScene.planetType);
-        GesturesController.RecogniseDoubleTouchGesturesAs_Shuffle();
+        
+        //GesturesController.RecogniseDoubleTouchGesturesAs_Shuffle();
+        
         loadGameScene.LoadScene();
-        loadGameScene.stopWaitingForPlanetClick();
+        loadGameScene.StopWaitingForPlanetClick();
     }
     void PlayTask()
     {
@@ -231,9 +235,11 @@ public class UIManager : MonoBehaviour
         currentPhase = UI_Phase.SolarSystem;
         mainMenuScreen.style.display = DisplayStyle.None;
         backButtonScreen.style.display = DisplayStyle.Flex;
-        loadGameScene.startWaitingForPlanetClick();
+        loadGameScene.StartWaitingForPlanetClick();
         solarSystem.EnableSolarSystemPhase(true);
-        GesturesController.RecogniseDoubleTouchGesturesAs_PinchSpread();
+        
+        //GesturesController.RecogniseDoubleTouchGesturesAs_PinchSpread();
+        
         _CheckoutToSolarSystemPhase();
     }
 
@@ -326,12 +332,12 @@ public class UIManager : MonoBehaviour
                 //solarSystem.EnableSolarSystemPhase(false);
                 mainCamera.GoMenu();
                 tutorial.DisableTutorial();
-                loadGameScene.stopWaitingForPlanetClick();
+                loadGameScene.StopWaitingForPlanetClick();
 
                 break;
             case UI_Phase.PlanetInfo:
                 mainCamera.GoFree();
-                loadGameScene.startWaitingForPlanetClick();
+                loadGameScene.StartWaitingForPlanetClick();
                 currentPhase = UI_Phase.SolarSystem;
                 planetInfoScreen.style.display = DisplayStyle.None;
                 planetIsDoneText.SetActive(false);
@@ -381,7 +387,7 @@ public class UIManager : MonoBehaviour
     }
     IEnumerator _WaitForCameraMenuPhase()
     {
-        while (!mainCamera.isCurrentPhase(CameraScript.Phase.Menu))// IsCurrentPhaseMenu())
+        while (!mainCamera.IsCurrentPhase(CameraScript.Phase.Menu))// IsCurrentPhaseMenu())
         {
             yield return new WaitForSeconds(0.01f);
         }
@@ -395,7 +401,7 @@ public class UIManager : MonoBehaviour
     }
     IEnumerator _WaitForCameraSettingsPhase()
     {
-        while (!mainCamera.isCurrentPhase(CameraScript.Phase.Settings))// IsCurrentPhaseMenu())
+        while (!mainCamera.IsCurrentPhase(CameraScript.Phase.Settings))// IsCurrentPhaseMenu())
         {
             yield return new WaitForSeconds(0.01f);
         }
@@ -405,7 +411,7 @@ public class UIManager : MonoBehaviour
     }
     IEnumerator _WaitForCameraLock(uint focusedPlanetInex)
     {
-        while (!mainCamera.isCurrentPhase(CameraScript.Phase.PlanetLock))// IsCurrentPhasePlanetLock())
+        while (!mainCamera.IsCurrentPhase(CameraScript.Phase.PlanetLock))// IsCurrentPhasePlanetLock())
         {
             yield return new WaitForSeconds(0.01f);
         }
@@ -441,14 +447,14 @@ public class UIManager : MonoBehaviour
     void _CheckoutToSolarSystemPhase()
     {
         mainCamera.GoFree();
-        planetClickSubscription = GesturesController.subscribeToPlanetClick(
+        planetClickSubscription = tapController.SubscribeToTap(TapController.Tap.Tap,
             (GameObject target) =>
             {
                 if (currentPhase == UI_Phase.SolarSystem && target.tag == "Planet")
                 {
                     lastActiveInfoPanel = target.GetComponent<PlanetScript>().GetIndex();
                     StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));
-                    loadGameScene.stopWaitingForPlanetClick();
+                    loadGameScene.StopWaitingForPlanetClick();
                 }
             });
         currentPhase = UI_Phase.SolarSystem;

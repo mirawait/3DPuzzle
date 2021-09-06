@@ -26,10 +26,11 @@ public class TutorialSwipes : MonoBehaviour
     }
     public Stages currentStage;
     Action actionOnComplete;
-    Action<List<Tuple<GesturesController.Gestures, GameObject>>> permitedActionSetter;
+    Action<List<Tuple<TutorialScript.Actions, GameObject>>> permitedActionSetter;
     bool isZoomTutorialEnabled;
     public ActionStatus actionStatus = ActionStatus.NothingHappened;
-    uint gestureSubscriptionID, endingSubscriptionID;
+    int gestureSubscriptionID;
+    SwipesController swipesController;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,12 +40,14 @@ public class TutorialSwipes : MonoBehaviour
         tutorialSwipeLeft = GameObject.Find("SwipeLeftGesture");
         tutorialSwipeRight = GameObject.Find("SwipeRightGesture");
 
+        swipesController = GameObject.Find("Controller").GetComponent<SwipesController>();
+
         tutorialSwipeDown.SetActive(false);
         tutorialSwipeUp.SetActive(false);
         tutorialSwipeLeft.SetActive(false);
         tutorialSwipeRight.SetActive(false);
     }
-    public void EnableTutorial(Action onComplete, Action<List<Tuple<GesturesController.Gestures, GameObject>>> actionRestricter)
+    public void EnableTutorial(Action onComplete, Action<List<Tuple<TutorialScript.Actions, GameObject>>> actionRestricter)
     {
         actionOnComplete = onComplete;
         permitedActionSetter = actionRestricter;
@@ -52,7 +55,7 @@ public class TutorialSwipes : MonoBehaviour
     }
     public void DisableTutorial()
     {
-        GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
+        swipesController.UnsubscribeFromSwipe(gestureSubscriptionID);
         tutorialSwipeDown.SetActive(false);
         tutorialSwipeUp.SetActive(false);
         tutorialSwipeLeft.SetActive(false);
@@ -61,47 +64,48 @@ public class TutorialSwipes : MonoBehaviour
     }
     public void StartNextStep()
     {
-        Action<GesturesController.Gestures, Vector2> gestureNotificationHandler = (GesturesController.Gestures gesture, Vector2 delta) => {
-                GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
-                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.Ending,
-                    (GesturesController.Gestures endingGesture, Vector2 delta1) =>
-                    {
-                        GesturesController.unsubscribeFromGesture(gestureSubscriptionID);
-                        StartNextStep();
-                    });
+        Action<Vector2> gestureNotificationHandler = (Vector2 delta) =>
+        {
+            swipesController.UnsubscribeFromSwipe(gestureSubscriptionID);
+            gestureSubscriptionID = swipesController.SubscribeToSwipe(SwipesController.Swipe.Ending,
+                (Vector2 delta1) =>
+                {
+                    swipesController.UnsubscribeFromSwipe(gestureSubscriptionID);
+                    StartNextStep();
+                });
         };
         currentStage++;
-        List<Tuple<GesturesController.Gestures, GameObject>> newPermittedActions = new List<Tuple<GesturesController.Gestures, GameObject>>();
+        List<Tuple<TutorialScript.Actions, GameObject>> newPermittedActions = new List<Tuple<TutorialScript.Actions, GameObject>>();
         switch (currentStage)
         {
             case Stages.WaitingForStart:
                 break;
             case Stages.SwipeDown:
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeDown, null));
+                newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.SwipeDown, null));
                 permitedActionSetter(newPermittedActions);
                 tutorialSwipeDown.SetActive(true);
-                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeDown, gestureNotificationHandler);
+                gestureSubscriptionID = swipesController.SubscribeToSwipe(SwipesController.Swipe.Down, gestureNotificationHandler);
                 break;
             case Stages.SwipeUp:
                 tutorialSwipeDown.SetActive(false);
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeUp, null));
+                newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.SwipeUp, null));
                 permitedActionSetter(newPermittedActions);
                 tutorialSwipeUp.SetActive(true);
-                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeUp, gestureNotificationHandler);
+                gestureSubscriptionID = swipesController.SubscribeToSwipe(SwipesController.Swipe.Up, gestureNotificationHandler);
                 break;
             case Stages.SwipeLeft:
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeLeft, null));
+                newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.SwipeLeft, null));
                 permitedActionSetter(newPermittedActions);
                 tutorialSwipeUp.SetActive(false);
                 tutorialSwipeLeft.SetActive(true);
-                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeLeft, gestureNotificationHandler);
+                gestureSubscriptionID = swipesController.SubscribeToSwipe(SwipesController.Swipe.Left, gestureNotificationHandler);
                 break;
             case Stages.SwipeRight:
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.SwipeRight, null));
+                newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.SwipeRight, null));
                 permitedActionSetter(newPermittedActions);
                 tutorialSwipeLeft.SetActive(false);
                 tutorialSwipeRight.SetActive(true);
-                gestureSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.SwipeRight, gestureNotificationHandler);
+                gestureSubscriptionID = swipesController.SubscribeToSwipe(SwipesController.Swipe.Right, gestureNotificationHandler);
                 break;
             case Stages.End:
                 tutorialSwipeRight.SetActive(false);
@@ -110,10 +114,5 @@ public class TutorialSwipes : MonoBehaviour
                 currentStage = Stages.WaitingForStart;
                 break;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }

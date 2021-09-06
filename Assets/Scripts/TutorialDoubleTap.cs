@@ -16,17 +16,18 @@ public class TutorialDoubleTap : MonoBehaviour
     }
     public Stages currentStage;
     Action actionOnComplete;
-    Action<List<Tuple<GesturesController.Gestures, GameObject>>> permitedActionSetter;
-    uint doubleTapSubscriptionID;
+    Action<List<Tuple<TutorialScript.Actions, GameObject>>> permitedActionSetter;
+    TapController tapController;
+    int doubleTapSubscriptionID;
     // Start is called before the first frame update
     void Start()
     {
         currentStage = Stages.WaitingForStart;
         doubleTapGesture = GameObject.Find("DoubleTapGesture");
-
+        tapController = GameObject.Find("Controller").GetComponent<TapController>();
         doubleTapGesture.SetActive(false);
     }
-    public void EnableTutorial(Action onComplete, Action<List<Tuple<GesturesController.Gestures, GameObject>>> actionRestricter)
+    public void EnableTutorial(Action onComplete, Action<List<Tuple<TutorialScript.Actions, GameObject>>> actionRestricter)
     {
         actionOnComplete = onComplete;
         permitedActionSetter = actionRestricter;
@@ -34,27 +35,27 @@ public class TutorialDoubleTap : MonoBehaviour
     }
     public void DisableTutorial()
     {
-        GesturesController.unsubscribeFromGesture(doubleTapSubscriptionID);
+        tapController.UnsubscribeFromTap(doubleTapSubscriptionID);
         doubleTapGesture.SetActive(false);
         currentStage = currentStage = Stages.WaitingForStart;
     }
     public void StartNextStep()
     {
-        Action<GesturesController.Gestures, Vector2> gestureNotificationHandler = (GesturesController.Gestures gesture, Vector2 delta) => {
-            GesturesController.unsubscribeFromGesture(doubleTapSubscriptionID);
+        Action<GameObject> gestureNotificationHandler = (GameObject target) => {
+            tapController.UnsubscribeFromTap(doubleTapSubscriptionID);
             StartNextStep();
         };
         currentStage++;
-        List<Tuple<GesturesController.Gestures, GameObject>> newPermittedActions = new List<Tuple<GesturesController.Gestures, GameObject>>();
+        List<Tuple<TutorialScript.Actions, GameObject>> newPermittedActions = new List<Tuple<TutorialScript.Actions, GameObject>>();
         switch (currentStage)
         {
             case Stages.WaitingForStart:
                 break;
             case Stages.DoubleTap:
-                newPermittedActions.Add(new Tuple<GesturesController.Gestures, GameObject>(GesturesController.Gestures.DoubleTap, null));
+                newPermittedActions.Add(new Tuple<TutorialScript.Actions, GameObject>(TutorialScript.Actions.DoubleTap, null));
                 permitedActionSetter(newPermittedActions);
                 doubleTapGesture.SetActive(true);
-                doubleTapSubscriptionID = GesturesController.subscribeToGesture(GesturesController.Gestures.DoubleTap, gestureNotificationHandler);
+                doubleTapSubscriptionID = tapController.SubscribeToTap(TapController.Tap.DoubleTap, gestureNotificationHandler);
                 break;
             case Stages.End:
                 doubleTapGesture.SetActive(false);
