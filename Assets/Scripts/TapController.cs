@@ -15,8 +15,8 @@ public class TapController : MonoBehaviour
         Ending = 3
     }
     static Dictionary<int, Tuple<Tap, Action<GameObject>>> subscriptionsOnTaps = new Dictionary<int, Tuple<Tap, Action<GameObject>>>();
-
     private System.DateTime lastTapStartDateTime, lastTapEndDateTime;
+    private uint maxDeltaPos = 5;
 
     [SerializeField] private System.TimeSpan singleTapInterval = System.TimeSpan.FromMilliseconds(200);
     [SerializeField] private System.TimeSpan doubleTapInterval = System.TimeSpan.FromMilliseconds(300);
@@ -44,13 +44,12 @@ public class TapController : MonoBehaviour
     {
         if (Input.touchCount == 1)
         {
-            if (Input.GetTouch(0).phase == TouchPhase.Ended)
+            if (Input.GetTouch(0).phase == TouchPhase.Ended && Input.GetTouch(0).deltaPosition.magnitude < maxDeltaPos)
             {
                 if ((System.DateTime.Now - lastTapStartDateTime) < singleTapInterval)
                 {
                     GameObject tapTarget = null;
                     Tap resultGesture = Tap.Tap;
-
                     Ray raycast = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
                     RaycastHit raycastHit;
                     if (Physics.Raycast(raycast, out raycastHit, Mathf.Infinity))

@@ -21418,7 +21418,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   solarRotationSpeed: 5
   planetRotationSpeed: 0.5
-  zoomSpeed: 1.5
+  zoomSpeed: 3
   focusSpeed: 200
   minSolarZoom: 30
   maxSolarZoom: 179.9
