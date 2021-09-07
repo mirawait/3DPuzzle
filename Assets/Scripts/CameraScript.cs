@@ -155,7 +155,7 @@ public class CameraScript : MonoBehaviour
                 planetClickSubscription = tapController.SubscribeToTap(TapController.Tap.Tap,
                     (GameObject target) =>
                         {
-                            if (target.tag == "Planet")
+                            if (target != null && target.tag == "Planet")
                             {
                                 tapController.UnsubscribeFromTap(planetClickSubscription);
                                 FocusOn(target);

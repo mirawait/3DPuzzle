@@ -6,9 +6,11 @@ public class Puzzle : MonoBehaviour
     public struct Config
     {
         public Material material;
+        public Material transparentMaterial;
 
         public GameObject planetOutline;
         public GameObject puzzleFrame;
+
 
         public Vector3 pieceFitOnPos;
     }
@@ -16,6 +18,7 @@ public class Puzzle : MonoBehaviour
     private int doubleTapSubscription, tapSubscription;
     private bool isInited = false;
     private Material material;
+    private Material transparentMaterial;
     private GameObject hud;
     private List<GameObject> pieces;
     private List<GameObject> fitPieces;
@@ -49,6 +52,7 @@ public class Puzzle : MonoBehaviour
     public void Init(Config config)
     {
         material = config.material;
+        transparentMaterial = config.transparentMaterial;
         puzzleFrame = config.puzzleFrame;
         planetOutline = config.planetOutline;
         pieceFitOnPos = config.pieceFitOnPos;
@@ -77,8 +81,7 @@ public class Puzzle : MonoBehaviour
         {
             _HandlePieceClicked(target);
         }
-
-        if (target == null && currentPiece != null)
+        else if (target != puzzleFrame && currentPiece != null)
         {
             var pieceScript = currentPiece.GetComponent<Piece>();
 
@@ -112,7 +115,7 @@ public class Puzzle : MonoBehaviour
 
     private void _DoubleTapHandler(GameObject target)
     {
-        if (target == null && currentPiece == null)
+        if (!_IsOneOfPieces(target) && target != puzzleFrame && currentPiece == null)
         {
             hud.GetComponent<Hud>().ShufflePieces();
         }
@@ -144,6 +147,7 @@ public class Puzzle : MonoBehaviour
             Piece.Config config;
 
             config.material = material;
+            config.transparentMaterial = transparentMaterial;
             config.twin = puzzleFramePieces[i];
             config.centerPos = transform.position;
             config.zoomablePos = pieceZoomablePos;

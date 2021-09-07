@@ -450,7 +450,7 @@ public class UIManager : MonoBehaviour
         planetClickSubscription = tapController.SubscribeToTap(TapController.Tap.Tap,
             (GameObject target) =>
             {
-                if (currentPhase == UI_Phase.SolarSystem && target.tag == "Planet")
+                if (currentPhase == UI_Phase.SolarSystem && target != null && target.tag == "Planet")
                 {
                     lastActiveInfoPanel = target.GetComponent<PlanetScript>().GetIndex();
                     StartCoroutine(_WaitForCameraLock(lastActiveInfoPanel));

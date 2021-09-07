@@ -60,44 +60,54 @@ public class Manager : MonoBehaviour
         switch (planetType)
         {
             case 0:
-                config.outlineMaterial = Resources.Load("Materials/SunTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/SunDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/SunOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/SunTransparent") as Material;
                 break;
             case 1:
-                config.outlineMaterial = Resources.Load("Materials/MercuryTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/MercuryDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/MercuryOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/MercuryTransparent") as Material;
                 break;
             case 2:
-                config.outlineMaterial = Resources.Load("Materials/VenusTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/VenusDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/VenusOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/VenusTransparent") as Material;
                 break;
             case 3:
-                config.outlineMaterial = Resources.Load("Materials/EarthTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/EarthDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/EarthOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/EarthTransparent") as Material;
                 break;
             case 4:
-                config.outlineMaterial = Resources.Load("Materials/MarsTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/MarsDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/MarsOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/MarsTransparent") as Material;
                 break;
             case 5:
-                config.outlineMaterial = Resources.Load("Materials/SaturnTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/SaturnDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/SaturnOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/SaturnTransparent") as Material;
                 break;
             case 6:
-                config.outlineMaterial = Resources.Load("Materials/JupiterTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/JupiterDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/JupiterOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/JupiterTransparent") as Material;
                 break;
             case 7:
-                config.outlineMaterial = Resources.Load("Materials/UranusTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/UranusDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/UranusOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/UranusTransparent") as Material;
                 break;
             case 8:
-                config.outlineMaterial = Resources.Load("Materials/NeptuneTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/NeptuneDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/NeptuneOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/NeptuneTransparent") as Material;
                 break;
             default:
-                config.outlineMaterial = Resources.Load("Materials/SunTransparent") as Material;
+                config.outlineMaterial = Resources.Load("Materials/SunDark") as Material;
                 config.puzzleMaterial = Resources.Load("Materials/SunOpaque") as Material;
+                config.transparentMaterial = Resources.Load("Materials/SunTransparent") as Material;
                 break;
         }
 

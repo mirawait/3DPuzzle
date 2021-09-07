@@ -15,6 +15,7 @@ public class Piece : MonoBehaviour
     public struct Config
     {
         public Material material;
+        public Material transparentMaterial;
 
         public GameObject twin;
 
@@ -31,6 +32,7 @@ public class Piece : MonoBehaviour
     public void Init(Config config)
     {
         material = config.material;
+        transparentMaterial = config.transparentMaterial;
         twin = config.twin;
         centerPos = config.centerPos;
         zoomablePos = config.zoomablePos;
@@ -39,7 +41,7 @@ public class Piece : MonoBehaviour
         maxZoomIn = config.maxZoomIn;
         maxZoomOut = config.maxZoomOut;
 
-        SetMaterial();
+        SetOpaqueMaterial();
         SetCollider();
         FaceToCamera();
         SetZoomable();
@@ -95,7 +97,7 @@ public class Piece : MonoBehaviour
             return false;
 
         SetCondition(Condition.RELEASED);
-
+        SetOpaqueMaterial();
         GetComponent<Zoomable>().Forbid();
         GetComponent<Rotatable>().Forbid();
 
@@ -110,7 +112,7 @@ public class Piece : MonoBehaviour
             return false;
 
         SetCondition(Condition.FOCUSED);
-
+        SetOpaqueMaterial();
         GetComponent<Rotatable>().Permit(true);
 
         TravelToPos(zoomablePos);
@@ -124,7 +126,7 @@ public class Piece : MonoBehaviour
             return false;
 
         SetCondition(Condition.SELECTED);
-
+        SetTransparentMaterial();
         GetComponent<Zoomable>().Forbid();
         GetComponent<Rotatable>().Forbid();
 
@@ -182,14 +184,15 @@ public class Piece : MonoBehaviour
     }
 
     private const float straightenSpeed = 1000.0f;
-    private const float maxFitDistanceFault = 0.25f;
-    private const float maxFitAngleFault = 15.0f;
+    private const float maxFitDistanceFault = 0.15f;
+    private const float maxFitAngleFault = 8.0f;
 
     private bool isInited = false;
     private bool isTravelling = false;
     private bool isStraightening = false;
 
     private Material material;
+    public Material transparentMaterial;
 
     private GameObject twin;
 
@@ -209,9 +212,14 @@ public class Piece : MonoBehaviour
 
     private Quaternion defaultRotation;
 
-    private void SetMaterial()
+    private void SetOpaqueMaterial()
     {
         GetComponent<Renderer>().material = material;
+    }
+
+    private void SetTransparentMaterial()
+    {
+        GetComponent<Renderer>().material = transparentMaterial;
     }
 
     private void SetCollider()
@@ -253,6 +261,7 @@ public class Piece : MonoBehaviour
     {
         twin.gameObject.GetComponent<Renderer>().enabled = false;
         SetCondition(Condition.FIT);
+        SetOpaqueMaterial();
     }
 
     private bool IsFitToTwin()

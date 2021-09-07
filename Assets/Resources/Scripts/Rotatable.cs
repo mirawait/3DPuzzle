@@ -11,7 +11,7 @@ public class Rotatable : MonoBehaviour
     private int swipeRightSubscription;
     private int twistSubscription;
     private const float rotationSpeed = 5f;
-    private const float twistSpeed = 15f;
+    private const float twistSpeed = 50f;
     private bool isPermited = false;
     private bool isAroundOnlyPermited = false;
     private SwipesController swipeController;

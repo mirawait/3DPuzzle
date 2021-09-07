@@ -69,7 +69,7 @@ public class LoadGameScene : MonoBehaviour
             subsctiptionID = tapController.SubscribeToTap(TapController.Tap.Tap,
                 (GameObject target) =>
                 {
-                    if (target.tag == "Planet")
+                    if (target != null && target.tag == "Planet")
                     {
                         planetType = target.GetComponent<PlanetScript>().GetIndex();
                         clickedPlanet = target;

@@ -19,6 +19,7 @@ public class PlanetPuzzle : MonoBehaviour
 
         public Material outlineMaterial;
         public Material puzzleMaterial;
+        public Material transparentMaterial;
     }
 
     public Error Init(Config config)
@@ -27,6 +28,7 @@ public class PlanetPuzzle : MonoBehaviour
         puzzleMeshResourceName = config.puzzleMeshResourceName;
         outlineMaterial = config.outlineMaterial;
         puzzleMaterial = config.puzzleMaterial;
+        transparentMaterial = config.transparentMaterial;
 
         isInited = true;
 
@@ -97,6 +99,7 @@ public class PlanetPuzzle : MonoBehaviour
 
     private Material outlineMaterial;
     private Material puzzleMaterial;
+    private Material transparentMaterial;
 
     private GameObject planetOutline;
     private GameObject puzzle;
@@ -167,6 +170,7 @@ public class PlanetPuzzle : MonoBehaviour
         Puzzle.Config config;
 
         config.material = puzzleMaterial;
+        config.transparentMaterial = transparentMaterial;
         config.planetOutline = planetOutline;
         config.puzzleFrame = puzzleFrame;
         config.pieceFitOnPos = CountPieceFitOnPos();
