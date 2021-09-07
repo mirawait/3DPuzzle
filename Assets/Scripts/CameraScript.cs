@@ -95,7 +95,10 @@ public class CameraScript : MonoBehaviour
                     delta.y = 0;
                 }
             }
-            transform.Translate(axis * delta * Time.deltaTime * currentRotationSpeed);
+            var secondPoint = target.transform.position + transform.right;
+            var vectorLeftFromTarget = target.transform.position - secondPoint;
+            transform.RotateAround(target.transform.position, vectorLeftFromTarget, delta.y * Time.deltaTime * currentRotationSpeed);
+            transform.RotateAround(target.transform.position, target.transform.up, delta.x * Time.deltaTime * currentRotationSpeed);
             transform.LookAt(target.transform);
         }
     }
