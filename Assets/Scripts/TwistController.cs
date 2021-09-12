@@ -63,6 +63,7 @@ public class TwistController : MonoBehaviour
             if (touch1Direction != touch1.position)
             {
                 resultAngle = Vector3.SignedAngle(touch1.position - touch0.position, touch1Direction - touch0Direction, Camera.main.transform.forward);
+                resultAngle = (Camera.main.transform.forward.z < 0 ? resultAngle * -1 : resultAngle);
                 resultGesture = Mathf.Abs(resultAngle) > minTwistAngle ? Twist.Twist : Twist.None;
             }
         }

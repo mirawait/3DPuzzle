@@ -16,6 +16,7 @@ public class TapController : MonoBehaviour
     }
     static Dictionary<int, Tuple<Tap, Action<GameObject>>> subscriptionsOnTaps = new Dictionary<int, Tuple<Tap, Action<GameObject>>>();
     private System.DateTime lastTapStartDateTime, lastTapEndDateTime;
+    private bool canDoubleTap = false;
     private uint maxDeltaPos = 5;
 
     [SerializeField] private System.TimeSpan singleTapInterval = System.TimeSpan.FromMilliseconds(200);
@@ -57,7 +58,7 @@ public class TapController : MonoBehaviour
                         Debug.DrawRay(transform.position, raycastHit.point, Color.red, 5f);
                         tapTarget = raycastHit.transform.gameObject;
                     }
-                    if (lastTapStartDateTime - lastTapEndDateTime <= doubleTapInterval)
+                    if (lastTapStartDateTime - lastTapEndDateTime <= doubleTapInterval && canDoubleTap)
                     {
                         resultGesture = Tap.DoubleTap;
                     }
@@ -65,6 +66,7 @@ public class TapController : MonoBehaviour
                     {
                         _NotifyAboutTap(resultGesture, tapTarget);
                     }
+                    canDoubleTap = true;
                 }
                 lastTapEndDateTime = System.DateTime.Now;
             }
@@ -72,6 +74,10 @@ public class TapController : MonoBehaviour
             {
                 lastTapStartDateTime = System.DateTime.Now;
             }
+        }
+        else if (Input.touchCount == 2)
+        {
+            canDoubleTap = false;
         }
     }
 
