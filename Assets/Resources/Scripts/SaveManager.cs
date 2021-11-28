@@ -10,6 +10,8 @@ public class SaveManager : MonoBehaviour
         public bool[] medium = new bool[9];
         public bool[] hard = new bool[9];
         public bool tutorial = false;
+        public bool sound = true;
+        public UIManager.Difficulty difficulty = UIManager.Difficulty.Medium;
     }
 
 
@@ -20,8 +22,18 @@ public class SaveManager : MonoBehaviour
         return save.tutorial;
     }
 
+    public bool GetSound()
+    {
+        return save.sound;
+    } 
+    
+    public UIManager.Difficulty GetDifficulty()
+    {
+        return save.difficulty;
+    }
 
-    public bool IsPlanetDone(int PlanetType, int PuzzleLevel)
+
+public bool IsPlanetDone(int PlanetType, int PuzzleLevel)
     {
         if (PuzzleLevel == 0)
         {
@@ -43,6 +55,8 @@ public class SaveManager : MonoBehaviour
         if (PlayerPrefs.HasKey("Save"))
         {
             LoadData();
+            print(save.difficulty);
+            print(save.sound);
         }
         else
         {
@@ -84,6 +98,13 @@ public class SaveManager : MonoBehaviour
             print("saved_hard");
         }
 
+        SaveData();
+    }
+
+    public void SaveSettings(bool sound, UIManager.Difficulty difficulty)
+    {
+        save.sound = sound;
+        save.difficulty = difficulty;
         SaveData();
     }
 

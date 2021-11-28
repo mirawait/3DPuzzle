@@ -10,19 +10,18 @@ public class ConfirmSettingsScript : MonoBehaviour
     [SerializeField]
     private SoundSwitcherScript.Sound curSoundStatus = SoundSwitcherScript.Sound.On;
 
-    private SoundSwitcherScript soundSwitcher;
     private DificultySwitcherScript dificultySwitcher;
     private GameObject confirmButton;
     private AudioSource audioSource;
+    private SaveManager saveManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        soundSwitcher = GameObject.Find("SoundSwitch").GetComponent<SoundSwitcherScript>();
         dificultySwitcher = GameObject.Find("DificultySwitch").GetComponent<DificultySwitcherScript>();
         confirmButton = GameObject.Find("ConfirmSettingsButton");
         audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
-
+        saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
         confirmButton.GetComponent<Button>().onClick.AddListener(ConfirmSettings);
 
         _UpdateGlobal();
@@ -63,7 +62,6 @@ public class ConfirmSettingsScript : MonoBehaviour
 
     public void ResetSwitchers()
     {
-        soundSwitcher.ResetTitle(curSoundStatus);
         dificultySwitcher.ResetTitle(curDif);
     }
 
@@ -86,7 +84,6 @@ public class ConfirmSettingsScript : MonoBehaviour
     private void ConfirmSettings()
     {
         curDif = DificultySwitcherScript.GetChosenDifficulty();
-        curSoundStatus = soundSwitcher.GetSoundStatus();
         Debug.Log("Sound to confirm:" + _SoundToString(curSoundStatus));
         Debug.Log("Dificulty to confirm:" + _DificultyToString(curDif));
         _UpdateGlobal();

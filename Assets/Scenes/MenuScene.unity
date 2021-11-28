@@ -21419,7 +21419,7 @@ MonoBehaviour:
   solarRotationSpeed: 5
   planetRotationSpeed: 2
   zoomSpeed: 3
-  focusSpeed: 200
+  focusSpeed: 150
   minSolarZoom: 30
   maxSolarZoom: 179.9
   minPlanetZoom: 7.5

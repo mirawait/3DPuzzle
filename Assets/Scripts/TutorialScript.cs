@@ -75,7 +75,7 @@ public class TutorialScript : MonoBehaviour
 
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
 
-        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, 0);
+        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(255, 255, 255, 0);
         tutorialCompleteText.SetActive(false);
 
         eventOnClick = ev => { StartNextStep(); };
@@ -227,7 +227,7 @@ public class TutorialScript : MonoBehaviour
         textFadingOut = true;
         textFadingIn = false; 
         timeSpan = false;
-        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, 0);
+        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(255, 255, 255, 0);
         tutorialCompleteText.SetActive(true);
         StartCoroutine(_StartFadeOut());
     }
@@ -236,7 +236,7 @@ public class TutorialScript : MonoBehaviour
         while (tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a < 1)
         {
             float currentA = tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a;
-            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, currentA + 0.1f);//CrossFadeAlpha(1, 1, false);
+            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(255, 255, 255, currentA + 0.1f);//CrossFadeAlpha(1, 1, false);
             yield return new WaitForSeconds(0.05f);
         }
         yield return new WaitForSeconds(0.9f);
@@ -248,7 +248,7 @@ public class TutorialScript : MonoBehaviour
         while (tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a > 0)
         {
             float currentA = tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a;
-            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(0, 0, 0, currentA - 0.1f);//CrossFadeAlpha(1, 1, false);
+            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(255, 255, 255, currentA - 0.1f);//CrossFadeAlpha(1, 1, false);
             yield return new WaitForSeconds(0.05f);
         }
         tutorialCompleteText.SetActive(false);

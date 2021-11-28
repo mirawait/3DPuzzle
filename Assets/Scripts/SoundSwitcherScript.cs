@@ -9,7 +9,7 @@ public class SoundSwitcherScript : MonoBehaviour
 {
 
     GameObject nextButton, prevButton, text;
-
+    private SaveManager saveManager;
     public enum Sound
     {
         On,
@@ -19,6 +19,7 @@ public class SoundSwitcherScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
         nextButton = GameObject.Find("NextSoundButton");
         prevButton = GameObject.Find("PrevSoundButton");
         text = GameObject.Find("CurSoundText");

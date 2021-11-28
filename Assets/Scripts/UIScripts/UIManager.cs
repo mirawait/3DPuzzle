@@ -120,12 +120,38 @@ public class UIManager : MonoBehaviour
 
     void SettingsScreen()
     {
+        var but = settingScreen?.Q("difficulty-button");
+        var butSound = settingScreen?.Q("sound-button");
         if (currentPhase != UI_Phase.MainMenu)
         {
-            var but = settingScreen?.Q("difficulty-button");
             but.SetEnabled(false);
         }
         settingScreen.style.display = DisplayStyle.Flex;
+        difficulty = saveManager.GetDifficulty();
+        isSound = saveManager.GetSound();
+        switch (difficulty)
+        {
+            case Difficulty.Easy:
+                but.style.backgroundImage = Resources.Load("UI/Buttons/EasyButton") as Texture2D;
+                break;
+            case Difficulty.Medium:
+                but.style.backgroundImage = Resources.Load("UI/Buttons/MediumButton") as Texture2D;
+                break;
+            case Difficulty.Hard:
+                but.style.backgroundImage = Resources.Load("UI/Buttons/HardButton") as Texture2D;
+                break;
+        }
+        
+        if (isSound)
+        {
+            butSound.style.backgroundImage = Resources.Load("UI/Buttons/EnabledButton") as Texture2D;
+            audioSource.Play();
+        }
+        else
+        {
+            butSound.style.backgroundImage = Resources.Load("UI/Buttons/DisabledButton") as Texture2D;
+            audioSource.Stop();
+        }
     }
 
     void SettingsBack()
@@ -153,6 +179,7 @@ public class UIManager : MonoBehaviour
                 difficulty = Difficulty.Easy;
                 break;
         }
+        saveManager.SaveSettings(isSound, difficulty);
     }
 
     void SettingsSound()
@@ -170,6 +197,7 @@ public class UIManager : MonoBehaviour
             isSound = true;
             audioSource.Play();
         }
+        saveManager.SaveSettings(isSound, difficulty);
     }
 
     void MainMenuTask()

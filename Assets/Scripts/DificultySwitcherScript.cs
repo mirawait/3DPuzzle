@@ -8,6 +8,7 @@ public class DificultySwitcherScript : MonoBehaviour
 {
     GameObject  text;
     public GameObject nextButton, prevButton;
+    private SaveManager saveManager;
     public enum Difficulty
     {
         Easy,
@@ -18,6 +19,7 @@ public class DificultySwitcherScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        saveManager = GameObject.FindGameObjectWithTag("LoadSceneTag").GetComponent<SaveManager>();
         nextButton = GameObject.Find("NextDifButton");
         prevButton = GameObject.Find("PrevDifButton");
         text = GameObject.Find("CurDifText");
@@ -56,6 +58,7 @@ public class DificultySwitcherScript : MonoBehaviour
                 break;
         }
         _UpdateText();
+
     }
 
     void PrevTask()
