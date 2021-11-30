@@ -8,11 +8,11 @@
         <ui:VisualElement name="menu" style="justify-content: space-between; align-items: center; flex-grow: 1;">
             <ui:VisualElement name="difficulty" style="align-items: center; justify-content: center; flex-grow: 1;">
                 <ui:Label text="Уровень сложности" display-tooltip-when-elided="True" name="difficulty-label" style="font-size: 54px; -unity-font: resource(&apos;Fonts/Montserrat-Bold&apos;); margin-top: 8%; color: rgb(255, 253, 247);" />
-                <ui:Button display-tooltip-when-elided="True" name="difficulty-button" class="difficulty-button" style="margin-top: 8%;" />
+                <ui:Button display-tooltip-when-elided="True" name="difficulty-button" class="difficulty-button" style="margin-top: 8%; -unity-background-scale-mode: scale-to-fit;" />
             </ui:VisualElement>
             <ui:VisualElement name="sound" style="align-items: center; justify-content: flex-start; flex-grow: 1;">
                 <ui:Label text="Звук" display-tooltip-when-elided="True" name="sound-label" style="font-size: 52px; -unity-font: resource(&apos;Fonts/Montserrat-Bold&apos;); padding-top: 2%; padding-bottom: 3%; justify-content: center; align-items: center; -unity-text-align: middle-center; color: rgb(255, 253, 247);" />
-                <ui:Button display-tooltip-when-elided="True" name="sound-button" class="difficulty-button" style="background-image: resource(&apos;UI/Buttons/EnabledButton&apos;);" />
+                <ui:Button display-tooltip-when-elided="True" name="sound-button" class="difficulty-button" style="background-image: resource(&apos;UI/Buttons/EnabledButton&apos;); -unity-background-scale-mode: scale-to-fit;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Button display-tooltip-when-elided="True" name="close-button" class="close-button" />

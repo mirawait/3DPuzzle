@@ -9,7 +9,7 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
-
+/[Xx]code/
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 
 
@@ -43,6 +43,8 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
+*.zip
+*.7z
 
 
 # Unity3D generated file on crash reports
