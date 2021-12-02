@@ -1022,7 +1022,7 @@ GameObject:
   - component: {fileID: 79221088}
   - component: {fileID: 79221090}
   - component: {fileID: 79221089}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: SwipeDownGesture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1046,7 +1046,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &79221089
 MonoBehaviour:
@@ -2741,7 +2741,7 @@ GameObject:
   m_Component:
   - component: {fileID: 397604800}
   - component: {fileID: 397604801}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TappingTutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8273,7 +8273,7 @@ GameObject:
   - component: {fileID: 572945100}
   - component: {fileID: 572945102}
   - component: {fileID: 572945101}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: SwipeRightGesture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8297,7 +8297,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &572945101
 MonoBehaviour:
@@ -8676,7 +8676,7 @@ GameObject:
   m_Component:
   - component: {fileID: 597044873}
   - component: {fileID: 597044874}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ZoomTutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19490,7 +19490,7 @@ GameObject:
   - component: {fileID: 853372417}
   - component: {fileID: 853372419}
   - component: {fileID: 853372418}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DoubleTapGesture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19514,7 +19514,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 358, y: -85}
-  m_SizeDelta: {x: 100, y: 150}
+  m_SizeDelta: {x: 133, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &853372418
 MonoBehaviour:
@@ -19565,7 +19565,7 @@ GameObject:
   - component: {fileID: 883072569}
   - component: {fileID: 883072571}
   - component: {fileID: 883072570}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: SwipeLeftGesture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19589,7 +19589,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &883072570
 MonoBehaviour:
@@ -20279,7 +20279,7 @@ GameObject:
   - component: {fileID: 1073144877}
   - component: {fileID: 1073144879}
   - component: {fileID: 1073144878}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: SpreadGesture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20303,7 +20303,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1073144878
 MonoBehaviour:
@@ -20353,7 +20353,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1087230932}
   - component: {fileID: 1087230933}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: RotationTutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23161,7 +23161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1509705452}
   - component: {fileID: 1509705453}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24511,7 +24511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1635793514}
   - component: {fileID: 1635793515}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: SwipesTutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24776,7 +24776,7 @@ GameObject:
   - component: {fileID: 1705594030}
   - component: {fileID: 1705594032}
   - component: {fileID: 1705594031}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TapImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24800,7 +24800,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -30.629974, y: 56.388153}
-  m_SizeDelta: {x: 102.1, y: 152.4}
+  m_SizeDelta: {x: 136.13, y: 203.2}
   m_Pivot: {x: 0.2, y: 0.87}
 --- !u!114 &1705594031
 MonoBehaviour:
@@ -25406,7 +25406,7 @@ GameObject:
   - component: {fileID: 1849079326}
   - component: {fileID: 1849079328}
   - component: {fileID: 1849079327}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PinchGesture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25430,7 +25430,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1849079327
 MonoBehaviour:
@@ -25813,7 +25813,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1913779007}
   - component: {fileID: 1913779008}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DoubleTapTutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25940,7 +25940,7 @@ GameObject:
   - component: {fileID: 1924441102}
   - component: {fileID: 1924441104}
   - component: {fileID: 1924441103}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: RotationGesture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25964,7 +25964,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -64, y: 0}
-  m_SizeDelta: {x: 1000, y: 150}
+  m_SizeDelta: {x: 1333, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1924441103
 MonoBehaviour:
@@ -32223,7 +32223,7 @@ GameObject:
   - component: {fileID: 2097072851}
   - component: {fileID: 2097072853}
   - component: {fileID: 2097072852}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: SwipeUpGesture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32247,7 +32247,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2097072852
 MonoBehaviour:

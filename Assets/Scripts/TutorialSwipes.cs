@@ -18,6 +18,11 @@ public class TutorialSwipes : MonoBehaviour
         SwipeRight = 4,
         End = 5,
     }
+    public enum HintsPosition
+    {
+        Center = 0,
+        Left = 1
+    }
     public enum ActionStatus
     {
         NothingHappened = 0,
@@ -47,10 +52,24 @@ public class TutorialSwipes : MonoBehaviour
         tutorialSwipeLeft.SetActive(false);
         tutorialSwipeRight.SetActive(false);
     }
-    public void EnableTutorial(Action onComplete, Action<List<Tuple<TutorialScript.Actions, GameObject>>> actionRestricter)
+    public void EnableTutorial(Action onComplete, Action<List<Tuple<TutorialScript.Actions, GameObject>>> actionRestricter, HintsPosition pos)
     {
         actionOnComplete = onComplete;
         permitedActionSetter = actionRestricter;
+        if (pos == HintsPosition.Center)
+        {
+            tutorialSwipeDown.transform.localPosition = new Vector3(0f, 0f, 0f);
+            tutorialSwipeUp.transform.localPosition = new Vector3(0f, 0f, 0f);
+            tutorialSwipeLeft.transform.localPosition = new Vector3(0f, 0f, 0f);
+            tutorialSwipeRight.transform.localPosition = new Vector3(0f, 0f, 0f);
+        }
+        else
+        {
+            tutorialSwipeDown.transform.localPosition = new Vector3(-400f, 0f, 0f);
+            tutorialSwipeUp.transform.localPosition = new Vector3(-400f, 0f, 0f);
+            tutorialSwipeLeft.transform.localPosition = new Vector3(-400f, 0f, 0f);
+            tutorialSwipeRight.transform.localPosition = new Vector3(-400f, 0f, 0f);
+        }
         StartNextStep();
     }
     public void DisableTutorial()

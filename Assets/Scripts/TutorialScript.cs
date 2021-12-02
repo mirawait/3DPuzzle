@@ -75,7 +75,9 @@ public class TutorialScript : MonoBehaviour
 
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraScript>();
 
-        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(255, 255, 255, 0);
+        var color = Color.white;
+        color.a = 0;
+        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = color;
         tutorialCompleteText.SetActive(false);
 
         eventOnClick = ev => { StartNextStep(); };
@@ -105,6 +107,7 @@ public class TutorialScript : MonoBehaviour
         pertitedAction.Clear();
         var but = planetInfoScreen?.Q("solve-button");
         but.style.backgroundImage = Resources.Load("UI/Buttons/SolveButton") as Texture2D;
+        but.SetEnabled(true);
         currentStage = TutorialStage.WaitingForStart;
     }
 
@@ -130,6 +133,8 @@ public class TutorialScript : MonoBehaviour
     {
         currentStage++;
         var but = planetInfoScreen?.Q("solve-button");
+        Action<List<Tuple<TutorialScript.Actions, GameObject>>> permittedActionSetter = (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); };
+        Action startNextStepHandler = () => { Invoke("StartNextStep", 0.5f); };
         switch (currentStage)
         {
             case TutorialStage.WaitingForStart:
@@ -138,20 +143,20 @@ public class TutorialScript : MonoBehaviour
                 StartCoroutine(_WaitForCameraPhase(CameraScript.Phase.Free));
                 break;
             case TutorialStage.SolarSystemRotation:
-                swipeTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                swipeTutorial.EnableTutorial(startNextStepHandler, permittedActionSetter, TutorialSwipes.HintsPosition.Center);
                 break;
             case TutorialStage.SolarSystemZoom:
-                zoomTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                zoomTutorial.EnableTutorial(startNextStepHandler, permittedActionSetter);
                 break;
             case TutorialStage.SolarSystemTap:
-                tappingTutorial.EnableTutorial(tappingTarget, () => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                tappingTutorial.EnableTutorial(tappingTarget, startNextStepHandler, permittedActionSetter);
                 break;
             case TutorialStage.WaitingForCameraPlanetLock:
                 StartCoroutine(_WaitForCameraPhase(CameraScript.Phase.PlanetLock));
                 break;
             case TutorialStage.PlanetRotation:
                 but.SetEnabled(false);
-                swipeTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                swipeTutorial.EnableTutorial(startNextStepHandler, permittedActionSetter, TutorialSwipes.HintsPosition.Left);
                 break;
             case TutorialStage.SolveClick:
                 but.SetEnabled(true);
@@ -161,13 +166,13 @@ public class TutorialScript : MonoBehaviour
             case TutorialStage.SolveSwipes:
                 but.UnregisterCallback<ClickEvent>(eventOnClick);
                 but.style.backgroundImage = Resources.Load("UI/Buttons/SolveButton") as Texture2D;
-                swipeTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                swipeTutorial.EnableTutorial(startNextStepHandler, permittedActionSetter, TutorialSwipes.HintsPosition.Center);
                 break;
             case TutorialStage.SolveRotation:
-                rotationTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                rotationTutorial.EnableTutorial(startNextStepHandler, permittedActionSetter);
                 break;
             case TutorialStage.SolveDoubleTap:
-                doubleTapTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                doubleTapTutorial.EnableTutorial(startNextStepHandler, permittedActionSetter);
                 break;
             case TutorialStage.ChoosePiece:
                 var puzzleObjects = GameObject.FindGameObjectsWithTag("piece");
@@ -176,16 +181,16 @@ public class TutorialScript : MonoBehaviour
                     if (obj.GetComponent<Piece>() != null && obj.GetComponent<Renderer>().enabled == true)
                     {
                         chosenPiece = obj;
-                        tappingTutorial.EnableTutorial(chosenPiece, () => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                        tappingTutorial.EnableTutorial(chosenPiece, startNextStepHandler, permittedActionSetter);
                         return;
                     }
                 }
                 break;
             case TutorialStage.PieceRotation:
-                rotationTutorial.EnableTutorial(() => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                rotationTutorial.EnableTutorial(startNextStepHandler, permittedActionSetter);
                 break;
             case TutorialStage.PieceConfirm:
-                tappingTutorial.EnableTutorial(chosenPiece, () => { Invoke("StartNextStep", 0.5f); }, (List<Tuple<Actions, GameObject>> newPermitedAction) => { SetPermittedActions(newPermitedAction); });
+                tappingTutorial.EnableTutorial(chosenPiece, startNextStepHandler, permittedActionSetter);
                 break;
             case TutorialStage.PiecePlacing:
                 chosenPiece.GetComponent<Piece>().MakeTwinMarkedForTutorial();
@@ -227,7 +232,9 @@ public class TutorialScript : MonoBehaviour
         textFadingOut = true;
         textFadingIn = false; 
         timeSpan = false;
-        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(255, 255, 255, 0);
+        var color = Color.white;
+        color.a = 0;
+        tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = color;
         tutorialCompleteText.SetActive(true);
         StartCoroutine(_StartFadeOut());
     }
@@ -236,7 +243,9 @@ public class TutorialScript : MonoBehaviour
         while (tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a < 1)
         {
             float currentA = tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a;
-            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(255, 255, 255, currentA + 0.1f);//CrossFadeAlpha(1, 1, false);
+            var color = Color.white;
+            color.a = currentA + 0.1f;
+            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = color;//CrossFadeAlpha(1, 1, false);
             yield return new WaitForSeconds(0.05f);
         }
         yield return new WaitForSeconds(0.9f);
@@ -248,7 +257,9 @@ public class TutorialScript : MonoBehaviour
         while (tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a > 0)
         {
             float currentA = tutorialCompleteText.GetComponent<TextMeshProUGUI>().color.a;
-            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = new Color(255, 255, 255, currentA - 0.1f);//CrossFadeAlpha(1, 1, false);
+            var color = Color.white;
+            color.a = currentA - 0.1f;
+            tutorialCompleteText.GetComponent<TextMeshProUGUI>().color = color;//CrossFadeAlpha(1, 1, false);
             yield return new WaitForSeconds(0.05f);
         }
         tutorialCompleteText.SetActive(false);
