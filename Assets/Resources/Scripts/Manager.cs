@@ -29,6 +29,7 @@ public class Manager : MonoBehaviour
     private bool loaded = false;
     int type;
     int level;
+ //   public Object prefab;
 
     private SaveManager saveManager;
    
@@ -125,8 +126,10 @@ public class Manager : MonoBehaviour
                 break;
         }
 
-        var prefab = Resources.Load("Meshes/WholePlanet") as GameObject;
+        GameObject prefab = Resources.Load("Meshes/WholePlanet") as GameObject;
         var spawnPos = Camera.main.transform.position + Camera.main.transform.forward * 10;
+        Debug.Log(prefab);
+        
         planetPuzzle = Instantiate(prefab, spawnPos, Quaternion.identity) as GameObject;
         planetPuzzle.tag = "puzzle";
         planetPuzzle.GetComponent<Renderer>().material = config.puzzleMaterial;

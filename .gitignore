@@ -57,7 +57,7 @@ crashlytics-build.properties
 
 *build*
 *build*/*
-
+xcode/
 *.csproj
 #*.json
 Debug
