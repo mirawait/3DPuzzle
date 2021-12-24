@@ -46,6 +46,7 @@ public class TapOnObjectTutorial : MonoBehaviour
     {
         //arrowPointer.SetActive(false);
         tapImage.SetActive(false);
+        StopCoroutine(_updateTapImageCords());
         tapController.UnsubscribeFromTap(tapSubscription);
         currentStage = Stages.WaitingForStart;
     }
