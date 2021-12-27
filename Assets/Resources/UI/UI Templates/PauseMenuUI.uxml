@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="CloseButtonUI.uss" />
     <Style src="ButtonsStyles.uss" />
-    <ui:VisualElement name="screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.78); display: flex;">
+    <ui:VisualElement name="screen" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.78); display: flex; justify-content: center;">
         <ui:VisualElement name="title" style="align-items: center; justify-content: center;">
             <ui:Label text="ПАУЗА" display-tooltip-when-elided="True" name="title-label" style="font-size: 74px; -unity-font: resource(&apos;Fonts/Montserrat-Black&apos;); padding-top: 115px; color: rgb(217, 136, 36);" />
         </ui:VisualElement>

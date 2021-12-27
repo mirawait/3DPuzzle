@@ -224,7 +224,7 @@ public class Piece : MonoBehaviour
 
     private void SetCollider()
     {
-        gameObject.AddComponent<MeshCollider>();
+        gameObject.AddComponent<UnityEngine.MeshCollider>();
     }
 
     private void SetZoomable()

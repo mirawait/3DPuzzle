@@ -77,14 +77,17 @@ public class Puzzle : MonoBehaviour
 
     private void _TapHandler(GameObject target)
     {
+        Debug.Log("TAP CONTROLLER START");
         if (isInited && _IsOneOfPieces(target))
         {
+            Debug.Log("_HandlePieceClicked(target);");
             _HandlePieceClicked(target);
         }
         else if (target != puzzleFrame && currentPiece != null)
         {
             var pieceScript = currentPiece.GetComponent<Piece>();
-
+            Debug.Log("else if (target != puzzleFrame && currentPiece != null)");
+            Debug.Log(pieceScript.GetCondition());
             switch (pieceScript.GetCondition())
             {
                 case Piece.Condition.FOCUSED:
@@ -198,6 +201,7 @@ public class Puzzle : MonoBehaviour
 
     private void _HandlePieceClicked(GameObject clickedPiece)
     {
+        Debug.Log("HANDE PIECE CLICKED START");
         if (!clickedPiece.GetComponent<Renderer>().enabled
             || (clickedPiece.GetComponent<Piece>().GetCondition() == Piece.Condition.SELECTED)
             || (clickedPiece.GetComponent<Piece>().GetCondition() == Piece.Condition.FIT))
@@ -242,7 +246,7 @@ public class Puzzle : MonoBehaviour
     {
         if (currentPiece == null)
             return;
-
+        Debug.Log("_HandleCurrentPiece START");
         var pieceScript = currentPiece.GetComponent<Piece>();
 
         if (pieceScript.GetCondition() == Piece.Condition.SELECTED)

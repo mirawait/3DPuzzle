@@ -1,0 +1,4 @@
+<linker>
+<type fullname="UnityEngine" preserve="all" />
+<type fullname="UnityEngine.Physics" preserve="all" />
+</linker>
